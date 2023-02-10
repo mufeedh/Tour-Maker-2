@@ -1,0 +1,77 @@
+import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+import 'package:tour_maker/app/widgets/custom_appbar.dart';
+import 'package:tour_maker/app/widgets/custom_elevated_button.dart';
+import 'package:tour_maker/core/theme/style.dart';
+
+import '../controllers/terms_and_conditions_controller.dart';
+
+class TermsAndConditionsView extends GetView<TermsAndConditionsController> {
+  const TermsAndConditionsView({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: const CustomAppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              Image.asset("assets/Accept illustration.png"),
+              SizedBox(height: 30),
+              Text("Terms & Conditions", style: heading2),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 25),
+                child: Text(controller.termsAndCond, style: paragraph4),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                child: Row(
+                  children: [
+                    Obx(() {
+                      return Checkbox(
+                        value: controller.ischecked.value,
+                        onChanged: (value) => controller.onCheck(value!),
+                        activeColor: englishViolet,
+                      );
+                    }),
+                    Text(
+                        "By clicking here, I state that I have read \nand understood the terms and conditions.",
+                        style: paragraph4),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30),
+              Obx(
+                () => controller.isButtonVisisble.value
+                    ? Container(
+                        width: 280,
+                        height: 68,
+                        child: CustomButton().showButtonWithGradient(
+                          text: "Let's Get Started",
+                          onPressed: () => controller.onGetStartedClicked(),
+                        ),
+                      )
+                    : Container(
+                        width: 280,
+                        height: 68,
+                        child: CustomButton().showButton(
+                          bgColor: Colors.grey,
+                          text: "Let's Get Started",
+                          onPressed: () {},
+                        ),
+                      ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
