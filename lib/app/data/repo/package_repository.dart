@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:tour_maker/app/data/models/package_model.dart';
 
 import '../../services/network_services/dio_client.dart';
+import '../models/package_model.dart';
 
 class PackageRepository {
   final Dio dio = Client().init();
   List<PackageModel> packageList = <PackageModel>[];
   Future<ApiResponse<List<PackageModel>>> getAllPackages() async {
     try {
-      final authHeader = await Client().getAuthHeader();
+      final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
       final Response<dynamic> res = await dio.getUri(
           Uri.parse('tours/packages'),
           options: Options(headers: authHeader));

@@ -10,26 +10,25 @@ import '../../duration/views/duration_view.dart';
 import '../controllers/filter_screen_controller.dart';
 
 class FilterScreenView extends GetView<FilterScreenController> {
-  const FilterScreenView({Key? key}) : super(key: key);
+  const FilterScreenView({super.key});
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(FilterScreenController());
+    final FilterScreenController controller = Get.put(FilterScreenController());
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
           iconTheme: IconThemeData(color: fontColor),
           foregroundColor: fontColor,
-          title: Text('Filters'),
+          title: const Text('Filters'),
         ),
         body: controller.obx(
           (state) => Row(
-            children: [
+            children: <Widget>[
               Obx(() {
                 return Expanded(
-                  flex: 1,
                   child: Column(
-                    children: [
+                    children: <Widget>[
                       SizedBox(
                         width: double.infinity,
                         height: 50,
@@ -50,7 +49,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
                           onPressed: () {
                             controller.selectedIndex.value = 0;
                           },
-                          child: Text("Destinations"),
+                          child: const Text('Destinations'),
                         ),
                       ),
                       SizedBox(
@@ -73,7 +72,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
                           onPressed: () {
                             controller.selectedIndex.value = 1;
                           },
-                          child: Text("Budget"),
+                          child: const Text('Budget'),
                         ),
                       ),
                       SizedBox(
@@ -96,7 +95,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
                           onPressed: () {
                             controller.selectedIndex.value = 2;
                           },
-                          child: Text("Category"),
+                          child: const Text('Category'),
                         ),
                       ),
                       SizedBox(
@@ -119,7 +118,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
                           onPressed: () {
                             controller.selectedIndex.value = 3;
                           },
-                          child: Text("Duration"),
+                          child: const Text('Duration'),
                         ),
                       ),
                     ],
@@ -130,12 +129,12 @@ class FilterScreenView extends GetView<FilterScreenController> {
                 return Expanded(
                     flex: 2,
                     child: controller.selectedIndex.value == 0
-                        ? DestinationsView()
+                        ? const DestinationsView()
                         : controller.selectedIndex.value == 1
-                            ? BudgetView()
+                            ? const BudgetView()
                             : controller.selectedIndex.value == 2
-                                ? CategoryView()
-                                : DurationView());
+                                ? const CategoryView()
+                                : const DurationView());
               }),
             ],
           ),

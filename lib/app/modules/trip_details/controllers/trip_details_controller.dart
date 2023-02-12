@@ -1,9 +1,8 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'package:get/get.dart';
 
 class TripDetailsController extends GetxController {
-  //TODO: Implement TripDetailsController
-
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -18,7 +17,4 @@ class TripDetailsController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  List tripdetrails = [];
-  void increment() => count.value++;
 }

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: unnecessary_overrides
+
 import 'package:get/get.dart';
 
 import '../../../widgets/custom_search_delegate.dart';
@@ -7,12 +8,11 @@ class MainScreenController extends GetxController with StateMixin {
   bool pinned = true;
   bool snap = false;
   bool floating = false;
-  var delegate = MyCustomSearchDelegate();
+  MyCustomSearchDelegate delegate = MyCustomSearchDelegate();
 
   @override
   void onInit() {
     super.onInit();
-    delegate;
   }
 
   @override
@@ -21,22 +21,23 @@ class MainScreenController extends GetxController with StateMixin {
     change(null, status: RxStatus.success());
   }
 
+  @override
   void onClose() {
     super.onClose();
   }
 
-  onNotificationsClicked() {}
+  void onNotificationsClicked() {}
 
-  onClickedCategory(index) {}
+  void onClickedCategory(int index) {}
 
-  loadData() {
+  void loadData() {
     getCategory();
     getTrending();
   }
 
-  getCategory() {}
+  void getCategory() {}
 
-  getTrending() {}
+  void getTrending() {}
 }
 
 // class MysearchDelegate extends SearchDelegate<String> {

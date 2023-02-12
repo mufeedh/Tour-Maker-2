@@ -1,30 +1,23 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import 'package:tour_maker/app/data/repo/category_repo.dart';
+import '../../../data/models/category_model.dart';
+import '../../../data/repo/category_repo.dart';
+import '../../../services/network_services/dio_client.dart';
 
 class CategoryController extends GetxController with StateMixin {
-  var categoryList = [].obs;
-  var isSelected = false.obs;
+  RxList<CategoryModel> categoryList = <CategoryModel>[].obs;
+  RxBool isSelected = false.obs;
   @override
   void onInit() {
     super.onInit();
     loadData();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  loadData() async {
+  Future<void> loadData() async {
     change(null, status: RxStatus.loading());
-    var res = await CategoryRepository().getAllCategory();
+    final ApiResponse<List<CategoryModel>> res =
+        await CategoryRepository().getAllCategory();
 
     try {
       if (res != null) {

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/theme/style.dart';
 
 class CustomButton {
-  showButton({
+  Widget showButton({
     Key? key,
     required String text,
     Color? textColor,
@@ -37,7 +36,7 @@ class CustomButton {
     );
   }
 
-  showIconButtonWithGradient({
+  Widget showIconButtonWithGradient({
     Key? key,
     required String text,
     Color textColor = Colors.white,
@@ -69,7 +68,7 @@ class CustomButton {
     );
   }
 
-  showIconButton({
+  Widget showIconButton({
     Key? key,
     required String text,
     Color textColor = Colors.white,
@@ -101,7 +100,7 @@ class CustomButton {
     );
   }
 
-  showButtonWithGradient({
+  Widget showButtonWithGradient({
     Key? key,
     required String text,
     Color textColor = Colors.white,
@@ -133,7 +132,7 @@ class CustomButton {
     );
   }
 
-  customButtomwithGradient({
+  Widget customButtomwithGradient({
     Key? key,
     required String text,
     Color? textColor,
@@ -156,7 +155,7 @@ class CustomButton {
           height: height ?? 50,
           width: width ?? 250,
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 97, 45, 109),
+            color: const Color.fromARGB(255, 97, 45, 109),
             borderRadius: BorderRadius.circular(100),
           ),
           child: isLoading
@@ -171,7 +170,7 @@ class CustomButton {
     );
   }
 
-  customButton(
+  Widget customButton(
       {Color? bgColor,
       EdgeInsets? contentPadding,
       double? elevation,
@@ -208,7 +207,7 @@ class CustomButton {
     );
   }
 
-  customIconButtonWithGradient({
+  Widget customIconButtonWithGradient({
     Key? key,
     required String text,
     Color? textColor,
@@ -225,15 +224,16 @@ class CustomButton {
   }) {
     return isLoading
         ? AnimatedContainer(
+            alignment: Alignment.center,
             curve: Curves.easeInOut,
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
             height: 10.h,
             width: 14.w,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.grey.shade400,
+              color: englishlinearViolet,
             ),
-            child: Center(
+            child: const Center(
               child: CircularProgressIndicator(color: Colors.white),
             ),
           )
@@ -243,12 +243,12 @@ class CustomButton {
               onTap: onPressed,
               child: AnimatedContainer(
                 curve: Curves.easeInOut,
-                duration: Duration(seconds: 2),
+                duration: const Duration(seconds: 2),
                 child: Container(
                   height: height ?? 50,
                   width: width ?? 250,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 97, 45, 109),
+                    color: const Color.fromARGB(255, 97, 45, 109),
                     // gradient: buttonColorGradient,
                     borderRadius: BorderRadius.circular(100),
                   ),
@@ -256,16 +256,16 @@ class CustomButton {
                     padding: const EdgeInsets.all(10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      children: <Widget>[
                         Text(text, style: buttonwithWhiteTextStyle),
                         Container(
                           height: 100.h,
                           width: 14.w,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white24,
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.keyboard_arrow_right_outlined,
                             size: 25,
                             color: Colors.white,
@@ -280,7 +280,7 @@ class CustomButton {
           );
   }
 
-  customIconButton({
+  Widget customIconButton({
     Key? key,
     required String text,
     Color? textColor,
@@ -296,16 +296,15 @@ class CustomButton {
     double? width,
   }) {
     return isLoading
-        ? AnimatedContainer(
-            curve: Curves.easeInOut,
-            duration: Duration(seconds: 2),
+        ? Container(
+            alignment: Alignment.center,
             height: 10.h,
             width: 14.w,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.grey.shade100,
+              color: englishViolet,
             ),
-            child: Center(
+            child: const Center(
               child: CircularProgressIndicator(color: Colors.white),
             ),
           )
@@ -315,7 +314,7 @@ class CustomButton {
               onTap: onPressed,
               child: AnimatedContainer(
                 curve: Curves.easeInOut,
-                duration: Duration(seconds: 2),
+                duration: const Duration(seconds: 2),
                 child: Container(
                   height: height ?? 50,
                   width: width ?? 250,
@@ -328,16 +327,16 @@ class CustomButton {
                     padding: const EdgeInsets.all(10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      children: <Widget>[
                         Text(text, style: buttonwithbLACKTextStyle),
                         Container(
                           height: 100.h,
                           width: 14.w,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white24,
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.keyboard_arrow_right_outlined,
                             size: 25,
                             color: Colors.white,

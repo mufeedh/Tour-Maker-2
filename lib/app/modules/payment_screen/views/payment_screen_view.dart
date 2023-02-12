@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/payment_screen_controller.dart';
 
 class PaymentScreenView extends GetView<PaymentScreenController> {
-  const PaymentScreenView({Key? key}) : super(key: key);
+  const PaymentScreenView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +13,7 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
         title: const Text('PaymentScreenView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'PaymentScreenView is working',
           style: TextStyle(fontSize: 20),

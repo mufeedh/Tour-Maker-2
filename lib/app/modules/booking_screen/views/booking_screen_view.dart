@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/booking_screen_controller.dart';
 
 class BookingScreenView extends GetView<BookingScreenController> {
-  const BookingScreenView({Key? key}) : super(key: key);
+  const BookingScreenView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +13,7 @@ class BookingScreenView extends GetView<BookingScreenController> {
         title: const Text('BookingScreenView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'BookingScreenView is working',
           style: TextStyle(fontSize: 20),

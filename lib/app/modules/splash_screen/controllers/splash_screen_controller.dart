@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_overrides, avoid_print, always_specify_types
+
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,13 +9,13 @@ import 'package:get_storage/get_storage.dart';
 import '../../../routes/app_pages.dart';
 
 class SplashScreenController extends GetxController {
-  final getStorage = GetStorage();
+  final GetStorage getStorage = GetStorage();
 
-  var a = false.obs;
-  var b = false.obs;
-  var c = false.obs;
-  var d = false.obs;
-  var e = false.obs;
+  RxBool a = false.obs;
+  RxBool b = false.obs;
+  RxBool c = false.obs;
+  RxBool d = false.obs;
+  RxBool e = false.obs;
   @override
   void onInit() {
     super.onInit();
@@ -43,11 +45,11 @@ class SplashScreenController extends GetxController {
     super.onClose();
   }
 
-  checkUserLoggedInORnOT() async {
-    final currentUser = FirebaseAuth.instance.currentUser;
+  Future<void> checkUserLoggedInORnOT() async {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser != null) {
-      print("home");
+      print('home');
       //home
       Future.delayed(
         const Duration(seconds: 2),
@@ -55,7 +57,7 @@ class SplashScreenController extends GetxController {
       );
     } else {
       //login
-      print("Login");
+      print('Login');
       Future.delayed(
         const Duration(seconds: 2),
         () => Get.offAllNamed(Routes.GET_STARTED),

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:tour_maker/app/widgets/custom_drop_down.dart';
-import 'package:tour_maker/app/widgets/custom_elevated_button.dart';
-import 'package:tour_maker/app/widgets/custom_textformFfeld.dart';
-import 'package:tour_maker/core/theme/style.dart';
 
+import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
+import '../../../widgets/custom_drop_down.dart';
+import '../../../widgets/custom_elevated_button.dart';
+import '../../../widgets/custom_textformfield.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
-  const LoginView({Key? key}) : super(key: key);
+  const LoginView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +26,7 @@ class LoginView extends GetView<LoginController> {
             padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Text(
                   'ALMOST \nTHERE',
                   style: TextStyle(
@@ -44,18 +43,18 @@ class LoginView extends GetView<LoginController> {
                   padding: const EdgeInsets.all(18.0),
                   child: Form(
                       child: Column(
-                    children: [
+                    children: <Widget>[
                       CustomTextFormField(
                         prefix: Icon(TourMaker.profile_icon, color: fontColor),
                         hintText: 'Username',
-                        validator: (value) =>
+                        validator: (String? value) =>
                             controller.usernameValidator(value),
                         onChanged: (_) {},
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       CustomDropDownButton(
                         lists: controller.states,
-                        onChange: (index, value) =>
+                        onChange: (int index, String value) =>
                             controller.state.value = value,
                         initialValue: controller.state.value,
                       ),

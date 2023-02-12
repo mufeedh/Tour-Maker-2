@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
-import 'package:tour_maker/app/data/repo/user_repo.dart';
+import '../../../data/repo/user_repo.dart';
 
 class LoginController extends GetxController with StateMixin {
   UserRepository userRepo = UserRepository();
-  late var states = userRepo.getStates();
-  var state = "".obs;
+  late List<String> states = userRepo.getStates();
+  @override
+  RxString state = ''.obs;
 
   @override
   void onInit() {
@@ -12,19 +13,11 @@ class LoginController extends GetxController with StateMixin {
     loadData();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  String loadData() {
+    return state.value = states[0];
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  String usernameValidator(String? value) {
+    return '';
   }
-
-  loadData() {
-    state.value = states[0];
-  }
-
-  usernameValidator(String? value) {}
 }

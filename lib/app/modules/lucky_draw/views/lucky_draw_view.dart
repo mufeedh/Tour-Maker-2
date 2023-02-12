@@ -8,7 +8,7 @@ import '../../../widgets/custom_elevated_button.dart';
 import '../controllers/lucky_draw_controller.dart';
 
 class LuckyDrawView extends GetView<LuckyDrawController> {
-  const LuckyDrawView({Key? key}) : super(key: key);
+  const LuckyDrawView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,19 +16,18 @@ class LuckyDrawView extends GetView<LuckyDrawController> {
         padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 18.0),
         child: SingleChildScrollView(
           child: Column(
-            children: [
+            children: <Widget>[
               Center(
                 child: AnimatedTextKit(
-                  repeatForever: false,
                   isRepeatingAnimation: false,
                   onFinished: () => controller.onFinished(),
-                  animatedTexts: [
+                  animatedTexts: <AnimatedText>[
                     TypewriterAnimatedText(
-                      controller.tokenText.toString(),
+                      controller.tokenText,
                       // curve: Curves.easeInOutCirc,
-                      speed: Duration(microseconds: 80000),
+                      speed: const Duration(microseconds: 80000),
                       textAlign: TextAlign.left,
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                           letterSpacing: 3,
                           leadingDistribution: TextLeadingDistribution.even,
                           wordSpacing: 4,
@@ -39,10 +38,10 @@ class LuckyDrawView extends GetView<LuckyDrawController> {
                   ],
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Obx(() => controller.isFinished.value
                   ? Column(
-                      children: [
+                      children: <Widget>[
                         CustomButton().showIconButton(
                           height: 72,
                           isLoading: controller.isLoading.value,
@@ -58,7 +57,7 @@ class LuckyDrawView extends GetView<LuckyDrawController> {
                             onPressed: () => controller.onClickDemoApp()),
                       ],
                     )
-                  : SizedBox()),
+                  : const SizedBox()),
             ],
           ),
         ),

@@ -1,3 +1,5 @@
+// ignore_for_file: always_specify_types
+
 import 'package:get/get.dart';
 
 import '../modules/booking_screen/bindings/booking_screen_binding.dart';
@@ -46,7 +48,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.GET_STARTED;
+  static const INITIAL = Routes.SPLASH_SCREEN;
 
   static final routes = [
     GetPage(

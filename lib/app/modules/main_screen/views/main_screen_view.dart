@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:tour_maker/core/theme/style.dart';
-import 'package:tour_maker/core/tour_maker_icons.dart';
+import '../../../../core/theme/style.dart';
+import '../../../../core/tour_maker_icons.dart';
 
-import '../../../routes/app_pages.dart';
-import '../../../widgets/custom_search_delegate.dart';
 import '../../search_view/views/search_view_view.dart';
 import '../controllers/main_screen_controller.dart';
 
 class MainScreenView extends GetView<MainScreenController> {
-  const MainScreenView({Key? key}) : super(key: key);
+  const MainScreenView({super.key});
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(MainScreenController());
-    var screenWidth = MediaQuery.of(context).size.width;
-    var screenHeight = MediaQuery.of(context).size.height;
+    final MainScreenController controller = Get.put(MainScreenController());
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: controller.obx(
         (state) => SingleChildScrollView(
           child: Column(
-            children: [
+            children: <Widget>[
               Stack(
-                children: [
+                children: <Widget>[
                   Container(
                     height: screenHeight * 0.4,
                     decoration: const BoxDecoration(
@@ -47,7 +45,7 @@ class MainScreenView extends GetView<MainScreenController> {
                       child: TextField(
                         //enabled: false,
                         onTap: () {
-                          Get.to(SearchViewView(),
+                          Get.to(const SearchViewView(),
                               transition: Transition.upToDown,
                               fullscreenDialog: true,
                               duration: const Duration(milliseconds: 800));
@@ -65,17 +63,17 @@ class MainScreenView extends GetView<MainScreenController> {
                           ),
                           fillColor: Colors.white,
                           filled: true,
-                          hintText: "Search Destinations",
+                          hintText: 'Search Destinations',
                           enabledBorder: OutlineInputBorder(
                             borderSide: const BorderSide(color: Colors.white),
                             borderRadius: BorderRadius.circular(18),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
+                            borderSide: const BorderSide(color: Colors.white),
                             borderRadius: BorderRadius.circular(18),
                           ),
                           border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
+                            borderSide: const BorderSide(color: Colors.white),
                             borderRadius: BorderRadius.circular(18),
                           ),
                         ),
@@ -88,7 +86,7 @@ class MainScreenView extends GetView<MainScreenController> {
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
+                  children: <Widget>[
                     Material(
                       elevation: 5,
                       borderRadius: BorderRadius.circular(30),
@@ -99,13 +97,13 @@ class MainScreenView extends GetView<MainScreenController> {
                             borderRadius: BorderRadius.circular(30),
                           ),
                           child: Column(
-                            children: [
+                            children: <Widget>[
                               Row(
-                                children: [
+                                children: <Widget>[
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 18.0, top: 30),
-                                    child: Text("category", style: paragraph2),
+                                    child: Text('category', style: paragraph2),
                                   ),
                                 ],
                               ),
@@ -113,22 +111,22 @@ class MainScreenView extends GetView<MainScreenController> {
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Column(
-                                  children: [
+                                  children: <Widget>[
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
-                                      children: [
+                                      children: <Widget>[
                                         buildCont(),
                                         buildCont(),
                                         buildCont(),
                                         buildCont(),
                                       ],
                                     ),
-                                    SizedBox(height: 20),
+                                    const SizedBox(height: 20),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
-                                      children: [
+                                      children: <Widget>[
                                         buildCont(),
                                         buildCont(),
                                         buildCont(),
@@ -141,13 +139,13 @@ class MainScreenView extends GetView<MainScreenController> {
                             ],
                           )),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
-                      children: [
-                        Text("Trending", style: paragraph1),
+                      children: <Widget>[
+                        Text('Trending', style: paragraph1),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Container(
                       height: screenHeight * 0.30,
                       decoration: BoxDecoration(
@@ -156,7 +154,8 @@ class MainScreenView extends GetView<MainScreenController> {
                       child: ListView.builder(
                         itemCount: 10,
                         scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => Material(
+                        itemBuilder: (BuildContext context, int index) =>
+                            Material(
                           borderRadius: BorderRadius.circular(18),
                           // borderOnForeground: false,
                           type: MaterialType.transparency,
@@ -179,13 +178,13 @@ class MainScreenView extends GetView<MainScreenController> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
-                      children: [
-                        Text("Exclusive Tours", style: paragraph1),
+                      children: <Widget>[
+                        Text('Exclusive Tours', style: paragraph1),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Container(
                       height: screenHeight * 0.30,
                       decoration: BoxDecoration(
@@ -194,7 +193,8 @@ class MainScreenView extends GetView<MainScreenController> {
                       child: ListView.builder(
                         itemCount: 10,
                         scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => Material(
+                        itemBuilder: (BuildContext context, int index) =>
+                            Material(
                           borderRadius: BorderRadius.circular(18),
                           // borderOnForeground: false,
                           type: MaterialType.transparency,
@@ -218,13 +218,13 @@ class MainScreenView extends GetView<MainScreenController> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
-                      children: [
-                        Text("Exclusive Tours", style: paragraph1),
+                      children: <Widget>[
+                        Text('Exclusive Tours', style: paragraph1),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Container(
                         height: screenHeight,
                         decoration: BoxDecoration(
@@ -235,7 +235,7 @@ class MainScreenView extends GetView<MainScreenController> {
                             8,
 
                             // scrollDirection: Axis.horizontal,
-                            (index) => Material(
+                            (int index) => Material(
                               borderRadius: BorderRadius.circular(18),
                               // borderOnForeground: false,
                               type: MaterialType.transparency,
@@ -269,8 +269,8 @@ class MainScreenView extends GetView<MainScreenController> {
     );
   }
 
-  buildCont() => Column(
-        children: [
+  Widget buildCont() => Column(
+        children: <Widget>[
           Container(
             width: 50,
             height: 50,
@@ -281,7 +281,7 @@ class MainScreenView extends GetView<MainScreenController> {
                     image: AssetImage(
                         'assets/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg'))),
           ),
-          Text("Mountai")
+          const Text('Mountai')
         ],
       );
 }

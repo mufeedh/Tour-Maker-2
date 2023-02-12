@@ -1,14 +1,15 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tour_maker/app/widgets/custom_dialogue.dart';
-import 'package:tour_maker/core/theme/style.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../../../core/theme/style.dart';
 
 class ProfileController extends GetxController {
   final ImagePicker _picker = ImagePicker();
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -24,19 +25,16 @@ class ProfileController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
-
-  onClickCamera() {}
-  cropImage(String fPath) async {
-    await ImageCropper()
+  void onClickCamera() {}
+  Future<String> cropImage(String fPath) async {
+    final String? file = await ImageCropper()
         .cropImage(
       sourcePath: fPath,
-      aspectRatioPresets: [
+      aspectRatioPresets: <CropAspectRatioPreset>[
         CropAspectRatioPreset.square,
       ],
-      compressFormat: ImageCompressFormat.jpg,
       compressQuality: 50,
-      uiSettings: [
+      uiSettings: <PlatformUiSettings>[
         AndroidUiSettings(
             toolbarColor: englishViolet,
             toolbarWidgetColor: Colors.white,
@@ -52,19 +50,22 @@ class ProfileController extends GetxController {
         // ),
       ],
     )
-        .then((croppedFile) {
+        .then((CroppedFile? croppedFile) {
       return croppedFile?.path;
       // filePath.value =
     });
+    return file.toString();
   }
 
   onPickedFromGallery() async {
-    await _picker.pickImage(source: ImageSource.gallery).then(
-        (xfile) => xfile != null ? cropImage(xfile.path.toString()) : null);
+    // await _picker
+    //     .pickImage(source: ImageSource.gallery)
+    //     .then((XFile? xfile) => xfile != null ? cropImage(xfile.path) : null);
   }
 
-  onPickedFromCamera() async {
-    await _picker.pickImage(source: ImageSource.camera).then(
-        (xfile) => xfile != null ? cropImage(xfile.path.toString()) : null);
+  Future<void> onPickedFromCamera() async {
+    // await _picker
+    //     .pickImage(source: ImageSource.camera)
+    //     .then((XFile? xfile) => xfile != null ? cropImage(xfile.path) : null);
   }
 }

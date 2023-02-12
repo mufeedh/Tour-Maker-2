@@ -1,30 +1,31 @@
 import 'dart:io';
 
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:sizer/sizer.dart';
-import 'firebase_options.dart';
-
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import 'app/routes/app_pages.dart';
-import 'package:flutter/services.dart';
+import 'firebase_options.dart';
 
-main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
 
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations(<DeviceOrientation>[
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    Sizer(builder: (context, orientation, deviceType) {
+    Sizer(builder:
+        (BuildContext context, Orientation orientation, DeviceType deviceType) {
       return GetMaterialApp(
-        title: "Application",
+        title: 'Application',
         initialRoute: AppPages.INITIAL,
         getPages: AppPages.routes,
       );

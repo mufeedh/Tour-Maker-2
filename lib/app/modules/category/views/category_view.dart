@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -6,16 +8,16 @@ import '../../../../core/theme/style.dart';
 import '../controllers/category_controller.dart';
 
 class CategoryView extends GetView<CategoryController> {
-  const CategoryView({Key? key}) : super(key: key);
+  const CategoryView({super.key});
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(CategoryController());
+    final CategoryController controller = Get.put(CategoryController());
 
     return controller.obx((state) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: ListView.builder(
             itemCount: controller.categoryList.length,
-            itemBuilder: (context, index) =>
+            itemBuilder: (BuildContext context, int index) =>
                 buildcategoriesList(controller, index),
           ),
         ));
@@ -25,11 +27,11 @@ class CategoryView extends GetView<CategoryController> {
     return Obx(() {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           CheckboxMenuButton(
               value: controller.isSelected.value,
-              onChanged: (value) {
-                print(value);
+              onChanged: (bool? value) {
+                log(int.parse(value.toString()));
               },
               child: Text(
                 controller.categoryList[index].category.toString(),

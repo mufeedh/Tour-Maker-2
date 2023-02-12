@@ -5,10 +5,6 @@ import 'package:flutter/material.dart';
 import '../../core/theme/style.dart';
 
 class CustomContainer extends StatelessWidget {
-  final Widget child;
-  final double height;
-  final double width;
-  final Color color;
   CustomContainer({
     super.key,
     required this.height,
@@ -16,6 +12,10 @@ class CustomContainer extends StatelessWidget {
     required this.child,
     Color? color,
   }) : color = color ?? backgroundColor;
+  final Widget child;
+  final double height;
+  final double width;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {

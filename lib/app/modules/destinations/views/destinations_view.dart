@@ -6,15 +6,15 @@ import '../../../../core/theme/style.dart';
 import '../controllers/destinations_controller.dart';
 
 class DestinationsView extends GetView<DestinationsController> {
-  const DestinationsView({Key? key}) : super(key: key);
+  const DestinationsView({super.key});
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(DestinationsController());
-    return controller.obx((state) => Padding(
+    final DestinationsController controller = Get.put(DestinationsController());
+    return controller.obx((dynamic state) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: ListView.builder(
             itemCount: controller.destinationList.length,
-            itemBuilder: (context, index) =>
+            itemBuilder: (BuildContext context, int index) =>
                 buildDestinationsList(controller, index),
           ),
         ));
@@ -24,12 +24,10 @@ class DestinationsView extends GetView<DestinationsController> {
     return Obx(() {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           CheckboxMenuButton(
               value: controller.isSelected.value,
-              onChanged: (value) {
-                print(value);
-              },
+              onChanged: (bool? value) {},
               child: Text(
                 controller.destinationList[index].destination.toString(),
                 style: subheading2,

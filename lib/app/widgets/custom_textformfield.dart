@@ -4,19 +4,6 @@ import 'package:get/get.dart';
 import '../../core/theme/style.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  final String? Function(String?)? validator;
-  final void Function(String)? onChanged;
-  final TextEditingController? controller;
-  final TextInputType? keyboardType;
-  final bool isBorder;
-  final EdgeInsetsGeometry? contentPadding;
-  final EdgeInsetsGeometry? padding;
-  final double? height;
-  final String? hintText;
-  final Widget? prefix;
-  final Widget? suffix;
-  final bool isPassword;
-  final Color errorTextColor;
   const CustomTextFormField({
     super.key,
     required this.validator,
@@ -32,12 +19,25 @@ class CustomTextFormField extends StatelessWidget {
     this.suffix,
     this.padding,
     this.isBorder = false,
-  })  : this.isPassword = isPassword ?? false,
-        this.errorTextColor = errorTextColor ?? Colors.red;
+  })  : isPassword = isPassword ?? false,
+        errorTextColor = errorTextColor ?? Colors.red;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
+  final TextEditingController? controller;
+  final TextInputType? keyboardType;
+  final bool isBorder;
+  final EdgeInsetsGeometry? contentPadding;
+  final EdgeInsetsGeometry? padding;
+  final double? height;
+  final String? hintText;
+  final Widget? prefix;
+  final Widget? suffix;
+  final bool isPassword;
+  final Color errorTextColor;
 
   @override
   Widget build(BuildContext context) {
-    var passwordVisible = isPassword.obs;
+    final RxBool passwordVisible = isPassword.obs;
 
     return Container(
       height: height ?? 85,
@@ -55,13 +55,11 @@ class CustomTextFormField extends StatelessWidget {
       child: Obx(() {
         return TextFormField(
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          autofocus: false,
           validator: validator,
           onChanged: onChanged,
           controller: controller,
           obscureText: passwordVisible.value,
           keyboardType: keyboardType,
-          expands: false,
           decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.only(left: 10, bottom: 40, right: 10),
@@ -88,23 +86,23 @@ class CustomTextFormField extends StatelessWidget {
             border: InputBorder.none,
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Colors.transparent),
+              borderSide: const BorderSide(color: Colors.transparent),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Colors.transparent),
+              borderSide: const BorderSide(color: Colors.transparent),
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Colors.transparent),
+              borderSide: const BorderSide(color: Colors.transparent),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Colors.transparent),
+              borderSide: const BorderSide(color: Colors.transparent),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Colors.transparent),
+              borderSide: const BorderSide(color: Colors.transparent),
             ),
           ),
         );

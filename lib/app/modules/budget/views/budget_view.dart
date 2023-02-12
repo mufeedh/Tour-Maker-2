@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/budget_controller.dart';
 
 class BudgetView extends GetView<BudgetController> {
-  const BudgetView({Key? key}) : super(key: key);
+  const BudgetView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +13,7 @@ class BudgetView extends GetView<BudgetController> {
         title: const Text('BudgetView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'BudgetView is working',
           style: TextStyle(fontSize: 20),

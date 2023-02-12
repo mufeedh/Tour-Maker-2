@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
 Color englishViolet = const Color.fromRGBO(86, 60, 92, 1);
@@ -13,92 +12,92 @@ Color textFieldBackgroundColor = const Color.fromRGBO(246, 246, 246, 1);
 LinearGradient buttonColorGradient = const LinearGradient(
   begin: Alignment.center,
   end: Alignment.centerLeft,
-  colors: [
+  colors: <Color>[
     Color.fromARGB(255, 94, 68, 99),
     Color.fromARGB(255, 97, 45, 109),
   ],
 );
-String montserratBold = "MontserratBold";
-String montserratRegular = "MontserratRegular";
-String montserratSemiBold = "MontserratSemiBold";
-String montserratMedium = "MontserratMedium";
-String onBoardingText = "Tahu";
-final heading1 = TextStyle(
+String montserratBold = 'MontserratBold';
+String montserratRegular = 'MontserratRegular';
+String montserratSemiBold = 'MontserratSemiBold';
+String montserratMedium = 'MontserratMedium';
+String onBoardingText = 'Tahu';
+final TextStyle heading1 = TextStyle(
   fontFamily: montserratSemiBold,
   fontWeight: FontWeight.w600,
   fontSize: 38,
   color: Colors.black,
 );
 
-final heading2 = TextStyle(
+final TextStyle heading2 = TextStyle(
   fontFamily: montserratSemiBold,
   fontWeight: FontWeight.w600,
   fontSize: 24,
   color: fontColor,
 );
-final heading3 = TextStyle(
+final TextStyle heading3 = TextStyle(
   fontFamily: montserratMedium,
   fontWeight: FontWeight.w600,
   fontSize: 20,
   color: fontColor,
 );
-final subheading1 = TextStyle(
+final TextStyle subheading1 = TextStyle(
   fontFamily: montserratRegular,
   fontWeight: FontWeight.w500,
   fontSize: 16,
   color: fontColor,
 );
-final subheading2 = TextStyle(
+final TextStyle subheading2 = TextStyle(
   fontFamily: montserratMedium,
   fontWeight: FontWeight.w500,
   fontSize: 14,
   color: fontColor,
 );
-final subheading3 = TextStyle(
+final TextStyle subheading3 = TextStyle(
   fontFamily: montserratMedium,
   fontWeight: FontWeight.w500,
   fontSize: 12,
   color: fontColor,
 );
-final paragraph1 = TextStyle(
+final TextStyle paragraph1 = TextStyle(
   fontFamily: montserratRegular,
   fontWeight: FontWeight.w400,
   fontSize: 16,
   color: fontColor,
 );
-final paragraph2 = TextStyle(
+final TextStyle paragraph2 = TextStyle(
   fontFamily: montserratRegular,
   fontWeight: FontWeight.w400,
   fontSize: 14,
   color: fontColor,
 );
-final buttonwithWhiteTextStyle = TextStyle(
+final TextStyle buttonwithWhiteTextStyle = TextStyle(
   fontFamily: montserratRegular,
   fontWeight: FontWeight.w500,
   fontSize: 16,
   color: Colors.white,
 );
-final buttonwithbLACKTextStyle = TextStyle(
+final TextStyle buttonwithbLACKTextStyle = TextStyle(
   fontFamily: montserratMedium,
   fontWeight: FontWeight.w500,
   fontSize: 16,
   color: fontColor,
 );
 
-final paragraph3 = TextStyle(
+final TextStyle paragraph3 = TextStyle(
   fontFamily: montserratRegular,
   fontWeight: FontWeight.w400,
   fontSize: 12,
   color: fontColor,
 );
-final paragraph4 = TextStyle(
+final TextStyle paragraph4 = TextStyle(
   fontFamily: montserratMedium,
   fontWeight: FontWeight.w400,
   fontSize: 10,
   color: fontColor,
 );
 
-List<String> imageData = [
+List<String> imageData = <String>[
   'https://picsum.photos/seed/image001/500/500',
   'https://picsum.photos/seed/image002/500/800',
   'https://picsum.photos/seed/image003/500/300',

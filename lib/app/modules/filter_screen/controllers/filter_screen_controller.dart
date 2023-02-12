@@ -1,12 +1,14 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FilterScreenController extends GetxController with StateMixin {
-  var selectedIndex = 0.obs;
-  var sliderValue = 0.0.obs;
-  final count = 0.obs;
-  var values = RangeValues(1, 100).obs;
-  var labels = RangeLabels('1', "100").obs;
+  RxInt selectedIndex = 0.obs;
+  RxDouble sliderValue = 0.0.obs;
+  final RxInt count = 0.obs;
+  Rx<RangeValues> values = const RangeValues(1, 100).obs;
+  Rx<RangeLabels> labels = const RangeLabels('1', '100').obs;
   @override
   void onInit() {
     super.onInit();

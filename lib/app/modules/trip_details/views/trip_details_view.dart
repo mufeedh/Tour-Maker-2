@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tour_maker/core/theme/style.dart';
+import '../../../../core/theme/style.dart';
 
 import '../controllers/trip_details_controller.dart';
 
 class TripDetailsView extends GetView<TripDetailsController> {
-  const TripDetailsView({Key? key}) : super(key: key);
+  const TripDetailsView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        children: [
+        children: <Widget>[
           Image.asset(
             'assets/Thumbnail.png',
             height: 100.w,
@@ -24,7 +24,7 @@ class TripDetailsView extends GetView<TripDetailsController> {
             left: 150,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: const <Widget>[
                 Center(
                   child: Text(
                     'Kashmir',
@@ -50,7 +50,7 @@ class TripDetailsView extends GetView<TripDetailsController> {
           ),
           SingleChildScrollView(
             child: Column(
-              children: [
+              children: <Widget>[
                 SizedBox(
                   height: 100.w - 30,
                 ),
@@ -67,24 +67,24 @@ class TripDetailsView extends GetView<TripDetailsController> {
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        children: <Widget>[
                           Text(
                             'All India Tour',
                             style: heading2,
                           ),
-                          Text("K2KL", style: subheading1),
+                          Text('K2KL', style: subheading1),
                           Row(
-                            children: [
+                            children: <Widget>[
                               Text('Tour Desription', style: paragraph1),
-                              Spacer(),
+                              const Spacer(),
                               Text('₹5100/person', style: paragraph1),
                             ],
                           ),
-                          Text("Test description of the tour"),
+                          const Text('Test description of the tour'),
                           TextButton.icon(
                             onPressed: () {},
-                            icon: Icon(Icons.share),
-                            label: Text("View Itinerary"),
+                            icon: const Icon(Icons.share),
+                            label: const Text('View Itinerary'),
                           ),
                         ],
                       ),

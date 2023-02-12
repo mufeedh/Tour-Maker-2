@@ -4,8 +4,8 @@ import '../../core/theme/style.dart';
 
 class CustomLoadingScreen extends StatelessWidget {
   const CustomLoadingScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

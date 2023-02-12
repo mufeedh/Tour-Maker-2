@@ -1,10 +1,10 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'package:get/get.dart';
 
-import '../../../routes/app_pages.dart';
-
 class TermsAndConditionsController extends GetxController {
-  String termsAndCond =
-      '''TOUR MAKER is an application designed to book tours of TRIPPENS’s tour operation company. Adventure tours, Package group tours, family package group tours, couple package tours, Ride tours, hiking, trucking etc. are available. This is basically not a customer focus app but for those who book tours on commission basis. For each and every tour package, company has fixed amount of commission for the agents on company’s wills.
+  String termsAndCond = '''
+TOUR MAKER is an application designed to book tours of TRIPPENS’s tour operation company. Adventure tours, Package group tours, family package group tours, couple package tours, Ride tours, hiking, trucking etc. are available. This is basically not a customer focus app but for those who book tours on commission basis. For each and every tour package, company has fixed amount of commission for the agents on company’s wills.
 
 For this application presently, we are not charging yearly charges or any registration fee. At this moment we have only 500Rs as service charges including tax. Tour payments are done only on GST tax basis. Bills and invoices will be done by TRIPPENS alone. And TRIPPENS will be responsible for all the tours operations.
 
@@ -14,13 +14,13 @@ The payments of the tours booked can be paid either through app or by bank throu
 
 The company have all the guaranteed rights to ban your login if we notice misuse of app by too much of fake bookings or unnecessary bookings.''';
 
-  String luckDrawContent =
-      '''Lucky draw will be conducted only after 10k app installations
+  String luckDrawContent = '''
+Lucky draw will be conducted only after 10k app installations
 
 If you can book minimum 2 tours within 20 days of your app installation, you will get 425 Rs from your service charge of 500 Rs after deducting the rax amount''';
-  var ischecked = false.obs;
-  var isButtonVisisble = false.obs;
-  final count = 0.obs;
+  RxBool ischecked = false.obs;
+  RxBool isButtonVisisble = false.obs;
+  final RxInt count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -38,18 +38,18 @@ If you can book minimum 2 tours within 20 days of your app installation, you wil
 
   void increment() => count.value++;
 
-  onConfirmDialogue() {
+  void onConfirmDialogue() {
     //Get.toNamed(Routes.WELCOME_SCREEN);
   }
 
-  onCheck(bool value) {
+  void onCheck(bool value) {
     ischecked.value = value;
     ischecked.value
         ? isButtonVisisble.value = true
         : isButtonVisisble.value = false;
   }
 
-  onGetStartedClicked() {
+  void onGetStartedClicked() {
     //Get.toNamed(Routes.WELCOME_SCREEN);
   }
 }

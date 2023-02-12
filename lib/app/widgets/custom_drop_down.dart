@@ -5,25 +5,23 @@ import '../../core/theme/style.dart';
 import '../../core/tour_maker_icons.dart';
 
 class CustomDropDownButton extends StatelessWidget {
+  CustomDropDownButton({
+    super.key,
+    required this.lists,
+    required this.onChange,
+    EdgeInsets? padding,
+    String? initialValue,
+  })  : padding = padding ?? const EdgeInsets.symmetric(vertical: 10.0),
+        initialValue = initialValue ?? lists[0];
   final List<String> lists;
   final Function(int index, String value) onChange;
   final EdgeInsets padding;
   final String initialValue;
 
-  CustomDropDownButton({
-    Key? key,
-    required this.lists,
-    required this.onChange,
-    EdgeInsets? padding,
-    String? initialValue,
-  })  : this.padding = padding ?? const EdgeInsets.symmetric(vertical: 10.0),
-        this.initialValue = initialValue ?? lists[0],
-        super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    int initValueIndex = lists.indexOf(initialValue);
-    var selectedItem = "$initValueIndex# $initialValue".obs;
+    final int initValueIndex = lists.indexOf(initialValue);
+    final RxString selectedItem = '$initValueIndex# $initialValue'.obs;
     return Padding(
       padding: padding,
       child: InputDecorator(
@@ -38,27 +36,28 @@ class CustomDropDownButton extends StatelessWidget {
         ),
         child: DropdownButtonHideUnderline(
           child: Obx(
-            () => DropdownButton(
+            () => DropdownButton<String>(
               style: paragraph1,
-              icon: Icon(TourMaker.arrow___down_3),
+              icon: const Icon(TourMaker.arrow___down_3),
               value: selectedItem.value,
               items: lists
                   .asMap()
                   .map(
-                    (i, e) => MapEntry(
+                    // ignore: always_specify_types
+                    (int i, String e) => MapEntry(
                       i,
-                      DropdownMenuItem(
-                        value: "$i# $e",
+                      DropdownMenuItem<String>(
+                        value: '$i# $e',
                         child: Text(e),
                       ),
                     ),
                   )
                   .values
                   .toList(),
-              onChanged: (value) {
+              onChanged: (String? value) {
                 selectedItem.value = value!;
-                int ind = int.parse(value.split('#')[0]);
-                String val = value.split('#')[1].trim();
+                final int ind = int.parse(value.split('#')[0]);
+                final String val = value.split('#')[1].trim();
                 onChange(ind, val);
               },
             ),

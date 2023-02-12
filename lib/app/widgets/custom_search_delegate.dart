@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../core/theme/style.dart';
-import '../../core/tour_maker_icons.dart';
-import '../routes/app_pages.dart';
 
 class MyCustomSearchDelegate extends SearchDelegate<String> {
   @override
   List<Widget> buildActions(BuildContext context) {
-    return [
+    return <Widget>[
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -39,7 +36,7 @@ class MyCustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 100.0,
       width: 100.0,
       child: Card(
@@ -53,10 +50,8 @@ class MyCustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text("This is a suggestion"),
-      ),
+    return const Center(
+      child: Text('This is a suggestion'),
     );
   }
 
@@ -75,24 +70,16 @@ class MyCustomSearchDelegate extends SearchDelegate<String> {
   //       border: InputBorder.none,
   //     );
 
-  @override
   TextInputType get textInputType => TextInputType.text;
-  @override
   Widget buildSearchField() {
-    return Container(
-      // decoration: BoxDecoration(
-      //   border: Border.all(color: Colors.grey),
-      //   borderRadius: BorderRadius.circular(10.0),
-      // ),
-      child: TextField(
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: 'Search',
-        ),
-        onChanged: (value) {
-          query = value;
-        },
+    return TextField(
+      decoration: const InputDecoration(
+        border: InputBorder.none,
+        hintText: 'Search',
       ),
+      onChanged: (String value) {
+        query = value;
+      },
     );
   }
 }

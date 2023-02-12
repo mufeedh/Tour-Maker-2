@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:tour_maker/app/widgets/custom_appbar.dart';
-import 'package:tour_maker/app/widgets/custom_elevated_button.dart';
-import 'package:tour_maker/core/theme/style.dart';
 
+import '../../../../core/theme/style.dart';
+import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/custom_elevated_button.dart';
 import '../controllers/terms_and_conditions_controller.dart';
 
 class TermsAndConditionsView extends GetView<TermsAndConditionsController> {
-  const TermsAndConditionsView({Key? key}) : super(key: key);
+  const TermsAndConditionsView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,38 +18,37 @@ class TermsAndConditionsView extends GetView<TermsAndConditionsController> {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
-            children: [
+            children: <Widget>[
               const SizedBox(height: 20),
-              Image.asset("assets/Accept illustration.png"),
-              SizedBox(height: 30),
-              Text("Terms & Conditions", style: heading2),
+              Image.asset('assets/Accept illustration.png'),
+              const SizedBox(height: 30),
+              Text('Terms & Conditions', style: heading2),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 40, vertical: 25),
                 child: Text(controller.termsAndCond, style: paragraph4),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
-                  children: [
+                  children: <Widget>[
                     Obx(() {
                       return Checkbox(
                         value: controller.ischecked.value,
-                        onChanged: (value) => controller.onCheck(value!),
+                        onChanged: (bool? value) => controller.onCheck(value!),
                         activeColor: englishViolet,
                       );
                     }),
                     Text(
-                        "By clicking here, I state that I have read \nand understood the terms and conditions.",
+                        'By clicking here, I state that I have read \nand understood the terms and conditions.',
                         style: paragraph4),
                   ],
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Obx(
                 () => controller.isButtonVisisble.value
-                    ? Container(
+                    ? SizedBox(
                         width: 280,
                         height: 68,
                         child: CustomButton().showButtonWithGradient(
@@ -58,7 +56,7 @@ class TermsAndConditionsView extends GetView<TermsAndConditionsController> {
                           onPressed: () => controller.onGetStartedClicked(),
                         ),
                       )
-                    : Container(
+                    : SizedBox(
                         width: 280,
                         height: 68,
                         child: CustomButton().showButton(

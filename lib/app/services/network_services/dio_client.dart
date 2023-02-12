@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -7,22 +8,19 @@ class Client {
   Dio init(
       {String baseUrl =
           'https://etnh73oqgjtljkgfrqy5ojcysi0tgmza.lambda-url.ap-south-1.on.aws/'}) {
-    Dio dio = Dio();
+    final Dio dio = Dio();
     dio.interceptors.add(PrettyDioLogger(
       requestHeader: true,
       requestBody: true,
-      responseBody: true,
       responseHeader: true,
-      error: true,
-      compact: true,
       maxWidth: 180,
     ));
 
     dio.options = BaseOptions(
         followRedirects: true,
         baseUrl: baseUrl,
-        validateStatus: (status) {
-          print("inside dio client");
+        validateStatus: (int? status) {
+          log('inside dio client');
           if (status != null) {
             return status < 500;
           } else {
@@ -30,7 +28,7 @@ class Client {
           }
         },
         contentType: 'application/json',
-        headers: {
+        headers: <String, dynamic>{
           // "X-Requested-With": "XMLHttpRequest",
           // HttpHeaders.contentTypeHeader: "application/json",
           // HttpHeaders.authorizationHeader: "Bearer ${getToken()}"
@@ -41,10 +39,10 @@ class Client {
 
   Future<Map<String, dynamic>?> getAuthHeader() async {
     if (tok != null) {
-      dynamic header = {
+      final Map<String, dynamic> header = <String, dynamic>{
         // "X-Requested-With": "XMLHttpRequest",
         // HttpHeaders.contentTypeHeader: "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $tok",
+        HttpHeaders.authorizationHeader: 'Bearer $tok',
       };
       return header;
     } else {
@@ -54,18 +52,18 @@ class Client {
 }
 
 class ApiResponse<T> {
+  ApiResponse.error(this.message) : status = ApiResponseStatus.error;
+  ApiResponse.unProcessable(this.message)
+      : status = ApiResponseStatus.unProcessable;
+  ApiResponse.completed(this.data) : status = ApiResponseStatus.completed;
+  ApiResponse.loading(this.message) : status = ApiResponseStatus.loading;
+  ApiResponse.idle() : status = ApiResponseStatus.idle;
   ApiResponseStatus status;
   T? data;
   String? message;
-  ApiResponse.idle() : status = ApiResponseStatus.idle;
-  ApiResponse.loading(this.message) : status = ApiResponseStatus.loading;
-  ApiResponse.completed(this.data) : status = ApiResponseStatus.completed;
-  ApiResponse.unProcessable(this.message)
-      : status = ApiResponseStatus.unProcessable;
-  ApiResponse.error(this.message) : status = ApiResponseStatus.error;
   @override
   String toString() {
-    return "ApiResponseStatus : $status \n Message : $message \n Data : $data";
+    return 'ApiResponseStatus : $status \n Message : $message \n Data : $data';
   }
 }
 

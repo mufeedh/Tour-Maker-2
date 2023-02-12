@@ -5,11 +5,11 @@ import '../../core/theme/style.dart';
 import 'custom_elevated_button.dart';
 
 class CustomDialog {
-  showCustomDialog(
+  Future<void> showCustomDialog(
     String title,
     String contentText, {
-    String cancelText = "Cancel",
-    String confirmText = "Confirm",
+    String cancelText = 'Cancel',
+    String confirmText = 'Confirm',
     Function()? onCancel,
     Function()? onConfirm,
     bool barrierDismissible = true,
@@ -18,16 +18,14 @@ class CustomDialog {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 30.0),
         child: Align(
-          alignment: Alignment.center,
           child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(37)),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
-                children: [
+                children: <Widget>[
                   DefaultTextStyle(
                     style: subheading2.copyWith(),
                     child: Text(title),
@@ -41,9 +39,9 @@ class CustomDialog {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
-                    children: [
+                    children: <Widget>[
                       if (onCancel != null)
-                        CustomButton().showButton(text: "", onPressed: () {}),
+                        CustomButton().showButton(text: '', onPressed: () {}),
                       // CustomElevatedButton(
                       //   text: cancelText,
                       //   onPressed: onCancel,
@@ -52,7 +50,7 @@ class CustomDialog {
                       // ),
                       if (onConfirm != null) const SizedBox(width: 20),
                       CustomButton()
-                          .showButtonWithGradient(text: "", onPressed: () {})
+                          .showButtonWithGradient(text: '', onPressed: () {})
                       // Container(
                       //   width: 240,
                       //   height: 68,

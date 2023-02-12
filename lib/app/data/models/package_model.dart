@@ -1,30 +1,4 @@
 class PackageModel {
-  int? iD;
-  String? name;
-  String? image;
-  String? destination;
-  String? trending;
-  String? exclusiveTour;
-  String? tourCode;
-  String? category;
-  String? travelType;
-  String? region;
-  int? tourId;
-  String? description;
-  int? days;
-  int? nights;
-  String? dateOfTravel;
-  int? totalSeats;
-  int? availableSeats;
-  String? batchOrIndividual;
-  int? amount;
-  int? offerAmount;
-  bool? extraOffer;
-  int? lastAmount;
-  String? itinerary;
-  int? advanceAmount;
-  String? transportationMode;
-
   PackageModel(
       {this.iD,
       this.name,
@@ -51,8 +25,33 @@ class PackageModel {
       this.itinerary,
       this.advanceAmount,
       this.transportationMode});
+  int? iD;
+  String? name;
+  String? image;
+  String? destination;
+  String? trending;
+  String? exclusiveTour;
+  String? tourCode;
+  String? category;
+  String? travelType;
+  String? region;
+  int? tourId;
+  String? description;
+  int? days;
+  int? nights;
+  String? dateOfTravel;
+  int? totalSeats;
+  int? availableSeats;
+  String? batchOrIndividual;
+  int? amount;
+  int? offerAmount;
+  bool? extraOffer;
+  int? lastAmount;
+  String? itinerary;
+  int? advanceAmount;
+  String? transportationMode;
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'ID': iD,
         'name': name,
         'image': image,
@@ -80,30 +79,30 @@ class PackageModel {
         'transportation_mode': transportationMode,
       };
   static PackageModel fromJson(Map<String, dynamic> json) => PackageModel(
-        iD: json['ID'],
-        name: json['name'],
-        image: json['image'],
-        destination: json['destination'],
-        trending: json['trending'],
-        exclusiveTour: json[' exclusive_tour'],
-        tourCode: json['tour_code'],
-        category: json['category'],
-        travelType: json['travel_type'],
-        region: json['region'],
-        tourId: json['tour_id'],
-        description: json['description'],
-        days: json['days'],
-        nights: json['nights'],
-        dateOfTravel: json['date_of_travel'],
-        totalSeats: json['total_seats'],
-        availableSeats: json['available_seats'],
-        batchOrIndividual: json['batch_or_individual'],
-        amount: json['Amount'],
-        offerAmount: json['offer_amount'],
-        extraOffer: json['extra_offer'],
-        lastAmount: json['last_amount'],
-        itinerary: json['itinerary'],
-        advanceAmount: json['advance_amount'],
-        transportationMode: json['transportation_mode'],
+        iD: json['ID'] as int,
+        name: json['name'] as String,
+        image: json['image'] as String,
+        destination: json['destination'] as String,
+        trending: json['trending'] as String,
+        exclusiveTour: json[' exclusive_tour'] as String,
+        tourCode: json['tour_code'] as String,
+        category: json['category'] as String,
+        travelType: json['travel_type'] as String,
+        region: json['region'] as String,
+        tourId: json['tour_id'] as int,
+        description: json['description'] as String,
+        days: json['days'] as int,
+        nights: json['nights'] as int,
+        dateOfTravel: json['date_of_travel'] as String,
+        totalSeats: json['total_seats'] as int,
+        availableSeats: json['available_seats'] as int,
+        batchOrIndividual: json['batch_or_individual'] as String,
+        amount: json['Amount'] as int,
+        offerAmount: json['offer_amount'] as int,
+        extraOffer: json['extra_offer'] as bool,
+        lastAmount: json['last_amount'] as int,
+        itinerary: json['itinerary'] as String,
+        advanceAmount: json['advance_amount'] as int,
+        transportationMode: json['transportation_mode'] as String,
       );
 }

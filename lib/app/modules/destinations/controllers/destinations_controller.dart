@@ -1,31 +1,25 @@
+// ignore_for_file: always_specify_types, strict_raw_type
+
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import 'package:tour_maker/app/data/models/destinations_model.dart';
-import 'package:tour_maker/app/data/repo/destination_repo.dart';
+import '../../../data/models/destinations_model.dart';
+import '../../../data/repo/destination_repo.dart';
+import '../../../services/network_services/dio_client.dart';
 
 class DestinationsController extends GetxController with StateMixin {
-  var destinationList = <DestinationsModel>[].obs;
-  var isSelected = false.obs;
+  RxList<DestinationsModel> destinationList = <DestinationsModel>[].obs;
+  RxBool isSelected = false.obs;
   @override
   void onInit() {
     super.onInit();
     loadData();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  loadData() async {
+  Future<void> loadData() async {
     change(null, status: RxStatus.loading());
-    var res = await DestinationRepository().getAllDestinations();
+    final ApiResponse<List<DestinationsModel>> res =
+        await DestinationRepository().getAllDestinations();
     try {
       if (res != null) {
         destinationList.value = res.data!;
