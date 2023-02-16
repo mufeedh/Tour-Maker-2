@@ -1,5 +1,3 @@
-// ignore_for_file: always_specify_types
-
 import 'package:get/get.dart';
 
 import '../modules/booking_screen/bindings/booking_screen_binding.dart';
@@ -40,6 +38,8 @@ import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
 import '../modules/terms_and_conditions/bindings/terms_and_conditions_binding.dart';
 import '../modules/terms_and_conditions/views/terms_and_conditions_view.dart';
+import '../modules/token_screen/bindings/token_screen_binding.dart';
+import '../modules/token_screen/views/token_screen_view.dart';
 import '../modules/trip_details/bindings/trip_details_binding.dart';
 import '../modules/trip_details/views/trip_details_view.dart';
 
@@ -48,108 +48,113 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SPLASH_SCREEN;
+  static const String INITIAL = Routes.SPLASH_SCREEN;
 
-  static final routes = [
-    GetPage(
+  static final List<GetPage<dynamic>> routes = <GetPage<dynamic>>[
+    GetPage<dynamic>(
       name: _Paths.HOME,
       page: () => const HomeView(),
       binding: HomeBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.SPLASH_SCREEN,
       page: () => const SplashScreenView(),
       binding: SplashScreenBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.GET_STARTED,
       page: () => const GetStartedView(),
       binding: GetStartedBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.LOGIN,
       page: () => const LoginView(),
       binding: LoginBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.MAIN_SCREEN,
       page: () => const MainScreenView(),
       binding: MainScreenBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.OTP_SCREEN,
       page: () => const OtpScreenView(),
       binding: OtpScreenBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.TERMS_AND_CONDITIONS,
       page: () => const TermsAndConditionsView(),
       binding: TermsAndConditionsBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.LUCKY_DRAW,
       page: () => const LuckyDrawView(),
       binding: LuckyDrawBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.PAYMENT_SCREEN,
       page: () => const PaymentScreenView(),
       binding: PaymentScreenBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.PAYMENT_SUMMARY,
       page: () => const PaymentSummaryView(),
       binding: PaymentSummaryBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.FAVOURITES_SCREEN,
       page: () => const FavouritesScreenView(),
       binding: FavouritesScreenBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.BOOKING_SCREEN,
       page: () => const BookingScreenView(),
       binding: BookingScreenBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.TRIP_DETAILS,
       page: () => const TripDetailsView(),
       binding: TripDetailsBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.FILTER_SCREEN,
       page: () => const FilterScreenView(),
       binding: FilterScreenBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.DESTINATIONS,
       page: () => const DestinationsView(),
       binding: DestinationsBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.BUDGET,
       page: () => const BudgetView(),
       binding: BudgetBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.CATEGORY,
       page: () => const CategoryView(),
       binding: CategoryBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.DURATION,
       page: () => const DurationView(),
       binding: DurationBinding(),
     ),
-    GetPage(
+    GetPage<dynamic>(
       name: _Paths.SEARCH_VIEW,
       page: () => const SearchViewView(),
       binding: SearchViewBinding(),
+    ),
+    GetPage<dynamic>(
+      name: _Paths.TOKEN_SCREEN,
+      page: () => const TokenScreenView(),
+      binding: TokenScreenBinding(),
     ),
   ];
 }

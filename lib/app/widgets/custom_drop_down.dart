@@ -37,14 +37,14 @@ class CustomDropDownButton extends StatelessWidget {
         child: DropdownButtonHideUnderline(
           child: Obx(
             () => DropdownButton<String>(
-              style: paragraph1,
-              icon: const Icon(TourMaker.arrow___down_3),
+              style: paragraph3,
+              icon: const Icon(TourMaker.arrow___down_3, size: 9),
               value: selectedItem.value,
               items: lists
                   .asMap()
                   .map(
-                    // ignore: always_specify_types
-                    (int i, String e) => MapEntry(
+                    (int i, String e) =>
+                        MapEntry<int, DropdownMenuItem<String>>(
                       i,
                       DropdownMenuItem<String>(
                         value: '$i# $e',

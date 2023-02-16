@@ -23,6 +23,7 @@ abstract class Routes {
   static const String CATEGORY = _Paths.CATEGORY;
   static const String DURATION = _Paths.DURATION;
   static const String SEARCH_VIEW = _Paths.SEARCH_VIEW;
+  static const String TOKEN_SCREEN = _Paths.TOKEN_SCREEN;
 }
 
 abstract class _Paths {
@@ -47,4 +48,5 @@ abstract class _Paths {
   static const String CATEGORY = '/category';
   static const String DURATION = '/duration';
   static const String SEARCH_VIEW = '/search-view';
+  static const String TOKEN_SCREEN = '/token-screen';
 }

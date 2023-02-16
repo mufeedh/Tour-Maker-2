@@ -14,7 +14,7 @@ class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(HomeController());
+    final HomeController controller = Get.put(HomeController());
     return Scaffold(
         body: PageView(
           controller: controller.pageViewController,

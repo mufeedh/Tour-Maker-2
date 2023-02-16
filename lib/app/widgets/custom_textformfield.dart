@@ -60,6 +60,7 @@ class CustomTextFormField extends StatelessWidget {
           controller: controller,
           obscureText: passwordVisible.value,
           keyboardType: keyboardType,
+          style: subheading1,
           decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.only(left: 10, bottom: 40, right: 10),
@@ -83,6 +84,7 @@ class CustomTextFormField extends StatelessWidget {
                     ),
                   )
                 : suffix,
+
             border: InputBorder.none,
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),

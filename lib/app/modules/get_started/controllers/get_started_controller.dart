@@ -1,14 +1,18 @@
-// ignore_for_file: unnecessary_overrides, avoid_print, unused_element, empty_catches
+// ignore_for_file: unnecessary_overrides
 
+import 'dart:developer';
+
+import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:country_calling_code_picker/picker.dart';
-import '../../home/views/home_view.dart';
-import '../../otp_screen/views/otp_screen_view.dart';
+import 'package:get_storage/get_storage.dart';
+import '../../../../core/theme/style.dart';
+import '../../../routes/app_pages.dart';
 
 class GetStartedController extends GetxController with StateMixin {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GetStorage storage = GetStorage();
   final FirebaseAuth auth = FirebaseAuth.instance;
   int? verificationId;
   int? otp;
@@ -16,14 +20,23 @@ class GetStartedController extends GetxController with StateMixin {
   RxBool isloading = false.obs;
   RxString authStatus = ''.obs;
   String? phone;
-
-  BuildContext? context;
-  Rx<Country>? selectedCountry;
+  var verificationid;
+  Rx<Country> selectedCountry = Country(
+    phoneCode: '91',
+    countryCode: 'IN',
+    e164Sc: 0,
+    geographic: true,
+    level: 1,
+    name: 'India',
+    example: 'India',
+    displayName: 'India',
+    displayNameNoCountryCode: 'IN',
+    e164Key: '',
+  ).obs;
   @override
   void onInit() {
     super.onInit();
     change(null, status: RxStatus.success());
-    initCountry();
   }
 
   @override
@@ -36,65 +49,72 @@ class GetStartedController extends GetxController with StateMixin {
     super.onClose();
   }
 
-  Future<void> initCountry() async {
-    // final Country country = await getDefaultCountry(context);
-
-    // selectedCountry?.value = country;
+  void onCountryCodeClicked(BuildContext context) {
+    showCountryPicker(
+      countryListTheme: CountryListThemeData(
+          backgroundColor: Colors.white,
+          bottomSheetHeight: 500,
+          textStyle: subheading1),
+      context: context,
+      onSelect: (Country value) => selectedCountry.value = value,
+    );
   }
 
-  Future<void> showCountryPicker() async {
-    final Country? country = await showCountryPickerSheet(context!);
-    if (country != null) {
-      selectedCountry?.value = country;
-    }
-  }
-
-  void onCountryCodeClicked(BuildContext context) {}
-
-  Future<void> onVerifyPhoneNumber(BuildContext context) async {
+  Future<void> onVerifyPhoneNumber() async {
     if (formKey.currentState!.validate()) {
-      print('valid');
-      isloading.value = true;
-      // Get.back();
-      final FirebaseAuth auth = FirebaseAuth.instance;
-      auth
-          .verifyPhoneNumber(
-        phoneNumber: '+91$phone',
-        timeout: const Duration(seconds: 60),
-        verificationCompleted: (PhoneAuthCredential authCredential) async {
-          isloading.value = true;
-
-          auth.signInWithCredential(authCredential).then(
-              (UserCredential result) => Get.to(const HomeView(),
-                  arguments: result.user,
-                  transition: Transition.leftToRightWithFade));
-          isloading.value = false;
-        },
-        verificationFailed: (FirebaseAuthException authException) {
-          print(authException.message);
-        },
-        codeSent: (String verificationId, [int? forceResendingToken]) {
-          Get.to(const OtpScreenView(),
-              arguments: [verificationId, forceResendingToken, phone],
-              transition: Transition.leftToRightWithFade);
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          verificationId = verificationId;
-          print('verificationId  $verificationId');
-          print('Timwout');
-        },
-      )
-          .catchError((e) {
-        print(e);
-      });
-      isloading.value = false;
+      log('valid');
+      try {
+        final String phoneNumber = '+${selectedCountry.value.phoneCode}$phone';
+        final FirebaseAuth auth = FirebaseAuth.instance;
+        await auth
+            .verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          timeout: const Duration(seconds: 60),
+          verificationCompleted: (PhoneAuthCredential authCredential) async {
+            isloading.value = true;
+            log('verification completed');
+            auth.signInWithCredential(authCredential);
+            log('auth cred token ${authCredential.token}');
+            log('auth cred smscode${authCredential.smsCode}');
+            log('auth cred verif ${authCredential.verificationId}');
+            verificationid = authCredential.verificationId;
+            log('auth cred accesstok ${authCredential.accessToken}');
+            log('auth cred provider id ${authCredential.providerId}');
+            log('auth cred sign in method ${authCredential.signInMethod}');
+          },
+          verificationFailed: (FirebaseAuthException authException) {
+            log('Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+          },
+          codeSent: (String verificationId, [int? forceResendingToken]) {
+            // first stage after enter otp
+            log('force resending token $forceResendingToken');
+            log('code sent');
+            verificationid = verificationId;
+            log(phoneNumber);
+            Get.toNamed(
+              Routes.OTP_SCREEN,
+              arguments: <dynamic>[verificationId, phoneNumber],
+            );
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            log('verificationId  $verificationId');
+            log('Timwout');
+            log('Phone code auto-retrieval timed out. Verification ID: $verificationId');
+          },
+        )
+            .catchError((dynamic e) {
+          log('catch err $e');
+        });
+      } catch (e) {
+        log('carch $e');
+      }
     } else {
-      print('not valid');
+      log('not valid');
     }
   }
 
   String? phoneNumberValidator(String value) =>
-      GetUtils.isLengthLessOrEqual(value, 9)
-          ? 'Please enter a valid phone number'
-          : null;
+      GetUtils.isLengthEqualTo(value, 10)
+          ? null
+          : 'Please enter a valid phone number';
 }

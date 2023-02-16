@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
@@ -39,29 +40,39 @@ class LoginView extends GetView<LoginController> {
                   'Enter your credentials here',
                   style: subheading2,
                 ),
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: Form(
+                      key: controller.formKey,
                       child: Column(
-                    children: <Widget>[
-                      CustomTextFormField(
-                        prefix: Icon(TourMaker.profile_icon, color: fontColor),
-                        hintText: 'Username',
-                        validator: (String? value) =>
-                            controller.usernameValidator(value),
-                        onChanged: (_) {},
-                      ),
-                      const SizedBox(height: 10),
-                      CustomDropDownButton(
-                        lists: controller.states,
-                        onChange: (int index, String value) =>
-                            controller.state.value = value,
-                        initialValue: controller.state.value,
-                      ),
-                      CustomButton().showIconButtonWithGradient(
-                          text: 'continue', onPressed: () {})
-                    ],
-                  )),
+                        children: <Widget>[
+                          CustomTextFormField(
+                            prefix:
+                                Icon(TourMaker.profile_icon, color: fontColor),
+                            hintText: 'Username',
+                            validator: (String? value) =>
+                                controller.usernameValidator(value),
+                            onChanged: (String value) =>
+                                controller.name.value = value,
+                          ),
+                          const SizedBox(height: 10),
+                          CustomDropDownButton(
+                            lists: controller.states,
+                            onChange: (int index, String value) =>
+                                controller.state.value = value,
+                            initialValue: controller.state.value,
+                          ),
+                          Obx(() => CustomButton().showIconButtonWithGradient(
+                                height: 72,
+                                isLoading: controller.isLoading.value,
+                                width: 100.w,
+                                text: '     Continue',
+                                onPressed: () =>
+                                    controller.onClickContinue(context),
+                              ))
+                        ],
+                      )),
                 )
               ],
             ),

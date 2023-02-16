@@ -13,7 +13,7 @@ class CategoryView extends GetView<CategoryController> {
   Widget build(BuildContext context) {
     final CategoryController controller = Get.put(CategoryController());
 
-    return controller.obx((state) => Padding(
+    return controller.obx((dynamic state) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: ListView.builder(
             itemCount: controller.categoryList.length,

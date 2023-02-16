@@ -5,4 +5,9 @@ import '../../../data/models/package_model.dart';
 
 class FavouritesScreenController extends GetxController with StateMixin {
   RxList<PackageModel> packagesList = <PackageModel>[].obs;
+  @override
+  void onInit() {
+    super.onInit();
+    change(null, status: RxStatus.success());
+  }
 }

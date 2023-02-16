@@ -23,7 +23,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
           title: const Text('Filters'),
         ),
         body: controller.obx(
-          (state) => Row(
+          (dynamic state) => Row(
             children: <Widget>[
               Obx(() {
                 return Expanded(

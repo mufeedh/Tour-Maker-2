@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/single_tour_tile.dart';
 import '../controllers/favourites_screen_controller.dart';
 
 class FavouritesScreenView extends GetView<FavouritesScreenController> {
@@ -11,14 +13,19 @@ class FavouritesScreenView extends GetView<FavouritesScreenController> {
     final FavouritesScreenController controller =
         Get.put(FavouritesScreenController());
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('FavouritesScreenView'),
-          centerTitle: true,
+      appBar: const CustomAppBar(
+        titleText: 'WishList',
+      ),
+      body: controller.obx(
+        (dynamic state) => ListView.builder(
+          itemCount: 20,
+          itemBuilder: (BuildContext context, int index) {
+            return SingleTourTile(
+              onPressed: () {},
+            );
+          },
         ),
-        body: controller.obx((state) => ListView.builder(
-              itemCount: controller.packagesList.length,
-              itemBuilder: (BuildContext context, int index) =>
-                  Text(controller.packagesList[index].amount.toString()),
-            )));
+      ),
+    );
   }
 }

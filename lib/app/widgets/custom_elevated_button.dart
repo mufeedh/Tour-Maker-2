@@ -222,62 +222,54 @@ class CustomButton {
     double? height,
     double? width,
   }) {
-    return isLoading
-        ? AnimatedContainer(
-            alignment: Alignment.center,
-            curve: Curves.easeInOut,
-            duration: const Duration(seconds: 2),
-            height: 10.h,
-            width: 14.w,
+    return Padding(
+      padding: padding ?? const EdgeInsets.all(25),
+      child: GestureDetector(
+        onTap: onPressed,
+        child: AnimatedContainer(
+          curve: Curves.easeInOut,
+          duration: const Duration(seconds: 2),
+          child: Container(
+            height: height ?? 50,
+            width: width ?? 250,
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: englishlinearViolet,
+              color: const Color.fromARGB(255, 97, 45, 109),
+              // gradient: buttonColorGradient,
+              borderRadius: BorderRadius.circular(100),
             ),
-            child: const Center(
-              child: CircularProgressIndicator(color: Colors.white),
-            ),
-          )
-        : Padding(
-            padding: padding ?? const EdgeInsets.all(25),
-            child: GestureDetector(
-              onTap: onPressed,
-              child: AnimatedContainer(
-                curve: Curves.easeInOut,
-                duration: const Duration(seconds: 2),
-                child: Container(
-                  height: height ?? 50,
-                  width: width ?? 250,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 97, 45, 109),
-                    // gradient: buttonColorGradient,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(text, style: buttonwithWhiteTextStyle),
-                        Container(
-                          height: 100.h,
-                          width: 14.w,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white24,
-                          ),
-                          child: const Icon(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(isLoading ? '        Please Wait' : text,
+                      style: buttonwithWhiteTextStyle),
+                  Container(
+                    height: 100.h,
+                    width: 14.w,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white24,
+                    ),
+                    child: isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Icon(
                             Icons.keyboard_arrow_right_outlined,
                             size: 25,
                             color: Colors.white,
                           ),
-                        ),
-                      ],
-                    ),
                   ),
-                ),
+                ],
               ),
             ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 
   Widget customIconButton({

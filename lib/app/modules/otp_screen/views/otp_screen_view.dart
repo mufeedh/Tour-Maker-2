@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:pinput/pinput.dart';
+import 'package:sizer/sizer.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
@@ -21,7 +23,7 @@ class OtpScreenView extends GetView<OtpScreenController> {
         appBar: const CustomAppBar(),
         body: controller.obx(
           onLoading: const CustomLoadingScreen(),
-          (state) => Padding(
+          (dynamic state) => Padding(
             padding: const EdgeInsets.all(28.0),
             child: SingleChildScrollView(
               child: Column(
@@ -42,36 +44,54 @@ class OtpScreenView extends GetView<OtpScreenController> {
                         decoration: BoxLooseDecoration(
                             strokeColorBuilder: FixedColorBuilder(fontColor)),
                         controller: controller.textEditorController,
-                        onCodeSubmitted: (String code) {},
+                        onCodeSubmitted: (String code) {
+                          log('code submitted');
+                        },
                         currentCode: controller.otpCode.value,
-                        onCodeChanged: (String? code) {
+                        onCodeChanged: (String? code) async {
+                          log('code changed');
                           controller.otpCode.value = code!;
+
                           controller.countDownController.pause();
+                          // await controller.signIn();
                         },
                       ),
                     );
                   }),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Countdown(
                     seconds: 60,
-                    interval: const Duration(milliseconds: 1000),
                     build: (BuildContext context, double currentRemainingtime) {
                       if (currentRemainingtime == 0.0) {
                         return GestureDetector(
-                          onTap: () {
-                            //resend otp
-                          },
-                          child: Text("Didn't Recieve OTP? Resend OTP ",
-                              style: subheading3),
+                          onTap: () => controller.onResendinOTP(),
+                          child: Text('Resend OTP ', style: subheading3),
                         );
                       } else {
                         controller.isLoading.value = true;
                         return Text(
-                          "Trying to automatically get OTP |${currentRemainingtime.toString().length == 4 ? " ${currentRemainingtime.toString().substring(0, 2)}" : " ${currentRemainingtime.toString().substring(0, 1)}"}",
+                          "Trying to automatically get OTP in ${currentRemainingtime.toString().length == 4 ? " ${currentRemainingtime.toString().substring(0, 2)}" : " ${currentRemainingtime.toString().substring(0, 1)} seconds"}",
                         );
                       }
                     },
                   ),
+
+                  const SizedBox(height: 20),
+                  CustomButton().showIconButtonWithGradient(
+                    height: 72,
+                    width: 100.w,
+                    text: '             verify',
+                    onPressed: () => controller.signIn(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
+  }
+}
+
+
                   // Pinput(
                   //   length: 6,
                   //   defaultPinTheme: PinTheme(
@@ -90,16 +110,3 @@ class OtpScreenView extends GetView<OtpScreenController> {
                   //     controller.otpCode.value = value;
                   //   },
                   // ),
-
-                  const SizedBox(height: 20),
-                  CustomButton().showButtonWithGradient(
-                    text: 'Verify',
-                    onPressed: () => controller.signIn(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ));
-  }
-}

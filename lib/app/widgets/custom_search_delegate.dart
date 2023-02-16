@@ -50,9 +50,19 @@ class MyCustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return const Center(
-      child: Text('This is a suggestion'),
-    );
+    return Scaffold(
+        extendBody: true,
+        body: ListView.builder(
+          itemBuilder: (BuildContext context, int index) => ListTile(
+            title: const Text('Kashmir Avdneture'),
+            trailing: IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.disabled_by_default_rounded,
+                  color: englishViolet,
+                )),
+          ),
+        ));
   }
 
   @override
