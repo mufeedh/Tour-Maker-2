@@ -29,25 +29,31 @@ class UserRepository {
       // final Response<Map<String, dynamic>> res =
       //     response.data!['result'] as Response<Map<String, dynamic>>;
       if (response.statusCode == 200) {
-        log('sts code');
-        if (response.data!['result'] != null ||
-            response.data!['result'].isBlank != true) {
-          // userModel =
-          //     (response.data!['result'] as List<dynamic>).map((dynamic e) {
-          //   return UserModel.fromjson(e as Map<String, String>);
-          // }).toList();
-          return ApiResponse<Map<String, dynamic>>.completed(
-              response.data!['result'] as Map<String, dynamic>);
-        } else {
-          log('log  s');
+        return ApiResponse<Map<String, dynamic>>.completed(
+            response.data!['result'] as Map<String, dynamic>);
+        // log('sts code');
+        // final data = response.data!['result'];
+        // log('dsdsd code ${data}');
+        // if (response.data!['result'].isBlank != true ||
+        //     response.data!['result'] != null) {
+        //   log('isblank');
+        //   // userModelList =
+        //   //     (response.data!['result'] as List<dynamic>).map((dynamic e) {
+        //   //   return UserModel.fromjson(e as Map<String, String>);
+        //   // }).toList();
 
-          return ApiResponse<Map<String, dynamic>>.error(
-              response.statusMessage);
-        }
-        // return ApiResponse<bool>.completed(
-        //   response.data as bool,
-        // );
+        // } else {
+        //   log('log  s ${response.statusMessage}');
+
+        //   return ApiResponse<Map<String, dynamic>>.error(
+        //       response.statusMessage);
+        // }
+        // // return ApiResponse<bool>.completed(
+        // //   response.data as bool,
+        // // );
       } else {
+        log('else');
+
         return ApiResponse<Map<String, dynamic>>.error(
             response.statusMessage.toString());
       }

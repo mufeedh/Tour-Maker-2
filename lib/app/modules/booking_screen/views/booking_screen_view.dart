@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
-import '../../../../core/tour_maker_icons.dart';
+import '../../../widgets/booking_tile.dart';
 import '../controllers/booking_screen_controller.dart';
 
+// ignore: , strict_raw_type
 class BookingScreenView extends GetView<BookingScreenController> {
   const BookingScreenView({super.key});
   @override
@@ -28,41 +30,50 @@ class BookingScreenView extends GetView<BookingScreenController> {
             children: <Widget>[
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 12.0, horizontal: 37),
-                child: TabBar(
-                  controller: controller.tabcontroller,
-                  isScrollable: true,
-                  indicatorColor: Colors.white,
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.black,
-                  indicator: BoxDecoration(
-                    color: englishViolet,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(25),
-                    ),
+                    const EdgeInsets.symmetric(vertical: 12.0, horizontal: 17),
+                child: Container(
+                  height: 60,
+                  width: 100.w,
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    color: const Color(0xFFF1F1F1),
                   ),
-                  tabs: const <Widget>[
-                    Tab(
-                      child: Text('Upcoming'),
+                  child: TabBar(
+                    controller: controller.tabcontroller,
+                    isScrollable: true,
+                    indicatorColor: Colors.white,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.black,
+                    indicator: BoxDecoration(
+                      color: englishViolet,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(25),
+                      ),
                     ),
-                    Tab(
-                      child: Text('Completed'),
-                    ),
-                    Tab(
-                      child: Text('Cancelled'),
-                    ),
-                  ],
+                    tabs: const <Widget>[
+                      Tab(
+                        child: Text(
+                          'Upcoming',
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Completed',
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Cancelled',
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 25, right: 25),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: backgroundColor,
-                    borderRadius: BorderRadius.circular(36),
-                  ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
                   child: TabBarView(
                     controller: controller.tabcontroller,
                     children: <Widget>[
@@ -80,32 +91,17 @@ class BookingScreenView extends GetView<BookingScreenController> {
 
   ListView buildCompletedView() {
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       itemCount: 115,
-      itemBuilder: (BuildContext context, int index) => Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Container(
-          margin: const EdgeInsets.all(10),
-          // width: 50,
-          height: 70,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: ListTile(
-            trailing: Wrap(
-              spacing: 5, // space between two icons
-              children: <Widget>[
-                Icon(TourMaker.people, color: englishViolet),
-                const Text('5')
-              ],
-            ),
-            title: const Text(
-              'KashMir Tour',
-            ),
-            subtitle: const Text('CK2D'),
-          ),
+      itemBuilder: (BuildContext context, int index) => GestureDetector(
+        onTap: () => controller.onTapSingleUpComingBooking(),
+        child: BookingTile(
+          onTapIcon: controller.onTapIcon,
+          tourName: 'Kasmmir',
+          tourAmount: '12-12-2001',
+          tourCode: 'CK2E',
+          tourPersons: '8',
+          tourAmountCriteria: 'Completed On',
         ),
       ),
     );
@@ -113,24 +109,17 @@ class BookingScreenView extends GetView<BookingScreenController> {
 
   ListView buildCancelledView() {
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       itemCount: 115,
-      itemBuilder: (BuildContext context, int index) => Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Container(
-          margin: const EdgeInsets.all(10),
-          // width: 50,
-          height: 70,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: ListTile(
-            trailing: Icon(TourMaker.people, color: englishViolet),
-            title: const Text('KashMir Tour'),
-            subtitle: const Text('CK2D'),
-          ),
+      itemBuilder: (BuildContext context, int index) => GestureDetector(
+        onTap: () => controller.onTapSingleUpComingBooking(),
+        child: BookingTile(
+          onTapIcon: controller.onTapIcon,
+          tourName: 'Kasmmir',
+          tourAmount: '500000',
+          tourCode: 'CK2E',
+          tourPersons: '8',
+          tourAmountCriteria: 'Cancelled On',
         ),
       ),
     );
@@ -138,25 +127,17 @@ class BookingScreenView extends GetView<BookingScreenController> {
 
   ListView buildUpcomingView() {
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       itemCount: 115,
-      itemBuilder: (BuildContext context, int index) => Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Container(
-          margin: const EdgeInsets.all(10),
-          // width: 50,
-          height: 70,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: ListTile(
-            style: ListTileStyle.drawer,
-            trailing: Icon(TourMaker.people, color: englishViolet),
-            title: const Text('KashMir Tour'),
-            subtitle: Text('pendiing amt:', style: paragraph2),
-          ),
+      itemBuilder: (BuildContext context, int index) => GestureDetector(
+        onTap: () => controller.onTapSingleUpComingBooking(),
+        child: BookingTile(
+          onTapIcon: controller.onTapIcon,
+          tourName: 'Kasmmir',
+          tourAmount: '500000',
+          tourCode: 'CK2E',
+          tourPersons: '8',
+          tourAmountCriteria: 'Pending Amount',
         ),
       ),
     );

@@ -7,17 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../data/models/user_model.dart';
 import '../../../data/repo/user_repo.dart';
 import '../../../services/network_services/dio_client.dart';
 
-class ProfileController extends GetxController with StateMixin {
+class ProfileController extends GetxController with StateMixin<dynamic> {
   // final ImagePicker _picker = ImagePicker();
+  Razorpay razorpay = Razorpay();
+  var isloading = false.obs;
   RxString selectedImagePath = ''.obs;
   RxString selectedImageSize = ''.obs;
   Rx<UserModel> userData = UserModel().obs;
+  Rx<XFile>? imgXfile;
   UserRepository userRepo = UserRepository();
   @override
   void onInit() {
@@ -43,6 +47,11 @@ class ProfileController extends GetxController with StateMixin {
       log('user ${userData.value.userName}');
       change(null, status: RxStatus.success());
     } else {}
+  }
+
+  Future<void> getImageFromCamera() async {
+    imgXfile?.value =
+        (await ImagePicker().pickImage(source: ImageSource.camera))!;
   }
 
   Future<void> getImage(ImageSource imageSource) async {
@@ -89,6 +98,43 @@ class ProfileController extends GetxController with StateMixin {
     return file.toString();
   }
 
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    // Handle payment success
+    log('success payment');
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // Handle payment failure
+    log('failed paymment');
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // Handle external wallet response
+    log('externnal');
+  }
+
+  Map<String, dynamic> options = {
+    'key': 'rzp_test_P4CbygdUfrhYr3',
+    'amount': 10000, // amount in paise
+    'name': 'TourMaker',
+    'description': 'Test Payment',
+    'prefill': {'contact': '', 'email': 'test@acme.com'},
+    'external': {
+      'wallets': ['paytm', 'Google Pay']
+    }
+  };
+
+  onClickPayment() {
+    isloading.value = true;
+    try {
+      log('opened');
+      razorpay.open(options);
+    } catch (e) {
+      debugPrint(e.toString());
+      log('print $e');
+    }
+    isloading.value = false;
+  }
   // onPickedFromGallery() async {
   //   await _picker
   //       .pickImage(source: ImageSource.gallery)

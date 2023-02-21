@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../widgets/custom_appbar.dart';
@@ -12,7 +13,7 @@ class TermsAndConditionsView extends GetView<TermsAndConditionsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: const CustomAppBar(),
+      // appBar: const CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: SingleChildScrollView(
@@ -25,11 +26,11 @@ class TermsAndConditionsView extends GetView<TermsAndConditionsController> {
               Text('Terms & Conditions', style: heading2),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 25),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
                 child: Text(controller.termsAndCond, style: paragraph4),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: Row(
                   children: <Widget>[
                     Obx(() {
@@ -40,8 +41,12 @@ class TermsAndConditionsView extends GetView<TermsAndConditionsController> {
                       );
                     }),
                     Text(
-                        'By clicking here, I state that I have read \nand understood the terms and conditions.',
-                        style: paragraph4),
+                      'By clicking here, I state that I have read \nand understood the terms and conditions.',
+                      style: TextStyle(
+                        // fontFamily: montserratRegular,
+                        fontSize: 8.sp,
+                      ),
+                    ),
                   ],
                 ),
               ),

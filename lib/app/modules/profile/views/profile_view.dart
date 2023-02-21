@@ -20,7 +20,9 @@ class ProfileView extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     final ProfileController controller = Get.put(ProfileController());
     return Scaffold(
-        drawer: const MyDrawer(),
+        drawer: Obx(() {
+          return MyDrawer(controller: controller.userData.value);
+        }),
         appBar: const CustomAppBar(
           titleText: 'Profile',
         ),
@@ -35,19 +37,29 @@ class ProfileView extends GetView<ProfileController> {
                       Obx(
                         () => controller.selectedImagePath.value == ''
                             ? const SizedBox(
-                                height: 190,
+                                height: 180,
                                 child: CircleAvatar(
-                                  radius: 70,
-                                  backgroundImage:
-                                      AssetImage('assets/Avatar.png'),
+                                  radius: 60,
+                                  backgroundImage: AssetImage(
+                                    'assets/Avatar.png',
+                                  ),
                                 ),
                               )
-                            : Image.file(
-                                File(controller.selectedImagePath.value)),
+                            : SizedBox(
+                                height: 180,
+                                child: CircleAvatar(
+                                  radius: 60,
+                                  backgroundImage: AssetImage(
+                                    Image.file(File(
+                                            controller.selectedImagePath.value))
+                                        .toString(),
+                                  ),
+                                ),
+                              ),
                       ),
                       Positioned(
-                        top: 140,
-                        left: 55,
+                        top: 130,
+                        left: 43,
                         child: GestureDetector(
                           onTap: () => onClckProfileIcon(context),
                           child: Container(
@@ -70,20 +82,29 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                     ],
                   ),
-                  buildListTile(TourMaker.profile_icon,
-                      controller.userData.value.userName.toString()),
-                  buildListTile(TourMaker.call,
-                      controller.userData.value.phoneNumber.toString()),
-                  buildListTile(TourMaker.location_icon,
-                      controller.userData.value.state.toString()),
+                  buildTile(
+                      icon: TourMaker.profile_icon,
+                      data: controller.userData.value.userName.toString(),
+                      label: 'Full Name'),
+                  buildTile(
+                    icon: TourMaker.call,
+                    data: controller.userData.value.phoneNumber.toString(),
+                    label: 'Phone Number',
+                  ),
+                  buildTile(
+                      icon: TourMaker.location_icon,
+                      label: 'State',
+                      data: controller.userData.value.state.toString()),
                   Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: CustomButton().showIconButtonWithGradient(
-                        height: 12.h,
-                        width: 100.h,
-                        text: '     Pay Service Charge Now',
-                        onPressed: () {},
-                      ))
+                    padding: const EdgeInsets.all(10),
+                    child: CustomButton().showIconButtonWithGradient(
+                      height: 12.h,
+                      width: 100.h,
+                      isLoading: controller.isloading.value,
+                      text: '  Pay Service Charge Now',
+                      onPressed: () => controller.onClickPayment(),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -123,15 +144,47 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 
-  Widget buildListTile(IconData icon, String label) {
+  Widget buildTile(
+      {required IconData icon, required String label, required String data}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
-      child: Row(
-        children: <Widget>[
-          Icon(icon, size: 30),
-          const SizedBox(width: 20),
-          Text(label, style: subheading1),
-        ],
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 23),
+      child: Container(
+        width: 100.w,
+        height: 85,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 232, 231, 233),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18.0),
+          child: Row(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(icon, color: fontColor),
+                ],
+              ),
+              const SizedBox(width: 15),
+              VerticalDivider(
+                color: Colors.grey.shade600,
+                endIndent: 10,
+                indent: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(label, style: paragraph3),
+                    Text(data, style: subheading2),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

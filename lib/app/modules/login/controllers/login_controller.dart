@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../data/models/user_model.dart';
 import '../../../data/repo/user_repo.dart';
+import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 
-class LoginController extends GetxController with StateMixin {
+class LoginController extends GetxController with StateMixin<dynamic> {
   GlobalKey<FormState> formKey = GlobalKey();
   UserRepository userRepo = UserRepository();
   late List<String> states = userRepo.getStates();
@@ -41,8 +42,9 @@ class LoginController extends GetxController with StateMixin {
       );
       final ApiResponse<Map<String, dynamic>> res =
           await userRepo.signUpTheUser(user);
-      if (res.status == ApiResponse.completed) {
+      if (res.status == ApiResponseStatus.completed) {
         log('completed');
+        Get.offAllNamed(Routes.TERMS_AND_CONDITIONS);
       } else {
         log('sdfgsg');
       }

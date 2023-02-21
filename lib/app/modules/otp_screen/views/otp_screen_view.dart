@@ -51,7 +51,6 @@ class OtpScreenView extends GetView<OtpScreenController> {
                         onCodeChanged: (String? code) async {
                           log('code changed');
                           controller.otpCode.value = code!;
-
                           controller.countDownController.pause();
                           // await controller.signIn();
                         },

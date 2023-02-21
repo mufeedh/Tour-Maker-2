@@ -10,7 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import '../../../../core/theme/style.dart';
 import '../../../routes/app_pages.dart';
 
-class GetStartedController extends GetxController with StateMixin {
+class GetStartedController extends GetxController with StateMixin<dynamic> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   GetStorage storage = GetStorage();
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -19,8 +19,9 @@ class GetStartedController extends GetxController with StateMixin {
   RxBool isButtonVisible = true.obs;
   RxBool isloading = false.obs;
   RxString authStatus = ''.obs;
+  Rx<bool> isFinished = false.obs;
   String? phone;
-  var verificationid;
+  dynamic verificationid;
   Rx<Country> selectedCountry = Country(
     phoneCode: '91',
     countryCode: 'IN',
@@ -63,15 +64,17 @@ class GetStartedController extends GetxController with StateMixin {
   Future<void> onVerifyPhoneNumber() async {
     if (formKey.currentState!.validate()) {
       log('valid');
+      await Future.delayed(const Duration(seconds: 1));
+      isloading.value = true;
       try {
         final String phoneNumber = '+${selectedCountry.value.phoneCode}$phone';
         final FirebaseAuth auth = FirebaseAuth.instance;
+
         await auth
             .verifyPhoneNumber(
           phoneNumber: phoneNumber,
           timeout: const Duration(seconds: 60),
           verificationCompleted: (PhoneAuthCredential authCredential) async {
-            isloading.value = true;
             log('verification completed');
             auth.signInWithCredential(authCredential);
             log('auth cred token ${authCredential.token}');
@@ -93,8 +96,13 @@ class GetStartedController extends GetxController with StateMixin {
             log(phoneNumber);
             Get.toNamed(
               Routes.OTP_SCREEN,
-              arguments: <dynamic>[verificationId, phoneNumber],
+              arguments: <dynamic>[
+                verificationId,
+                phoneNumber,
+                forceResendingToken
+              ],
             );
+            isFinished.value = true;
           },
           codeAutoRetrievalTimeout: (String verificationId) {
             log('verificationId  $verificationId');
@@ -105,6 +113,12 @@ class GetStartedController extends GetxController with StateMixin {
             .catchError((dynamic e) {
           log('catch err $e');
         });
+        await Future.delayed(Duration(
+          seconds: isFinished.value != true ? 1 : 15,
+        ));
+
+        isloading.value = false;
+        // update();
       } catch (e) {
         log('carch $e');
       }

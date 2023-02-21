@@ -2,6 +2,8 @@
 
 import 'package:get/get.dart';
 
+import '../../../routes/app_pages.dart';
+
 class TermsAndConditionsController extends GetxController {
   String termsAndCond = '''
 TOUR MAKER is an application designed to book tours of TRIPPENS’s tour operation company. Adventure tours, Package group tours, family package group tours, couple package tours, Ride tours, hiking, trucking etc. are available. This is basically not a customer focus app but for those who book tours on commission basis. For each and every tour package, company has fixed amount of commission for the agents on company’s wills.
@@ -50,6 +52,6 @@ If you can book minimum 2 tours within 20 days of your app installation, you wil
   }
 
   void onGetStartedClicked() {
-    //Get.toNamed(Routes.WELCOME_SCREEN);
+    Get.toNamed(Routes.LUCKY_DRAW);
   }
 }

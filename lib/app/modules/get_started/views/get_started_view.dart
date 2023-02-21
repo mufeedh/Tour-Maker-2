@@ -14,7 +14,6 @@ class GetStartedView extends GetView<GetStartedController> {
   const GetStartedView({super.key});
   @override
   Widget build(BuildContext context) {
-    final GetStartedController controller = Get.put(GetStartedController());
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Stack(
@@ -81,7 +80,7 @@ class GetStartedView extends GetView<GetStartedController> {
         enterBottomSheetDuration: const Duration(milliseconds: 600),
         exitBottomSheetDuration: const Duration(milliseconds: 600),
         isDismissible: true,
-        isScrollControlled: true,
+        isScrollControlled: false,
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -114,25 +113,27 @@ class GetStartedView extends GetView<GetStartedController> {
                       validator: (String? value) =>
                           controller.phoneNumberValidator(value!),
                       onChanged: (String? value) => controller.phone = value,
-                      prefix: GestureDetector(
-                        onTap: () => controller.onCountryCodeClicked(context),
-                        child: Container(
-                          width: 30,
-                          margin: const EdgeInsets.only(right: 10),
-                          height: 30,
-                          decoration: BoxDecoration(
-                              // color: Colors.red,
-                              // borderRadius: BorderRadius.circular(40),
+                      prefix: Obx(() {
+                        return GestureDetector(
+                          onTap: () => controller.onCountryCodeClicked(context),
+                          child: Container(
+                            width: 30,
+                            margin: const EdgeInsets.only(right: 10),
+                            height: 30,
+                            decoration: BoxDecoration(
+                                // color: Colors.red,
+                                // borderRadius: BorderRadius.circular(40),
+                                ),
+                            clipBehavior: Clip.hardEdge,
+                            child: Center(
+                              child: Text(
+                                controller.selectedCountry.value.flagEmoji,
+                                style: TextStyle(fontSize: 30),
                               ),
-                          clipBehavior: Clip.hardEdge,
-                          child: Center(
-                            child: Text(
-                              controller.selectedCountry.value.flagEmoji,
-                              style: TextStyle(fontSize: 30),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                     ),
                   ),
                   Obx(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -10,14 +12,16 @@ class DestinationsView extends GetView<DestinationsController> {
   @override
   Widget build(BuildContext context) {
     final DestinationsController controller = Get.put(DestinationsController());
-    return controller.obx((dynamic state) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: ListView.builder(
-            itemCount: controller.destinationList.length,
-            itemBuilder: (BuildContext context, int index) =>
-                buildDestinationsList(controller, index),
-          ),
-        ));
+    return controller.obx(
+      (dynamic state) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: ListView.builder(
+          itemCount: controller.destinationList.length,
+          itemBuilder: (BuildContext context, int index) =>
+              buildDestinationsList(controller, index),
+        ),
+      ),
+    );
   }
 
   Widget buildDestinationsList(DestinationsController controller, int index) {
@@ -27,15 +31,13 @@ class DestinationsView extends GetView<DestinationsController> {
         children: <Widget>[
           CheckboxMenuButton(
               value: controller.isSelected.value,
-              onChanged: (bool? value) {},
+              onChanged: (bool? value) {
+                log('df$value');
+              },
               child: Text(
                 controller.destinationList[index].destination.toString(),
                 style: subheading2,
               )),
-          // Text(
-          //   controller.destinationList.value[index].destination.toString(),
-          //   style: heading3,
-          // )
         ],
       );
     });

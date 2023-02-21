@@ -40,7 +40,7 @@ class CustomButton {
     Key? key,
     required String text,
     Color textColor = Colors.white,
-    Color bgColor = Colors.red,
+    Color bgColor = const Color.fromRGBO(86, 60, 92, 1),
     EdgeInsets padding = const EdgeInsets.all(10),
     EdgeInsets contentPadding = const EdgeInsets.all(10),
     bool isLoading = false,
@@ -50,6 +50,7 @@ class CustomButton {
     required Function() onPressed,
     double? height,
     double? width,
+    TextStyle? textStyle,
   }) {
     return customIconButtonWithGradient(
       bgColor: bgColor,
@@ -65,6 +66,7 @@ class CustomButton {
       text: text,
       textColor: textColor,
       key: key,
+      textstyle: textStyle,
     );
   }
 
@@ -207,21 +209,21 @@ class CustomButton {
     );
   }
 
-  Widget customIconButtonWithGradient({
-    Key? key,
-    required String text,
-    Color? textColor,
-    Color? bgColor,
-    EdgeInsets? padding,
-    EdgeInsets? contentPadding,
-    bool isLoading = false,
-    bool isIconRight = true,
-    IconData? icon,
-    double? elevation,
-    Function()? onPressed,
-    double? height,
-    double? width,
-  }) {
+  Widget customIconButtonWithGradient(
+      {Key? key,
+      required String text,
+      Color? textColor,
+      Color? bgColor,
+      EdgeInsets? padding,
+      EdgeInsets? contentPadding,
+      bool isLoading = false,
+      bool isIconRight = true,
+      IconData? icon,
+      double? elevation,
+      Function()? onPressed,
+      double? height,
+      double? width,
+      TextStyle? textstyle}) {
     return Padding(
       padding: padding ?? const EdgeInsets.all(25),
       child: GestureDetector(
@@ -233,7 +235,7 @@ class CustomButton {
             height: height ?? 50,
             width: width ?? 250,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 97, 45, 109),
+              color: bgColor ?? const Color.fromARGB(255, 97, 45, 109),
               // gradient: buttonColorGradient,
               borderRadius: BorderRadius.circular(100),
             ),
@@ -243,7 +245,7 @@ class CustomButton {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(isLoading ? '        Please Wait' : text,
-                      style: buttonwithWhiteTextStyle),
+                      style: textstyle ?? buttonwithWhiteTextStyle),
                   Container(
                     height: 100.h,
                     width: 14.w,
@@ -257,10 +259,10 @@ class CustomButton {
                               color: Colors.white,
                             ),
                           )
-                        : const Icon(
+                        : Icon(
                             Icons.keyboard_arrow_right_outlined,
                             size: 25,
-                            color: Colors.white,
+                            color: textColor ?? Colors.white,
                           ),
                   ),
                 ],

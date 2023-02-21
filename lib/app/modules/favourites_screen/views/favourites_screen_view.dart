@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../data/models/wishlist_model.dart';
 import '../../../widgets/custom_appbar.dart';
-import '../../../widgets/single_tour_tile.dart';
 import '../controllers/favourites_screen_controller.dart';
 
 class FavouritesScreenView extends GetView<FavouritesScreenController> {
@@ -12,17 +12,17 @@ class FavouritesScreenView extends GetView<FavouritesScreenController> {
   Widget build(BuildContext context) {
     final FavouritesScreenController controller =
         Get.put(FavouritesScreenController());
+    final RxList<WishListModel> data = controller.wishList;
     return Scaffold(
       appBar: const CustomAppBar(
-        titleText: 'WishList',
+        titleText: 'Wishlist',
       ),
       body: controller.obx(
         (dynamic state) => ListView.builder(
-          itemCount: 20,
+          physics: const BouncingScrollPhysics(),
+          itemCount: data.length,
           itemBuilder: (BuildContext context, int index) {
-            return SingleTourTile(
-              onPressed: () {},
-            );
+            return Text(data[index].packageId.toString());
           },
         ),
       ),

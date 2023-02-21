@@ -37,10 +37,6 @@ class CategoryView extends GetView<CategoryController> {
                 controller.categoryList[index].category.toString(),
                 style: subheading2,
               )),
-          // Text(
-          //   controller.destinationList.value[index].destination.toString(),
-          //   style: heading3,
-          // )
         ],
       );
     });

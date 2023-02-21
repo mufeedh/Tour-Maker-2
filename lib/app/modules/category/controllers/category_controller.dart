@@ -4,8 +4,9 @@ import 'package:get/get.dart';
 import '../../../data/models/category_model.dart';
 import '../../../data/repo/category_repo.dart';
 import '../../../services/network_services/dio_client.dart';
+import '../views/category_view.dart';
 
-class CategoryController extends GetxController with StateMixin {
+class CategoryController extends GetxController with StateMixin<CategoryView> {
   RxList<CategoryModel> categoryList = <CategoryModel>[].obs;
   RxBool isSelected = false.obs;
   @override

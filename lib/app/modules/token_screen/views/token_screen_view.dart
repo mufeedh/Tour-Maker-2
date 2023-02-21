@@ -33,7 +33,7 @@ class TokenScreenView extends GetView<TokenScreenController> {
                 keyboardType: TextInputType.streetAddress,
                 maxLines: 100,
                 initialValue: controller.tok.toString(),
-                onChanged: (String value) => controller.tok = value),
+                onChanged: (String value) => controller.tok = value,),
           ),
         ),
       ),

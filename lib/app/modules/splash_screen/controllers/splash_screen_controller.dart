@@ -7,11 +7,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../../data/models/user_model.dart';
 import '../../../data/repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
+import '../../../widgets/nointernet.dart';
 
-class SplashScreenController extends GetxController with StateMixin {
+class SplashScreenController extends GetxController with StateMixin<dynamic> {
   final GetStorage getStorage = GetStorage();
   final User? currentUser = FirebaseAuth.instance.currentUser;
 
@@ -23,16 +25,17 @@ class SplashScreenController extends GetxController with StateMixin {
   @override
   Future<void> onInit() async {
     super.onInit();
-    change(null, status: RxStatus.success());
-    log('df');
-    await checkUserLoggedInORnOT();
+    // // change(null, status: RxStatus.success());
+    // log('df');
+    // await checkUserLoggedInORnOT();
   }
 
   @override
-  void onReady() async {
+  Future<void> onReady() async {
     super.onReady();
-    // // print('dsf');
-    // await checkUserLoggedInORnOT();
+    // print('dsf');
+    log('re');
+    await checkUserLoggedInORnOT();
   }
 
   @override
@@ -41,26 +44,34 @@ class SplashScreenController extends GetxController with StateMixin {
   }
 
   Future<void> checkUserLoggedInORnOT() async {
-    log('CHECKING . . . . ');
+    try {
+      if (currentUser != null) {
+        // user is logged in firebase
+        final String token = await currentUser!.getIdToken(true);
+        //generating token
+        await getStorage.write('token', token);
+        final ApiResponse<Map<String, dynamic>> res =
+            await UserRepository().checkUserExists();
+        //check on DB
+        if (res.status == ApiResponseStatus.completed) {
+          //statuscodde==200
+          if (res.data?.isEmpty != true) {
+            // await Get.offAllNamed(Routes.TOKEN_SCREEN, arguments: token);
 
-    if (currentUser != null) {
-      log('USER EXISTS ON FIREBASE');
-      final String token = await currentUser!.getIdToken(true);
-      log('tokken $token');
-      await getStorage.write('token', token);
-      final ApiResponse<Map<String, dynamic>> res =
-          await UserRepository().checkUserExists();
-      if (res.status == ApiResponseStatus.completed) {
-        log('USER EXISTS ON DB');
-        Get.offAllNamed(Routes.HOME);
-        // Get.offAllNamed(Routes.TOKEN_SCREEN, arguments: token);
+            await Get.offAllNamed(Routes.HOME);
+            //on DB result:{"""data"""}
+          } else {
+            await Get.offAllNamed(Routes.LOGIN,
+                arguments: currentUser?.phoneNumber);
+            //on DB result:{}
+          }
+        }
       } else {
-        Get.offAllNamed(Routes.LOGIN);
-        log('USER SIGNED IN FIREBASE');
+        //user is not logged in
+        await Get.offAllNamed(Routes.GET_STARTED);
       }
-    } else {
-      log('NEW USER');
-      Get.offAllNamed(Routes.GET_STARTED);
+    } catch (e) {
+      log('catch $e');
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -12,20 +14,68 @@ class SearchViewView extends GetView<SearchViewController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: fontColor,
-        ),
-        title: buildTextField(),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text(
-          'SearchViewView is working',
-          style: TextStyle(fontSize: 20),
-        ),
+      body: Column(
+        children: <Widget>[
+          SizedBox(height: 05.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              IconButton(
+                  onPressed: () => controller.onClickBack(),
+                  icon: const Icon(Icons.arrow_back)),
+              Expanded(child: buildTextField()),
+              const SizedBox(width: 10),
+            ],
+          ),
+          Expanded(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+              child: ListView.separated(
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(indent: 30, endIndent: 50),
+                shrinkWrap: true,
+                itemCount: 30,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Kashmir', style: subheading1),
+                        GestureDetector(
+                          onTap: () => controller.onClickDeleteSuggestion(),
+                          child: Container(
+                            width: 25,
+                            height: 25,
+                            decoration: BoxDecoration(
+                              color: englishViolet,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.close_sharp,
+                                color: Colors.white,
+                                size: 10,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          )
+          // Expanded(
+          //     child:
+          // ListView.builder(
+          //   shrinkWrap: true,
+          //   itemBuilder: (context, index) => Container(),
+          // )
+          // )
+        ],
       ),
     );
   }
@@ -39,15 +89,23 @@ class SearchViewView extends GetView<SearchViewController> {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
+        controller: controller.textController,
+        textInputAction: TextInputAction.search,
+        onSubmitted: (String value) => controller.onSubmitSearch(value),
         decoration: InputDecoration(
-            contentPadding: const EdgeInsets.only(left: 23, top: 10),
-            border: InputBorder.none,
-            hintText: 'Search Destinations',
-            prefixIcon: Icon(
-              TourMaker.search,
-              color: englishViolet,
-              size: 35,
-            )),
+          contentPadding: const EdgeInsets.only(left: 23, top: 10),
+          border: InputBorder.none,
+          hintText: 'Search Destinations',
+          prefixIcon: Icon(
+            TourMaker.search,
+            color: englishViolet,
+            size: 35,
+          ),
+          suffixIcon: IconButton(
+            onPressed: () => controller.onClickClearTextfIeld(),
+            icon: Icon(Icons.close_rounded, color: englishlinearViolet),
+          ),
+        ),
       ),
     );
   }

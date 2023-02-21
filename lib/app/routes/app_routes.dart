@@ -24,6 +24,12 @@ abstract class Routes {
   static const String DURATION = _Paths.DURATION;
   static const String SEARCH_VIEW = _Paths.SEARCH_VIEW;
   static const String TOKEN_SCREEN = _Paths.TOKEN_SCREEN;
+  static const String REWARDS = _Paths.REWARDS;
+  static const RAZORPAY = _Paths.RAZORPAY;
+  static const SINGLE_TOUR = _Paths.SINGLE_TOUR;
+  static const PASSENGER_DETAILS = _Paths.PASSENGER_DETAILS;
+  static const SINGLE_CATEGORY = _Paths.SINGLE_CATEGORY;
+  static const SEARCH_DETAILS = _Paths.SEARCH_DETAILS;
 }
 
 abstract class _Paths {
@@ -49,4 +55,10 @@ abstract class _Paths {
   static const String DURATION = '/duration';
   static const String SEARCH_VIEW = '/search-view';
   static const String TOKEN_SCREEN = '/token-screen';
+  static const String REWARDS = '/rewards';
+  static const RAZORPAY = '/razorpay';
+  static const SINGLE_TOUR = '/single-tour';
+  static const PASSENGER_DETAILS = '/passenger-details';
+  static const SINGLE_CATEGORY = '/single-category';
+  static const SEARCH_DETAILS = '/search-details';
 }

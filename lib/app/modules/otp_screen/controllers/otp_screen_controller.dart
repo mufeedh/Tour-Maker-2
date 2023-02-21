@@ -7,18 +7,19 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_controller.dart';
 
+import '../../../data/models/user_model.dart';
 import '../../../data/repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/otp_screen_view.dart';
 
-class OtpScreenController extends GetxController
-    with StateMixin<OtpScreenView> {
+class OtpScreenController extends GetxController with StateMixin {
   CountdownController countDownController = CountdownController();
   TextEditingController textEditorController = TextEditingController();
   GetStorage storage = GetStorage();
   String? phone;
   String? verID;
+  int? forceToken;
   RxBool isLoading = false.obs;
   RxString otpCode = ''.obs;
   @override
@@ -46,6 +47,7 @@ class OtpScreenController extends GetxController
     if (Get.arguments != null) {
       verID = Get.arguments[0] as String;
       phone = Get.arguments[1] as String;
+      forceToken = Get.arguments[2] as int;
       log('ver id $verID');
       log('phoone $phone');
     }
@@ -53,8 +55,10 @@ class OtpScreenController extends GetxController
   }
 
   Future<void> signIn() async {
+    change(null, status: RxStatus.loading());
     try {
       log('sign in otp contr');
+      isLoading.value = true;
       final FirebaseAuth auth = FirebaseAuth.instance;
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verID.toString(),
@@ -79,17 +83,36 @@ class OtpScreenController extends GetxController
           log('res S${res.status}');
           log('res M${res.message}');
           if (res.status == ApiResponseStatus.completed) {
-            Get.offAllNamed(Routes.HOME);
-            log('home');
+            if (res.data?.isEmpty != true) {
+              log('dat');
+              Get.offAllNamed(Routes.HOME);
+              // Get.offAllNamed(Routes.TOKEN_SCREEN, arguments: token);
+            } else {
+              log('els $phone');
+              Get.offAllNamed(Routes.LOGIN, arguments: phone);
+            }
+            change(null, status: RxStatus.success());
           } else {
-            Get.offAllNamed(Routes.LOGIN, arguments: phone);
-            log('phne $phone');
+            log('errrrrrooorr');
           }
         });
         log('token strg ${storage.read('token')}');
       });
     } catch (e) {
       log('jdngjsd $e');
+      // change(null, status: RxStatus.loading());
+      // final FirebaseAuth auth = FirebaseAuth.instance;
+
+      // auth.verifyPhoneNumber(
+      //   phoneNumber: phone,
+      //   timeout: const Duration(minutes: 2),
+      //   forceResendingToken: forceToken,
+      //   codeAutoRetrievalTimeout: (_) {},
+      //   codeSent: (String verificationId, int? forceResendingToken) {},
+      //   verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {},
+      //   verificationFailed: (FirebaseAuthException error) {},
+      // );
+      // change(null, status: RxStatus.success());
     }
   }
 

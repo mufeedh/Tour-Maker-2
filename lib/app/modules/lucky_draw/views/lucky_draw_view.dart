@@ -43,21 +43,30 @@ class LuckyDrawView extends GetView<LuckyDrawController> {
                   ? Column(
                       children: <Widget>[
                         CustomButton().showIconButton(
-                          height: 72,
+                          height: 12.h,
                           isLoading: controller.isLoading.value,
-                          width: 100.w,
-                          text: '                    Pay Rs 424+GST ',
+                          width: 100.h,
+                          text: '           Pay Rs 424+GST ',
                           onPressed: () => controller.onClickPayment(),
                         ),
                         CustomButton().showIconButtonWithGradient(
-                            height: 72,
+                            height: 12.h,
                             isLoading: controller.isLoading.value,
-                            width: 100.w,
-                            text: '     See a demo of the App',
+                            width: 100.h,
+                            text: '   See a demo of the App',
                             onPressed: () => controller.onClickDemoApp()),
                       ],
                     )
                   : const SizedBox()),
+              //  Padding(
+              //   padding: const EdgeInsets.all(10),
+              //   child: CustomButton().showIconButtonWithGradient(
+              //     height: 12.h,
+              //     width: 100.h,
+              //     text: '  Pay Service Charge Now',
+              //     onPressed: () => controller.onClickPayment(),
+              //   ),
+              // )
             ],
           ),
         ),

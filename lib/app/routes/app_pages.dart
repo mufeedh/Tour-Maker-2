@@ -26,14 +26,26 @@ import '../modules/main_screen/bindings/main_screen_binding.dart';
 import '../modules/main_screen/views/main_screen_view.dart';
 import '../modules/otp_screen/bindings/otp_screen_binding.dart';
 import '../modules/otp_screen/views/otp_screen_view.dart';
+import '../modules/passenger_details/bindings/passenger_details_binding.dart';
+import '../modules/passenger_details/views/passenger_details_view.dart';
 import '../modules/payment_screen/bindings/payment_screen_binding.dart';
 import '../modules/payment_screen/views/payment_screen_view.dart';
 import '../modules/payment_summary/bindings/payment_summary_binding.dart';
 import '../modules/payment_summary/views/payment_summary_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/razorpay/bindings/razorpay_binding.dart';
+import '../modules/razorpay/views/razorpay_view.dart';
+import '../modules/rewards/bindings/rewards_binding.dart';
+import '../modules/rewards/views/rewards_view.dart';
+import '../modules/search_details/bindings/search_details_binding.dart';
+import '../modules/search_details/views/search_details_view.dart';
 import '../modules/search_view/bindings/search_view_binding.dart';
 import '../modules/search_view/views/search_view_view.dart';
+import '../modules/single_category/bindings/single_category_binding.dart';
+import '../modules/single_category/views/single_category_view.dart';
+import '../modules/single_tour/bindings/single_tour_binding.dart';
+import '../modules/single_tour/views/single_tour_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
 import '../modules/terms_and_conditions/bindings/terms_and_conditions_binding.dart';
@@ -155,6 +167,36 @@ class AppPages {
       name: _Paths.TOKEN_SCREEN,
       page: () => const TokenScreenView(),
       binding: TokenScreenBinding(),
+    ),
+    GetPage<dynamic>(
+      name: _Paths.REWARDS,
+      page: () => const RewardsView(),
+      binding: RewardsBinding(),
+    ),
+    GetPage(
+      name: _Paths.RAZORPAY,
+      page: () => const RazorpayView(),
+      binding: RazorpayBinding(),
+    ),
+    GetPage(
+      name: _Paths.SINGLE_TOUR,
+      page: () => const SingleTourView(),
+      binding: SingleTourBinding(),
+    ),
+    GetPage(
+      name: _Paths.PASSENGER_DETAILS,
+      page: () => const PassengerDetailsView(),
+      binding: PassengerDetailsBinding(),
+    ),
+    GetPage(
+      name: _Paths.SINGLE_CATEGORY,
+      page: () => const SingleCategoryView(),
+      binding: SingleCategoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.SEARCH_DETAILS,
+      page: () => const SearchDetailsView(),
+      binding: SearchDetailsBinding(),
     ),
   ];
 }

@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../routes/app_pages.dart';
+import '../views/booking_screen_view.dart';
+
 class BookingScreenController extends GetxController
-    with StateMixin, GetSingleTickerProviderStateMixin {
+    with StateMixin<BookingScreenView>, GetSingleTickerProviderStateMixin {
   late final TabController tabcontroller =
       TabController(length: 3, vsync: this);
   @override
@@ -34,4 +37,10 @@ class BookingScreenController extends GetxController
   void onTapCancelled() {
     tabcontroller.animateTo(1);
   }
+
+  void onTapSingleUpComingBooking() {
+    Get.toNamed(Routes.PAYMENT_SUMMARY);
+  }
+
+  void onTapIcon() => Get.toNamed(Routes.PASSENGER_DETAILS);
 }

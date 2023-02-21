@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/style.dart';
+import 'custom_errorscreen.dart';
 
 class MyCustomSearchDelegate extends SearchDelegate<String> {
+  TextEditingController textController = TextEditingController();
   @override
   List<Widget> buildActions(BuildContext context) {
     return <Widget>[
@@ -29,6 +31,8 @@ class MyCustomSearchDelegate extends SearchDelegate<String> {
         progress: transitionAnimation,
       ),
       onPressed: () {
+        textController.dispose();
+
         close(context, '');
       },
     );
@@ -50,19 +54,19 @@ class MyCustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Scaffold(
-        extendBody: true,
-        body: ListView.builder(
-          itemBuilder: (BuildContext context, int index) => ListTile(
-            title: const Text('Kashmir Avdneture'),
-            trailing: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.disabled_by_default_rounded,
-                  color: englishViolet,
-                )),
-          ),
-        ));
+    return Scaffold(extendBody: true, body: SizedBox()
+        // ListView.builder(
+        //   itemBuilder: (BuildContext context, int index) => ListTile(
+        //     title: const Text('Kashmir Avdneture'),
+        //     trailing: IconButton(
+        //         onPressed: () {},
+        //         icon: Icon(
+        //           Icons.disabled_by_default_rounded,
+        //           color: englishViolet,
+        //         )),
+        //   ),
+        // ),
+        );
   }
 
   @override
