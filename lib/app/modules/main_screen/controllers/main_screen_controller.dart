@@ -6,13 +6,19 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../../../data/models/category_model.dart';
+import '../../../data/models/trending_tours.dart';
 import '../../../data/repo/category_repo.dart';
+import '../../../data/repo/trending_tours_rep.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../../../widgets/custom_search_delegate.dart';
+import '../views/main_screen_view.dart';
 
-class MainScreenController extends GetxController with StateMixin {
+class MainScreenController extends GetxController
+    with StateMixin<MainScreenView> {
   RxList<CategoryModel> categoryList = <CategoryModel>[].obs;
+  RxList<TrendingToursModel> trendingToursList = <TrendingToursModel>[].obs;
+
   TextEditingController textController = TextEditingController();
   MyCustomSearchDelegate delegate = MyCustomSearchDelegate();
   final FocusNode searchFocusNode = FocusNode();
@@ -37,79 +43,56 @@ class MainScreenController extends GetxController with StateMixin {
 
   Future<void> loadData() async {
     log('laopd');
+    change(null, status: RxStatus.loading());
+
     await getCategory();
+    // await getTrending();
   }
 
   Future<void> getCategory() async {
     log('get cate');
     change(null, status: RxStatus.loading());
-    final ApiResponse<List<CategoryModel>> res =
-        await CategoryRepository().getAllCategory();
-    log('cat ${res.status}');
-    try {
+    await CategoryRepository()
+        .getAllCategory()
+        .then((ApiResponse<List<CategoryModel>> res) async {
       if (res.status == ApiResponseStatus.completed) {
         categoryList.value = res.data!;
-        log('cygd ${categoryList.value.length}');
+        log('cygd ${categoryList.length}');
         change(null, status: RxStatus.success());
       } else {
         change(null, status: RxStatus.error());
         log('err ');
       }
-    } catch (e) {
-      log('catch error $e');
-    }
+    });
   }
 
   void onNotificationsClicked() {}
 
   void onClickedCategory(int index) {}
 
-  onClickedSingleCategory(String name) {
-    Get.toNamed(Routes.SINGLE_CATEGORY, arguments: name);
+  void onClickedSingleCategory(String name, String image) {
+    Get.toNamed(Routes.SINGLE_CATEGORY, arguments: <String>[name, image])!
+        .whenComplete(() => loadData());
   }
 
-  // void loadData() {
-  //   getCategory();
-  //   getTrending();
-  // }
+  Future<void> getTrending() async {
+    change(null, status: RxStatus.loading());
+    await TrendingToursRepository()
+        .getAllTrendingTours()
+        .then((ApiResponse<List<TrendingToursModel>> res) {
+      if (res.data != null) {
+        trendingToursList.value = res.data!;
+        change(null, status: RxStatus.success());
+      } else {
+        change(null, status: RxStatus.empty());
+      }
+    });
+  }
 
-  // void getCategory() {}
-
-  // void getTrending() {}
+  void onSearchClicked() {
+    searchFocusNode.unfocus();
+    change(null, status: RxStatus.loading());
+    Get.toNamed(Routes.SEARCH_VIEW)!.whenComplete(() => loadData());
+    change(null, status: RxStatus.success());
+  }
 }
-
-// class MysearchDelegate extends SearchDelegate<String> {
-//   @override
-//   List<Widget>? buildActions(BuildContext context) {}
-
-//   @override
-//   Widget? buildLeading(BuildContext context) {
-//     return IconButton(
-//       onPressed: () {
-//         this.close(context, "null");
-//       },
-//       icon: Icon(Icons.arrow_back_ios),
-//     );
-//   }
-
-//   @override
-//   Widget buildResults(BuildContext context) {
-//     return ListView.builder(
-//       itemCount: 50,
-//       itemBuilder: (context, index) => Text("suggeest"),
-//     );
-//   }
-
-//   @override
-//   Widget buildSuggestions(BuildContext context) {
-//     return GridView.builder(
-//       itemBuilder: (context, index) => Container(
-//         color: Colors.red,
-//         width: 100,
-//         height: 100,
-//       ),
-//       gridDelegate:
-//           const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 10),
-//     );
-//   }
-// }

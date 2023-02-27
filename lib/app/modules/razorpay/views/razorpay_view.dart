@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/razorpay_controller.dart';
 
 class RazorpayView extends GetView<RazorpayController> {
-  const RazorpayView({Key? key}) : super(key: key);
+  const RazorpayView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +13,7 @@ class RazorpayView extends GetView<RazorpayController> {
         title: const Text('RazorpayView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'RazorpayView is working',
           style: TextStyle(fontSize: 20),

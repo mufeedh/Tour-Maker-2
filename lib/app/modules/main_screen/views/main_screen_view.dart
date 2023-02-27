@@ -8,8 +8,11 @@ import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/custom_loadinscreen.dart';
-import '../../../widgets/custom_search_delegate.dart';
 import '../controllers/main_screen_controller.dart';
+
+//? hiii
+//! dmvl
+//* dfd
 
 class MainScreenView extends GetView<MainScreenController> {
   const MainScreenView({super.key});
@@ -21,7 +24,7 @@ class MainScreenView extends GetView<MainScreenController> {
     return Scaffold(
       body: controller.obx(
         onLoading: const CustomLoadingScreen(),
-        (state) => SingleChildScrollView(
+        (MainScreenView? state) => SingleChildScrollView(
           child: Column(
             children: <Widget>[
               buildHeadSection(screenHeight, context),
@@ -38,7 +41,7 @@ class MainScreenView extends GetView<MainScreenController> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    buildTrending(screenHeight),
+                    // buildTrending(screenHeight),
                     const SizedBox(height: 20),
                     Row(
                       children: <Widget>[
@@ -135,38 +138,104 @@ class MainScreenView extends GetView<MainScreenController> {
     );
   }
 
-  Container buildTrending(double screenHeight) {
-    return Container(
-      height: screenHeight * 0.30,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: ListView.builder(
-        itemCount: 10,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (BuildContext context, int index) => Material(
-          borderRadius: BorderRadius.circular(18),
-          // borderOnForeground: false,
+  Widget buildTrending(double screenHeight) {
+    return Obx(
+      () => controller.trendingToursList.isEmpty
+          ? const CustomLoadingScreen()
+          : Container(
+              height: screenHeight * 0.30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: RefreshIndicator(
+                onRefresh: () => controller.getTrending(),
+                child: ListView.builder(
+                  itemCount: controller.trendingToursList.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) => Hero(
+                    tag: controller.trendingToursList[index],
+                    child: Material(
+                      borderRadius: BorderRadius.circular(18),
+                      // borderOnForeground: false,
 
-          type: MaterialType.transparency,
-          elevation: 5,
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            // height: 100,
-            width: 171,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                  imageData[index],
+                      type: MaterialType.transparency,
+                      elevation: 5,
+                      child: Container(
+                        margin: const EdgeInsets.all(10),
+                        // height: 100,
+                        width: 171,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                              controller.trendingToursList[index].image
+                                  .toString(),
+                            ),
+                          ),
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const SizedBox(height: 40),
+                              Column(
+                                children: [
+                                  Text(
+                                    controller
+                                        .trendingToursList[index].destination
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontFamily: 'Tahu',
+                                      fontSize: 30,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const Text(
+                                    'Tours',
+                                    style: TextStyle(
+                                      fontFamily: 'Tahu',
+                                      fontSize: 20,
+                                      color: Colors.amber,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  Text(
+                                    'Starting From: ',
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    controller
+                                        .trendingToursList[index].minAmount
+                                        .toString(),
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      color: Colors.amber,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(18),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -194,50 +263,65 @@ class MainScreenView extends GetView<MainScreenController> {
                   padding: const EdgeInsets.symmetric(horizontal: 7.0),
                   child: SizedBox(
                     height: 190,
-                    child: GridView.builder(
-                      itemCount: controller.categoryList.length,
-                      physics: controller.categoryList.length <= 8
-                          ? const NeverScrollableScrollPhysics()
-                          : BouncingScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisSpacing: 1,
-                        mainAxisSpacing: 5,
-                        crossAxisCount: 4,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () => controller.onClickedSingleCategory(
-                              controller.categoryList.value[index].category
-                                  .toString()),
-                          child: SizedBox(
-                            height: 73,
-                            width: 73,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: 53,
-                                  height: 53,
-                                  decoration: const BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                          'assets/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg',
-                                        ),
+                    child: Obx(
+                      () => controller.categoryList.isEmpty
+                          ? const CustomLoadingScreen()
+                          : GridView.builder(
+                              itemCount: controller.categoryList.length,
+                              physics: controller.categoryList.length <= 8
+                                  ? const NeverScrollableScrollPhysics()
+                                  : const BouncingScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisSpacing: 1,
+                                mainAxisSpacing: 5,
+                                crossAxisCount: 4,
+                              ),
+                              itemBuilder: (BuildContext context, int index) {
+                                return Hero(
+                                  tag: controller.categoryList[index],
+                                  child: GestureDetector(
+                                    onTap: () =>
+                                        controller.onClickedSingleCategory(
+                                            controller.categoryList[index].name
+                                                .toString(),
+                                            controller.categoryList[index].image
+                                                .toString()),
+                                    child: SizedBox(
+                                      height: 73,
+                                      width: 73,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            width: 53,
+                                            height: 53,
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  fit: BoxFit.cover,
+                                                  image: NetworkImage(
+                                                    controller
+                                                        .categoryList[index]
+                                                        .image
+                                                        .toString(),
+                                                  ),
+                                                ),
+                                                shape: BoxShape.circle,
+                                                color: Colors.blue),
+                                          ),
+                                          Text(
+                                              controller
+                                                  .categoryList[index].name
+                                                  .toString(),
+                                              style: paragraph4),
+                                        ],
                                       ),
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue),
-                                ),
-                                Text(
-                                    controller.categoryList[index].category
-                                        .toString(),
-                                    style: paragraph4),
-                              ],
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          ),
-                        );
-                      },
                     ),
                   )),
             ],
@@ -264,7 +348,7 @@ class MainScreenView extends GetView<MainScreenController> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 300),
+          padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 80.w),
           child: badges.Badge(
             badgeContent: Text(
               '3',
@@ -297,17 +381,16 @@ class MainScreenView extends GetView<MainScreenController> {
               //enabled: false,
               focusNode: controller.searchFocusNode,
               controller: controller.textController,
-              onTap: () {
-                controller.searchFocusNode.unfocus();
-                Get.toNamed(Routes.SEARCH_VIEW);
-                // Future.delayed(const Duration(milliseconds: 100), () {
-                //   showSearch(
-                //     useRootNavigator: true,
-                //     context: context,
-                // delegate: MyCustomSearchDelegate(),
-                //   );
-                // });
-              },
+              onTap: () => controller.onSearchClicked(),
+
+              // Future.delayed(const Duration(milliseconds: 100), () {
+              //   showSearch(
+              //     useRootNavigator: true,
+              //     context: context,
+              // delegate: MyCustomSearchDelegate(),
+              //   );
+              // });
+              // },
               decoration: InputDecoration(
                 suffixIcon: Padding(
                   padding: const EdgeInsets.only(right: 10.0),

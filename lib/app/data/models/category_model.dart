@@ -1,11 +1,18 @@
 class CategoryModel {
-  CategoryModel({this.category});
-  String? category;
+  CategoryModel({this.id, this.name, this.image});
+  int? id;
+  String? name;
+  String? image;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'category': category,
+        'id': id,
+        'name': name,
+        'image': image,
       };
+
   static CategoryModel fromJson(Map<String, dynamic> json) => CategoryModel(
-        category: json['category'] as String,
+        id: json['id'] as int,
+        name: json['name'] as String,
+        image: json['image'] as String,
       );
 }

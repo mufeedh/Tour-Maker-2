@@ -8,35 +8,34 @@ import '../../../widgets/custom_elevated_button.dart';
 import '../controllers/single_tour_controller.dart';
 
 class SingleTourView extends GetView<SingleTourController> {
-  const SingleTourView({Key? key}) : super(key: key);
+  const SingleTourView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+    final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.black,
         ),
       ),
       body: Expanded(
         child: Stack(
-          children: [
-            Container(
+          children: <Widget>[
+            SizedBox(
               height: 40.h,
               width: 100.w,
-              child: Image.asset(
-                'assets/Background.png',
-                fit: BoxFit.cover,
-              ),
+              // child: Image.network(
+              //   controller.tourList.value.image.toString(),
+              //   fit: BoxFit.cover,
+              // ),
             ),
             SingleChildScrollView(
               child: Column(
-                children: [
+                children: <Widget>[
                   SizedBox(
                     height: screenWidth - 116,
                   ),
@@ -49,42 +48,43 @@ class SingleTourView extends GetView<SingleTourController> {
                       color: Colors.white,
                     ),
                     child: Column(
-                      children: [
-                        Text('All India Tour', style: heading2),
-                        Text('K2KL', style: subheading2),
+                      children: <Widget>[
+                        Text(controller.tourList.value.name.toString(),
+                            style: heading2),
+                        Text(controller.tourList.value.tourCode.toString(),
+                            style: subheading2),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text("5100/person"),
+                          children: <Widget>[
+                            Text('${controller.tourList.value.amount}/person'),
                           ],
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Tour Description"),
+                          children: const <Widget>[
+                            Text('Tour Description'),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Text(
-                            '''Package for 20 days Will be starting from KERALA to  KERALA .The Standard rooms provided will be shared by 3 persons. There will be 10 travellers in this Tour. There will be food providing from our side. Booking and Cancellation details are included in our itenerary. Check out our itenarary for more details.''',
+                            controller.tourList.value.description.toString(),
                             style: paragraph3,
                           ),
                         ),
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFF6F6F6),
+                            backgroundColor: const Color(0xFFF6F6F6),
                             foregroundColor: englishViolet,
-                            shape: StadiumBorder(),
+                            shape: const StadiumBorder(),
                           ),
                           onPressed: () {},
                           icon: const Icon(
                             Icons.remove_red_eye,
                           ),
-                          label: Text('View Itinerary'),
+                          label: const Text('View Itinerary'),
                         ),
-                        SizedBox(height: 25),
+                        const SizedBox(height: 25),
                         TabBar(
                           controller: controller.tabcontroller,
                           isScrollable: true,
@@ -110,8 +110,8 @@ class SingleTourView extends GetView<SingleTourController> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 30),
-                        Container(
+                        const SizedBox(height: 30),
+                        SizedBox(
                           height: 60.h,
                           child: TabBarView(
                             controller: controller.tabcontroller,
@@ -139,27 +139,27 @@ class SingleTourView extends GetView<SingleTourController> {
 
   Widget buildFixedDeparture() {
     return Column(
-      children: [
+      children: <Widget>[
         Row(
-          children: [
+          children: <Widget>[
             Text('Select Date', style: subheading3),
           ],
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Container(
           height: 40.h,
           decoration: BoxDecoration(
-            color: Color(0xFFF6F6F6),
+            color: const Color(0xFFF6F6F6),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
-            children: [
-              Container(
+            children: <Widget>[
+              SizedBox(
                 height: 30.h,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
+                  children: <Widget>[
+                    SizedBox(
                       width: 50.w,
                       child: ListWheelScrollView.useDelegate(
                         itemExtent: 90,
@@ -184,15 +184,15 @@ class SingleTourView extends GetView<SingleTourController> {
                       padding: const EdgeInsets.all(18.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Adult'),
+                        children: <Widget>[
+                          const Text('Adult'),
                           Container(
                             width: 100,
                             height: 37,
-                            color: Color.fromARGB(255, 233, 234, 238),
+                            color: const Color.fromARGB(255, 233, 234, 238),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
+                              children: <Widget>[
                                 GestureDetector(
                                   onTap: () => controller.onClickedAdd(),
                                   child: Container(
@@ -201,7 +201,7 @@ class SingleTourView extends GetView<SingleTourController> {
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: englishViolet),
-                                    child: Center(
+                                    child: const Center(
                                       child: Icon(
                                         Icons.add,
                                         color: Colors.white,
@@ -210,7 +210,7 @@ class SingleTourView extends GetView<SingleTourController> {
                                     ),
                                   ),
                                 ),
-                                Text("4"),
+                                const Text('4'),
                                 GestureDetector(
                                   onTap: () => controller.onClickedAdd(),
                                   child: Container(
@@ -219,7 +219,7 @@ class SingleTourView extends GetView<SingleTourController> {
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: englishViolet),
-                                    child: Center(
+                                    child: const Center(
                                       child: Icon(
                                         Icons.add,
                                         color: Colors.white,
@@ -231,14 +231,14 @@ class SingleTourView extends GetView<SingleTourController> {
                               ],
                             ),
                           ),
-                          Text('Children'),
+                          const Text('Children'),
                           Container(
                             width: 100,
                             height: 37,
-                            color: Color.fromARGB(255, 233, 234, 238),
+                            color: const Color.fromARGB(255, 233, 234, 238),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
+                              children: <Widget>[
                                 GestureDetector(
                                   onTap: () => controller.onClickedAdd(),
                                   child: Container(
@@ -247,7 +247,7 @@ class SingleTourView extends GetView<SingleTourController> {
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: englishViolet),
-                                    child: Center(
+                                    child: const Center(
                                       child: Icon(
                                         Icons.add,
                                         color: Colors.white,
@@ -256,7 +256,7 @@ class SingleTourView extends GetView<SingleTourController> {
                                     ),
                                   ),
                                 ),
-                                Text("4"),
+                                const Text('4'),
                                 GestureDetector(
                                   onTap: () => controller.onClickedAdd(),
                                   child: Container(
@@ -265,7 +265,7 @@ class SingleTourView extends GetView<SingleTourController> {
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: englishViolet),
-                                    child: Center(
+                                    child: const Center(
                                       child: Icon(
                                         Icons.add,
                                         color: Colors.white,
@@ -285,11 +285,11 @@ class SingleTourView extends GetView<SingleTourController> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
+                children: <Widget>[
                   Column(
-                    children: [
+                    children: <Widget>[
                       Text('Total amount', style: heading3),
-                      Text(
+                      const Text(
                         'Not including GST(5%)',
                         //   style: TextStyle(
                         //       color: englishlinearViolet,
@@ -298,7 +298,7 @@ class SingleTourView extends GetView<SingleTourController> {
                       ),
                     ],
                   ),
-                  Text("90000", style: heading2)
+                  Text('90000', style: heading2)
                 ],
               )
             ],

@@ -3,49 +3,46 @@ import 'dart:developer';
 import 'package:get/get.dart';
 
 import '../../../data/models/single_category_model.dart';
+import '../../../data/models/wishlist_model.dart';
 import '../../../data/repo/category_repo.dart';
+import '../../../data/repo/wishlist_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
+import '../views/single_category_view.dart';
 
-class SingleCategoryController extends GetxController with StateMixin {
+class SingleCategoryController extends GetxController
+    with StateMixin<SingleCategoryView> {
   RxList<SingleCategoryModel> singleCategoryList = <SingleCategoryModel>[].obs;
-  String? categoryName;
+  Rx<String> categoryName = ''.obs;
+  Rx<String> categoryImage = ''.obs;
   Rx<bool> isHaveOffer = false.obs;
+  Rx<bool> isClickedFavorites = false.obs;
+
   @override
   void onInit() {
     super.onInit();
     loadData();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void loadData() async {
+  Future<void> loadData() async {
     await getData();
     loadOffers();
   }
 
-  onSingleTourPressed() {
-    Get.toNamed(Routes.SINGLE_TOUR);
+  void onSingleTourPressed(int id) {
+    Get.toNamed(Routes.SINGLE_TOUR, arguments: <int>[id]);
   }
 
   Future<void> getData() async {
-    change(null, status: RxStatus.loading());
     if (Get.arguments != null) {
-      categoryName = Get.arguments as String;
+      categoryName.value = Get.arguments[0] as String;
+      categoryImage.value = Get.arguments[1] as String;
       log('catname $categoryName');
       try {
         change(null, status: RxStatus.loading());
 
         final ApiResponse<List<SingleCategoryModel>> res =
-            await CategoryRepository().getCategorybycategoryName(categoryName!);
+            await CategoryRepository().getCategorybycategoryName(categoryName);
         if (res.status == ApiResponseStatus.completed) {
           singleCategoryList.value = res.data!;
           change(null, status: RxStatus.success());
@@ -66,5 +63,16 @@ class SingleCategoryController extends GetxController with StateMixin {
     // } else {
 
     // }
+  }
+  Future<void> onClickFavourites(int index) async {
+    final tourId = singleCategoryList[index].tourId!;
+    final ApiResponse<List<WishListModel>> res =
+        await WishListRepo().createFav(tourId);
+
+    if (res.status == ApiResponseStatus.completed) {
+      isClickedFavorites.value = true;
+    } else {
+      isClickedFavorites.value = false;
+    }
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -7,14 +5,19 @@ import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
+import '../../../data/models/recent_searchmodel.dart';
+import '../../../widgets/custom_loadinscreen.dart';
 import '../controllers/search_view_controller.dart';
 
 class SearchViewView extends GetView<SearchViewController> {
   const SearchViewView({super.key});
   @override
   Widget build(BuildContext context) {
+    final SearchViewController controller = Get.put(SearchViewController());
     return Scaffold(
-      body: Column(
+        body: controller.obx(
+      onLoading: const CustomLoadingScreen(),
+      (SearchViewView? state) => Column(
         children: <Widget>[
           SizedBox(height: 05.h),
           Row(
@@ -31,53 +34,57 @@ class SearchViewView extends GetView<SearchViewController> {
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-              child: ListView.separated(
-                separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(indent: 30, endIndent: 50),
-                shrinkWrap: true,
-                itemCount: 30,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('Kashmir', style: subheading1),
-                        GestureDetector(
-                          onTap: () => controller.onClickDeleteSuggestion(),
-                          child: Container(
-                            width: 25,
-                            height: 25,
-                            decoration: BoxDecoration(
-                              color: englishViolet,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.close_sharp,
-                                color: Colors.white,
-                                size: 10,
+              child: Obx(() {
+                return RefreshIndicator(
+                  onRefresh: () => controller.loadRecentSearchesFromStorage(),
+                  child: ListView.separated(
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const Divider(indent: 30, endIndent: 50),
+                    shrinkWrap: true,
+                    itemCount: controller.recentSearches.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final RecentSearch search =
+                          controller.recentSearches[index];
+                      return GestureDetector(
+                        onTap: () => controller.onSubmitSearch(search.keyword),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(search.keyword, style: subheading1),
+                              GestureDetector(
+                                onTap: () =>
+                                    controller.onClickDeleteSuggestion(index),
+                                child: Container(
+                                  width: 25,
+                                  height: 25,
+                                  decoration: BoxDecoration(
+                                    color: englishViolet,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.close_sharp,
+                                      color: Colors.white,
+                                      size: 10,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                      );
+                    },
+                  ),
+                );
+              }),
             ),
-          )
-          // Expanded(
-          //     child:
-          // ListView.builder(
-          //   shrinkWrap: true,
-          //   itemBuilder: (context, index) => Container(),
-          // )
-          // )
+          ),
         ],
       ),
-    );
+    ));
   }
 
   Widget buildTextField() {

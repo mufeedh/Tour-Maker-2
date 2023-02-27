@@ -11,21 +11,25 @@ class SingleTourTile extends StatelessWidget {
     required this.image,
     required this.tourName,
     required this.tourcode,
-    required this.tourdaysandnights,
     required this.packageamount,
     this.isClickedFavourites = false,
     this.isHaveoffer = false,
     this.offerAmount,
+    required this.days,
+    required this.nights,
+    required this.onClickFavourites,
   });
   final Function() onPressed;
   final String image;
   final String tourName;
   final String tourcode;
-  final String tourdaysandnights;
+  final String days;
+  final String nights;
   final String packageamount;
   final bool isHaveoffer;
   final bool isClickedFavourites;
   final String? offerAmount;
+  final Function() onClickFavourites;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +54,7 @@ class SingleTourTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(25),
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -60,6 +65,7 @@ class SingleTourTile extends StatelessWidget {
                       height: 130,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(18),
+                        color: englishlinearViolet,
                         image: DecorationImage(
                           fit: BoxFit.fill,
                           image: NetworkImage(image),
@@ -72,22 +78,25 @@ class SingleTourTile extends StatelessWidget {
                   padding: const EdgeInsets.all(12.0),
                   child: Wrap(
                     spacing: 8.0,
-                    alignment: WrapAlignment.center,
-                    children: [
+                    alignment: WrapAlignment.spaceEvenly,
+                    children: <Widget>[
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Text(
                             tourName,
                             style: subheading1,
-                            overflow: TextOverflow.visible,
+                            overflow: TextOverflow.ellipsis,
                             softWrap: true,
                           ),
+                          const SizedBox(height: 5),
                           Text(tourcode, style: paragraph2),
+                          const SizedBox(height: 5),
                           Text(
-                            tourdaysandnights,
+                            '$days Days / $nights Nights',
                             style: subheading3,
                           ),
+                          const SizedBox(height: 10),
                           if (isHaveoffer)
                             Row(
                               children: <Widget>[
@@ -105,6 +114,7 @@ class SingleTourTile extends StatelessWidget {
                             )
                           else
                             Text('₹$packageamount', style: subheading1),
+                          const SizedBox(height: 10),
                         ],
                       ),
                     ],
@@ -112,19 +122,22 @@ class SingleTourTile extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(1.0),
-                  child: Column(
-                    children: <Widget>[
-                      if (isClickedFavourites)
-                        const Icon(
-                          Icons.favorite,
-                          color: Colors.red,
-                        )
-                      else
-                        const Icon(
-                          Icons.favorite_border_outlined,
-                          color: Colors.black,
-                        ),
-                    ],
+                  child: GestureDetector(
+                    onTap: onClickFavourites,
+                    child: Column(
+                      children: <Widget>[
+                        if (isClickedFavourites)
+                          const Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                          )
+                        else
+                          const Icon(
+                            Icons.favorite_border_outlined,
+                            color: Colors.black,
+                          ),
+                      ],
+                    ),
                   ),
                 )
               ],

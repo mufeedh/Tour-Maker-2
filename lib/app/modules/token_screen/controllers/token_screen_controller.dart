@@ -28,7 +28,7 @@ class TokenScreenController extends GetxController with StateMixin<dynamic> {
 
   void increment() => count.value++;
 
-  void loadData() async {
+  Future<void> loadData() async {
     log('1');
     change(null, status: RxStatus.loading());
 
@@ -42,7 +42,7 @@ class TokenScreenController extends GetxController with StateMixin<dynamic> {
       // change(null, status: RxStatus.loading());
 
       // tok = token;
-      tok = await getstorage.read('token');
+      tok = getstorage.read('token');
       log('hbsdfj');
       // change(null, status: RxStatus.success());
     }

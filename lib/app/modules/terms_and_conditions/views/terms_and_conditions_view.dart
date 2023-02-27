@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
-import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import '../controllers/terms_and_conditions_controller.dart';
 
@@ -53,22 +52,18 @@ class TermsAndConditionsView extends GetView<TermsAndConditionsController> {
               const SizedBox(height: 30),
               Obx(
                 () => controller.isButtonVisisble.value
-                    ? SizedBox(
+                    ? CustomButton().showButtonWithGradient(
                         width: 280,
-                        height: 68,
-                        child: CustomButton().showButtonWithGradient(
-                          text: "Let's Get Started",
-                          onPressed: () => controller.onGetStartedClicked(),
-                        ),
+                        height: 70,
+                        text: "Let's Get Started",
+                        onPressed: () => controller.onGetStartedClicked(),
                       )
-                    : SizedBox(
+                    : CustomButton().showButton(
                         width: 280,
-                        height: 68,
-                        child: CustomButton().showButton(
-                          bgColor: Colors.grey,
-                          text: "Let's Get Started",
-                          onPressed: () {},
-                        ),
+                        height: 70,
+                        bgColor: Colors.grey,
+                        text: "Let's Get Started",
+                        onPressed: () {},
                       ),
               )
             ],

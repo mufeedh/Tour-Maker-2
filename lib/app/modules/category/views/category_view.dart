@@ -34,7 +34,7 @@ class CategoryView extends GetView<CategoryController> {
                 log(int.parse(value.toString()));
               },
               child: Text(
-                controller.categoryList[index].category.toString(),
+                controller.categoryList[index].name.toString(),
                 style: subheading2,
               )),
         ],

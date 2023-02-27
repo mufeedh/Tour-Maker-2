@@ -51,6 +51,10 @@ class OtpScreenView extends GetView<OtpScreenController> {
                         onCodeChanged: (String? code) async {
                           log('code changed');
                           controller.otpCode.value = code!;
+                          if (controller.otpCode.value.length == 6) {
+                            log('sign in');
+                            await controller.signIn();
+                          }
                           controller.countDownController.pause();
                           // await controller.signIn();
                         },
@@ -76,12 +80,15 @@ class OtpScreenView extends GetView<OtpScreenController> {
                   ),
 
                   const SizedBox(height: 20),
-                  CustomButton().showIconButtonWithGradient(
-                    height: 72,
-                    width: 100.w,
-                    text: '             verify',
-                    onPressed: () => controller.signIn(),
-                  ),
+                  Obx(() {
+                    return CustomButton().showIconButtonWithGradient(
+                      height: 72,
+                      isLoading: controller.isLoading.value,
+                      width: 100.w,
+                      text: '             verify',
+                      onPressed: () => controller.signIn(),
+                    );
+                  }),
                 ],
               ),
             ),

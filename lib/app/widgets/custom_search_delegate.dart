@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/style.dart';
-import 'custom_errorscreen.dart';
 
 class MyCustomSearchDelegate extends SearchDelegate<String> {
   TextEditingController textController = TextEditingController();
@@ -54,7 +53,7 @@ class MyCustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Scaffold(extendBody: true, body: SizedBox()
+    return const Scaffold(extendBody: true, body: SizedBox()
         // ListView.builder(
         //   itemBuilder: (BuildContext context, int index) => ListTile(
         //     title: const Text('Kashmir Avdneture'),

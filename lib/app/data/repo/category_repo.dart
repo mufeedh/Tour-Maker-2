@@ -30,7 +30,7 @@ class CategoryRepository {
   }
 
   Future<ApiResponse<List<SingleCategoryModel>>> getCategorybycategoryName(
-      String categoryname) async {
+      dynamic categoryname) async {
     try {
       final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
       final Response<Map<String, dynamic>> response = await dio.getUri(

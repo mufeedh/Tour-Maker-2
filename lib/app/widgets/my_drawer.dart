@@ -27,7 +27,7 @@ class MyDrawer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Text('Hi ${controller?.userName}', style: heading2),
+              Text('Hi ${controller?.name}', style: heading2),
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -149,7 +149,7 @@ class MyDrawer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Text(
-                  'Do you want to logout \n from TourMaker?',
+                  'Do you really want to logout \n from TourMaker?',
                   textAlign: TextAlign.center,
                   style: subheading2,
                 ),
@@ -161,7 +161,7 @@ class MyDrawer extends StatelessWidget {
                 const Divider(),
                 GestureDetector(
                   onTap: () => cancel(),
-                  child: Text(
+                  child: const Text(
                     'Cancel',
                     style: TextStyle(
                       // fontFamily: montserratMedium,
@@ -188,7 +188,7 @@ class MyDrawer extends StatelessWidget {
       scheme: 'mailto',
       path: 'tourmakerapp@gmail.com',
       query:
-          'subject=I am ${controller?.userName} , and i need a help from TourMaker',
+          'subject=I am ${controller?.name} , and i need a help from TourMaker',
     );
     final String url = params.toString();
     if (await canLaunchUrl(Uri.parse(url))) {
@@ -202,7 +202,7 @@ class MyDrawer extends StatelessWidget {
     final Uri params = Uri(
       scheme: 'mailto',
       path: 'tourmakerapp@gmail.com',
-      query: 'subject=Hi , I am ${controller?.userName}',
+      query: 'subject=Hi , I am ${controller?.name}',
     );
     final String url = params.toString();
     if (await canLaunchUrl(Uri.parse(url))) {

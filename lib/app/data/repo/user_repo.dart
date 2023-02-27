@@ -78,17 +78,10 @@ class UserRepository {
       //     response.data!['result'] as Response<Map<String, dynamic>>;
       if (response.statusCode == 200) {
         log('sts code');
-        final UserModel user = UserModel.fromjson(
+        final UserModel user = UserModel.fromJson(
             response.data!['result'] as Map<String, dynamic>);
-        // userModel =res.da
-        //     (response.data!['result'] as List<dynamic>).map((dynamic e) {
-        //   return UserModel.fromjson(e as Map<String, String>);
-        // }).toList();
+        // log('adeeb rep ${response.}');
         return ApiResponse<UserModel>.completed(user);
-
-        // return ApiResponse<bool>.completed(
-        //   response.data as bool,
-        // );
       } else {
         return ApiResponse<UserModel>.error(response.statusMessage.toString());
       }
@@ -110,7 +103,7 @@ class UserRepository {
       final Response<Map<String, dynamic>> res = await dio.postUri(
           Uri.parse('user/signup'),
           options: Options(headers: autheHeader),
-          data: user.tojson());
+          data: user.toJson());
       if (res.statusCode == 200) {
         log('200');
 

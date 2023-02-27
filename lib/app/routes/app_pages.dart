@@ -1,3 +1,5 @@
+import 'package:flutter/animation.dart';
+
 import 'package:get/get.dart';
 
 import '../modules/booking_screen/bindings/booking_screen_binding.dart';
@@ -24,6 +26,10 @@ import '../modules/lucky_draw/bindings/lucky_draw_binding.dart';
 import '../modules/lucky_draw/views/lucky_draw_view.dart';
 import '../modules/main_screen/bindings/main_screen_binding.dart';
 import '../modules/main_screen/views/main_screen_view.dart';
+import '../modules/nointernet/bindings/nointernet_binding.dart';
+import '../modules/nointernet/views/nointernet_view.dart';
+import '../modules/notifications/bindings/notifications_binding.dart';
+import '../modules/notifications/views/notifications_view.dart';
 import '../modules/otp_screen/bindings/otp_screen_binding.dart';
 import '../modules/otp_screen/views/otp_screen_view.dart';
 import '../modules/passenger_details/bindings/passenger_details_binding.dart';
@@ -52,8 +58,10 @@ import '../modules/terms_and_conditions/bindings/terms_and_conditions_binding.da
 import '../modules/terms_and_conditions/views/terms_and_conditions_view.dart';
 import '../modules/token_screen/bindings/token_screen_binding.dart';
 import '../modules/token_screen/views/token_screen_view.dart';
-import '../modules/trip_details/bindings/trip_details_binding.dart';
-import '../modules/trip_details/views/trip_details_view.dart';
+import '../modules/tours_view/bindings/tours_view_binding.dart';
+import '../modules/tours_view/views/tours_view_view.dart';
+
+// ignore_for_file: always_specify_types
 
 part 'app_routes.dart';
 
@@ -69,36 +77,50 @@ class AppPages {
       binding: HomeBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.zoom,
+      curve: Curves.easeInOut,
       name: _Paths.SPLASH_SCREEN,
       page: () => const SplashScreenView(),
       binding: SplashScreenBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.leftToRightWithFade,
+      curve: Curves.easeInOut,
       name: _Paths.GET_STARTED,
       page: () => const GetStartedView(),
       binding: GetStartedBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.rightToLeftWithFade,
+      curve: Curves.easeInOut,
       name: _Paths.LOGIN,
       page: () => const LoginView(),
       binding: LoginBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.MAIN_SCREEN,
       page: () => const MainScreenView(),
       binding: MainScreenBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.fade,
+      curve: Curves.easeInOut,
       name: _Paths.OTP_SCREEN,
       page: () => const OtpScreenView(),
       binding: OtpScreenBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.rightToLeft,
+      curve: Curves.easeInOut,
       name: _Paths.TERMS_AND_CONDITIONS,
       page: () => const TermsAndConditionsView(),
       binding: TermsAndConditionsBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.LUCKY_DRAW,
       page: () => const LuckyDrawView(),
       binding: LuckyDrawBinding(),
@@ -109,11 +131,15 @@ class AppPages {
       binding: ProfileBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.topLevel,
+      curve: Curves.easeInOut,
       name: _Paths.PAYMENT_SCREEN,
       page: () => const PaymentScreenView(),
       binding: PaymentScreenBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.downToUp,
+      curve: Curves.easeInOut,
       name: _Paths.PAYMENT_SUMMARY,
       page: () => const PaymentSummaryView(),
       binding: PaymentSummaryBinding(),
@@ -129,11 +155,8 @@ class AppPages {
       binding: BookingScreenBinding(),
     ),
     GetPage<dynamic>(
-      name: _Paths.TRIP_DETAILS,
-      page: () => const TripDetailsView(),
-      binding: TripDetailsBinding(),
-    ),
-    GetPage<dynamic>(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.FILTER_SCREEN,
       page: () => const FilterScreenView(),
       binding: FilterScreenBinding(),
@@ -159,6 +182,8 @@ class AppPages {
       binding: DurationBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.circularReveal,
+      curve: Curves.easeInOut,
       name: _Paths.SEARCH_VIEW,
       page: () => const SearchViewView(),
       binding: SearchViewBinding(),
@@ -169,6 +194,8 @@ class AppPages {
       binding: TokenScreenBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.fade,
+      curve: Curves.easeInOut,
       name: _Paths.REWARDS,
       page: () => const RewardsView(),
       binding: RewardsBinding(),
@@ -179,24 +206,48 @@ class AppPages {
       binding: RazorpayBinding(),
     ),
     GetPage(
+      transition: Transition.leftToRightWithFade,
+      curve: Curves.bounceIn,
       name: _Paths.SINGLE_TOUR,
       page: () => const SingleTourView(),
       binding: SingleTourBinding(),
     ),
     GetPage(
+      transition: Transition.rightToLeftWithFade,
+      curve: Curves.easeInOut,
       name: _Paths.PASSENGER_DETAILS,
       page: () => const PassengerDetailsView(),
       binding: PassengerDetailsBinding(),
     ),
     GetPage(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.SINGLE_CATEGORY,
       page: () => const SingleCategoryView(),
       binding: SingleCategoryBinding(),
     ),
     GetPage(
+      transition: Transition.leftToRightWithFade,
+      curve: Curves.easeInOut,
       name: _Paths.SEARCH_DETAILS,
       page: () => const SearchDetailsView(),
       binding: SearchDetailsBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIFICATIONS,
+      page: () => const NotificationsView(),
+      binding: NotificationsBinding(),
+    ),
+    GetPage(
+      transition: Transition.leftToRightWithFade,
+      name: _Paths.NOINTERNET,
+      page: () => const NointernetView(),
+      binding: NointernetBinding(),
+    ),
+    GetPage(
+      name: _Paths.TOURS_VIEW,
+      page: () => const ToursViewView(),
+      binding: ToursViewBinding(),
     ),
   ];
 }

@@ -27,7 +27,7 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
+          children: <Widget>[
             Card(
               margin: const EdgeInsets.all(10),
               shape: RoundedRectangleBorder(
@@ -47,19 +47,19 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Column(
-                            children: [
+                            children: <Widget>[
                               Text('Kashmir Tour', style: subheading3),
                               Text('CK2D', style: paragraph4),
                             ],
                           ),
                           Column(
-                            children: [
+                            children: <Widget>[
                               Text('Booked Date', style: subheading3),
                               Text('11-11-2022 12:33 Am', style: paragraph4),
                             ],
                           ),
                           Column(
-                            children: [
+                            children: <Widget>[
                               Text('Tour Date', style: subheading3),
                               Text('11-12-1209', style: paragraph4),
                             ],
@@ -86,15 +86,15 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
                             child: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  const Icon(
+                                children: const <Widget>[
+                                  Icon(
                                     TourMaker.people,
                                     color: Colors.white,
                                   ),
-                                  const SizedBox(width: 4),
+                                  SizedBox(width: 4),
                                   Text(
                                     '889',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w800),
                                   ),
@@ -119,16 +119,16 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text("Type",
+                children: <Widget>[
+                  Text('Type',
                       style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
                         color: Colors.white,
                       )),
-                  VerticalDivider(color: Colors.white),
+                  const VerticalDivider(color: Colors.white),
                   Text(
-                    "Amount",
+                    'Amount',
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
@@ -153,10 +153,10 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                    children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const <Widget>[
                           Text('Package Amount'),
                           Text(':'),
                           Text('500'),
@@ -164,7 +164,7 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const <Widget>[
                           Text('Commission'),
                           Text(':'),
                           Text('500'),
@@ -172,7 +172,7 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const <Widget>[
                           Text('Total Amount'),
                           Text(':'),
                           Text('500'),
@@ -180,7 +180,7 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const <Widget>[
                           Text('GST'),
                           Text(':'),
                           Text('500'),
@@ -188,7 +188,7 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const <Widget>[
                           Text('Grand Total'),
                           Text(':'),
                           Text('500'),
@@ -196,7 +196,7 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const <Widget>[
                           Text('Payable Amount'),
                           Text(':'),
                           Text('500'),
@@ -204,7 +204,7 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const <Widget>[
                           Text('Paid Amount'),
                           Text(':'),
                           Text('500'),
@@ -212,7 +212,7 @@ class PaymentSummaryView extends GetView<PaymentSummaryController> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const <Widget>[
                           Text('Remaining Amount'),
                           Text(':'),
                           Text('500'),

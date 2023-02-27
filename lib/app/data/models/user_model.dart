@@ -1,56 +1,57 @@
 class UserModel {
   UserModel(
-      {this.userName,
-      this.phoneNumber,
-      this.address,
-      this.state,
+      {this.address,
       this.category,
       this.district,
       this.email,
       this.enterpriseName,
       this.gender,
-      this.paymentID,
+      this.name,
+      this.paymentId,
       this.paymentStatus,
-      this.tandcstatus});
-  String? userName;
+      this.phoneNumber,
+      this.state,
+      this.tAndCStatus});
   String? address;
-  String? phoneNumber;
-  String? state;
   String? category;
   String? district;
   String? email;
   String? enterpriseName;
   String? gender;
-  String? paymentID;
+  String? name;
+  String? paymentId;
   String? paymentStatus;
-  String? tandcstatus;
+  String? phoneNumber;
+  String? state;
+  String? tAndCStatus;
 
-  Map<String, dynamic> tojson() => <String, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'address': address,
         'category': category,
         'district': district,
         'email': email,
         'enterprise_name': enterpriseName,
         'gender': gender,
-        'name': userName,
-        'payment_id': paymentID,
+        'name': name,
+        'payment_id': paymentId,
         'payment_status': paymentStatus,
         'phone_number': phoneNumber,
         'state': state,
-        't_and_c_status': tandcstatus,
+        't_and_c_status': tAndCStatus,
       };
-  static UserModel fromjson(Map<String, dynamic> json) => UserModel(
+
+  static UserModel fromJson(Map<String, dynamic> json) => UserModel(
         address: json['address'] as String,
         category: json['category'] as String,
         district: json['district'] as String,
         email: json['email'] as String,
         enterpriseName: json['enterprise_name'] as String,
         gender: json['gender'] as String,
-        userName: json['name'] as String,
-        paymentID: json['payment_id'] as String,
+        name: json['name'] as String,
+        paymentId: json['payment_id'] as String,
         paymentStatus: json['payment_status'] as String,
         phoneNumber: json['phone_number'] as String,
         state: json['state'] as String,
-        tandcstatus: json['tandc_status'] as String,
+        tAndCStatus: json['t_and_c_status'] as String,
       );
 }

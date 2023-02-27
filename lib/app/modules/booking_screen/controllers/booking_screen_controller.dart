@@ -13,7 +13,7 @@ class BookingScreenController extends GetxController
   @override
   void onInit() {
     super.onInit();
-    change(null, status: RxStatus.success());
+    loadData();
   }
 
   @override
@@ -24,6 +24,10 @@ class BookingScreenController extends GetxController
   @override
   void onClose() {
     super.onClose();
+  }
+
+  Future<void> loadData() async {
+    await getAllUpcomingBookings();
   }
 
   void onTapUpcoming() {
@@ -43,4 +47,6 @@ class BookingScreenController extends GetxController
   }
 
   void onTapIcon() => Get.toNamed(Routes.PASSENGER_DETAILS);
+
+  Future<void> getAllUpcomingBookings() async {}
 }

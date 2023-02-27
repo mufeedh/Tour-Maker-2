@@ -36,7 +36,7 @@ class LoginController extends GetxController with StateMixin<dynamic> {
         Get.snackbar('Select your district', 'please select your country');
       }
       final UserModel user = UserModel(
-        userName: name.value,
+        name: name.value,
         phoneNumber: phone.value,
         state: state.value,
       );

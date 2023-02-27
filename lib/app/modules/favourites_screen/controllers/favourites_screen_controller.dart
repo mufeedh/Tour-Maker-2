@@ -21,10 +21,18 @@ class FavouritesScreenController extends GetxController with StateMixin {
       await Get.toNamed(Routes.SINGLE_TOUR);
 
   Future<void> loadData() async {
+    await loadWishlists();
+  }
+
+  Future<void> loadWishlists() async {
     log('kopa');
     change(null, status: RxStatus.loading());
+    final ApiResponse<List<WishListModel>> res =
+        await WishListRepo().getAllFav();
+
     try {
-      final res = await WishListRepo().getAllFav();
+      log('data ${res.data}');
+      log('res ${res.message}');
       if (res.status == ApiResponseStatus.completed) {
         log('cdsc');
         wishList.value = res.data!;
@@ -32,12 +40,14 @@ class FavouritesScreenController extends GetxController with StateMixin {
         change(null, status: RxStatus.success());
       } else {
         change(null, status: RxStatus.empty());
-        log('nop');
+        log('jbfidfwefc ${wishList.length}');
       }
     } catch (e) {
       log('catch error $e');
     }
   }
+
+  void loadWishlist() {}
 }
 // 5 beef bir
 // 5 meen fry 

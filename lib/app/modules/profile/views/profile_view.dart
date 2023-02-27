@@ -1,15 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_elevated_button.dart';
+import '../../../widgets/custom_errorscreen.dart';
 import '../../../widgets/custom_loadinscreen.dart';
 import '../../../widgets/my_drawer.dart';
 import '../controllers/profile_controller.dart';
@@ -20,129 +18,140 @@ class ProfileView extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     final ProfileController controller = Get.put(ProfileController());
     return Scaffold(
-        drawer: Obx(() {
-          return MyDrawer(controller: controller.userData.value);
-        }),
-        appBar: const CustomAppBar(
-          titleText: 'Profile',
-        ),
-        body: controller.obx(
-          onLoading: const CustomLoadingScreen(),
-          (dynamic state) => Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Stack(
-                    children: <Widget>[
-                      Obx(
-                        () => controller.selectedImagePath.value == ''
-                            ? const SizedBox(
-                                height: 180,
-                                child: CircleAvatar(
-                                  radius: 60,
-                                  backgroundImage: AssetImage(
-                                    'assets/Avatar.png',
-                                  ),
-                                ),
-                              )
-                            : SizedBox(
-                                height: 180,
-                                child: CircleAvatar(
-                                  radius: 60,
-                                  backgroundImage: AssetImage(
-                                    Image.file(File(
-                                            controller.selectedImagePath.value))
-                                        .toString(),
-                                  ),
-                                ),
-                              ),
+      drawer: Obx(() {
+        return MyDrawer(controller: controller.userData.value);
+      }),
+      appBar: const CustomAppBar(
+        titleText: 'Profile',
+      ),
+      body: controller.obx(
+        onError: (String? e) => CustomErrorScreen(errorText: '$e'),
+        onLoading: const CustomLoadingScreen(),
+        (ProfileView? state) => Center(
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Stack(
+                  children: <Widget>[
+                    // Obx(
+                    //   () => controller.selectedImagePath.value == ''
+                    // ?
+                    const SizedBox(
+                      height: 180,
+                      child: CircleAvatar(
+                        radius: 60,
+                        backgroundImage: AssetImage(
+                          'assets/Avatar.png',
+                        ),
                       ),
-                      Positioned(
-                        top: 130,
-                        left: 43,
-                        child: GestureDetector(
-                          onTap: () => onClckProfileIcon(context),
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: englishViolet,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: SvgPicture.asset(
-                                'assets/camera.svg',
-                                fit: BoxFit.cover,
-                                height: 20,
-                                width: 20,
-                              ),
+                    ),
+                    // : SizedBox(
+                    //     height: 180,
+                    //     child: CircleAvatar(
+                    //       radius: 60,
+                    //       backgroundImage: AssetImage(
+                    //         Image.file(File(
+                    //                 controller.selectedImagePath.value))
+                    //             .toString(),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    Positioned(
+                      top: 130,
+                      left: 43,
+                      child: GestureDetector(
+                        // onTap: () => onClckProfileIcon(context),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: englishViolet,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'assets/camera.svg',
+                              fit: BoxFit.cover,
+                              height: 20,
+                              width: 20,
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  buildTile(
+                    ),
+                  ],
+                ),
+                Obx(() {
+                  return buildTile(
                       icon: TourMaker.profile_icon,
-                      data: controller.userData.value.userName.toString(),
-                      label: 'Full Name'),
-                  buildTile(
+                      data: controller.userData.value.name.toString(),
+                      label: 'Full Name');
+                }),
+                Obx(() {
+                  return buildTile(
                     icon: TourMaker.call,
                     data: controller.userData.value.phoneNumber.toString(),
                     label: 'Phone Number',
-                  ),
-                  buildTile(
+                  );
+                }),
+                Obx(() {
+                  return buildTile(
                       icon: TourMaker.location_icon,
                       label: 'State',
-                      data: controller.userData.value.state.toString()),
-                  Padding(
+                      data: controller.userData.value.state.toString());
+                }),
+                Obx(() {
+                  return Padding(
                     padding: const EdgeInsets.all(10),
                     child: CustomButton().showIconButtonWithGradient(
                       height: 12.h,
                       width: 100.h,
                       isLoading: controller.isloading.value,
                       text: '  Pay Service Charge Now',
-                      onPressed: () => controller.onClickPayment(),
+                      onPressed: () {},
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ));
-  }
-
-  Future<void> onClckProfileIcon(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-          ),
-          title: const Text('Choose profile pic from :'),
-          content: Container(
-            padding: const EdgeInsets.all(8),
-            height: 140,
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  leading: Icon(Icons.image, color: englishViolet),
-                  title: const Text('Gallery'),
-                  onTap: () => controller.getImage(ImageSource.gallery),
-                ),
-                ListTile(
-                  leading: Icon(Icons.camera_alt_rounded, color: englishViolet),
-                  title: const Text('Camera'),
-                  onTap: () => controller.getImage(ImageSource.camera),
-                ),
+                  );
+                })
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
+
+  // Future<void> onClckProfileIcon(BuildContext context) {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(18),
+  //         ),
+  //         title: const Text('Choose profile pic from :'),
+  //         content: Container(
+  //           padding: const EdgeInsets.all(8),
+  //           height: 140,
+  //           child: Column(
+  //             children: <Widget>[
+  //               ListTile(
+  //                 leading: Icon(Icons.image, color: englishViolet),
+  //                 title: const Text('Gallery'),
+  //                 onTap: () => controller.getImage(ImageSource.gallery),
+  //               ),
+  //               ListTile(
+  //                 leading: Icon(Icons.camera_alt_rounded, color: englishViolet),
+  //                 title: const Text('Camera'),
+  //                 onTap: () => controller.getImage(ImageSource.camera),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget buildTile(
       {required IconData icon, required String label, required String data}) {

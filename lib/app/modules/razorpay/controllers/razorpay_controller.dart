@@ -1,11 +1,13 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorpayController extends GetxController {
-  Razorpay _razorpay = Razorpay();
-  final count = 0.obs;
+  final Razorpay _razorpay = Razorpay();
+  final RxInt count = 0.obs;
   @override
   void onInit() {
     super.onInit();

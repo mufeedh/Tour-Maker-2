@@ -64,12 +64,13 @@ class GetStartedController extends GetxController with StateMixin<dynamic> {
   Future<void> onVerifyPhoneNumber() async {
     if (formKey.currentState!.validate()) {
       log('valid');
+      // ignore: always_specify_types
       await Future.delayed(const Duration(seconds: 1));
       isloading.value = true;
       try {
         final String phoneNumber = '+${selectedCountry.value.phoneCode}$phone';
         final FirebaseAuth auth = FirebaseAuth.instance;
-
+        log('get started try');
         await auth
             .verifyPhoneNumber(
           phoneNumber: phoneNumber,
@@ -111,8 +112,9 @@ class GetStartedController extends GetxController with StateMixin<dynamic> {
           },
         )
             .catchError((dynamic e) {
-          log('catch err $e');
+          log('catch err get started $e');
         });
+        // ignore: always_specify_types
         await Future.delayed(Duration(
           seconds: isFinished.value != true ? 1 : 15,
         ));

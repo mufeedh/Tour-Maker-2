@@ -13,6 +13,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
   Widget build(BuildContext context) {
     // final double h = MediaQuery.of(context).size.height;
     // final double w = MediaQuery.of(context).size.width;
+    // ignore: unused_local_variable
     final SplashScreenController controller = Get.put(SplashScreenController());
     return Scaffold(
       backgroundColor: Colors.white,

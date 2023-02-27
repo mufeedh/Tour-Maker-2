@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,9 +9,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sizer/sizer.dart';
 
-import 'app/data/repo/user_repo.dart';
 import 'app/routes/app_pages.dart';
-import 'app/services/network_services/dio_client.dart';
 import 'firebase_options.dart';
 
 GetStorage getStorage = GetStorage();
@@ -60,6 +57,7 @@ Future<void> main() async {
         (BuildContext context, Orientation orientation, DeviceType deviceType) {
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
         title: 'Application',
         initialRoute: AppPages.INITIAL,
         getPages: AppPages.routes,

@@ -8,23 +8,23 @@ import '../../../widgets/custom_appbar.dart';
 import '../controllers/passenger_details_controller.dart';
 
 class PassengerDetailsView extends GetView<PassengerDetailsController> {
-  const PassengerDetailsView({Key? key}) : super(key: key);
+  const PassengerDetailsView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(titleText: 'Passenger Details'),
+      appBar: const CustomAppBar(titleText: 'Passenger Details'),
       body: Padding(
           padding: const EdgeInsets.all(24),
           child: Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 239, 240, 241),
+                color: const Color.fromARGB(255, 239, 240, 241),
                 borderRadius: BorderRadius.circular(18),
               ),
               padding: const EdgeInsets.all(12),
               child: ListView.builder(
                 itemCount: 50,
-                itemBuilder: (context, index) => Container(
+                itemBuilder: (BuildContext context, int index) => Container(
                   height: 162,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -34,27 +34,27 @@ class PassengerDetailsView extends GetView<PassengerDetailsController> {
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
+                    children: <Widget>[
                       Row(
-                        children: [
+                        children: <Widget>[
                           Icon(TourMaker.profile_icon, color: fontColor),
-                          SizedBox(width: 5),
-                          Text('JOHN Jacob'),
-                          Spacer(),
-                          Text('Ck2D'),
+                          const SizedBox(width: 5),
+                          const Text('JOHN Jacob'),
+                          const Spacer(),
+                          const Text('Ck2D'),
                         ],
                       ),
                       Row(
-                        children: [
+                        children: <Widget>[
                           Icon(TourMaker.call, color: fontColor),
-                          SizedBox(width: 5),
-                          Text('+91987654321'),
+                          const SizedBox(width: 5),
+                          const Text('+91987654321'),
                         ],
                       ),
                       Row(
-                        children: [
+                        children: <Widget>[
                           Icon(TourMaker.location_icon, color: fontColor),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           Text(
                             'Address of the residence of\n passenger who \nlived in anywhere in the world',
                             style: subheading3,
