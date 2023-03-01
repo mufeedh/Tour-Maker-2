@@ -6,7 +6,6 @@ import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
-import '../../../routes/app_pages.dart';
 import '../../../widgets/custom_loadinscreen.dart';
 import '../controllers/main_screen_controller.dart';
 
@@ -41,7 +40,7 @@ class MainScreenView extends GetView<MainScreenController> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    // buildTrending(screenHeight),
+                    buildTrending(screenHeight),
                     const SizedBox(height: 20),
                     Row(
                       children: <Widget>[
@@ -181,7 +180,7 @@ class MainScreenView extends GetView<MainScreenController> {
                             children: <Widget>[
                               const SizedBox(height: 40),
                               Column(
-                                children: [
+                                children: <Widget>[
                                   Text(
                                     controller
                                         .trendingToursList[index].destination
@@ -278,45 +277,40 @@ class MainScreenView extends GetView<MainScreenController> {
                                 crossAxisCount: 4,
                               ),
                               itemBuilder: (BuildContext context, int index) {
-                                return Hero(
-                                  tag: controller.categoryList[index],
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        controller.onClickedSingleCategory(
+                                return GestureDetector(
+                                  onTap: () =>
+                                      controller.onClickedSingleCategory(
+                                          controller.categoryList[index].name
+                                              .toString(),
+                                          controller.categoryList[index].image
+                                              .toString()),
+                                  child: SizedBox(
+                                    height: 73,
+                                    width: 73,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Container(
+                                          width: 53,
+                                          height: 53,
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                  controller
+                                                      .categoryList[index].image
+                                                      .toString(),
+                                                ),
+                                              ),
+                                              shape: BoxShape.circle,
+                                              color: Colors.blue),
+                                        ),
+                                        Text(
                                             controller.categoryList[index].name
                                                 .toString(),
-                                            controller.categoryList[index].image
-                                                .toString()),
-                                    child: SizedBox(
-                                      height: 73,
-                                      width: 73,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Container(
-                                            width: 53,
-                                            height: 53,
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  fit: BoxFit.cover,
-                                                  image: NetworkImage(
-                                                    controller
-                                                        .categoryList[index]
-                                                        .image
-                                                        .toString(),
-                                                  ),
-                                                ),
-                                                shape: BoxShape.circle,
-                                                color: Colors.blue),
-                                          ),
-                                          Text(
-                                              controller
-                                                  .categoryList[index].name
-                                                  .toString(),
-                                              style: paragraph4),
-                                        ],
-                                      ),
+                                            style: paragraph4),
+                                      ],
                                     ),
                                   ),
                                 );

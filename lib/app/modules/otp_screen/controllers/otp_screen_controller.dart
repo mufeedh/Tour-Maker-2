@@ -76,19 +76,19 @@ class OtpScreenController extends GetxController
             await UserRepository().checkUserExists();
         if (res.status == ApiResponseStatus.completed) {
           if (res.data?.isEmpty != true) {
-            log('dat');
+            log('adeeb home');
 
             Get.offAllNamed(Routes.HOME);
             isLoading.value = false;
             // Get.offAllNamed(Routes.TOKEN_SCREEN, arguments: token);
           } else {
-            log('els $phone');
+            log('adeeb login');
 
             Get.offAllNamed(Routes.LOGIN, arguments: phone);
             isLoading.value = false;
           }
         } else {
-          log('errrrrrooorr');
+          log('adeeb errrrrrooorr');
         }
       });
       log('token strg ${storage.read('token')}');

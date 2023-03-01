@@ -1,13 +1,18 @@
 // ignore_for_file: unnecessary_overrides
 
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
+import '../../../../core/theme/style.dart';
 import '../../../data/models/razorpay_model.dart';
 import '../../../data/models/user_model.dart';
+import '../../../data/repo/razorpay_repo.dart';
 import '../../../data/repo/user_repo.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/profile_view.dart';
@@ -15,22 +20,26 @@ import '../views/profile_view.dart';
 class ProfileController extends GetxController with StateMixin<ProfileView> {
   late Razorpay razorPay;
   RxBool isloading = false.obs;
+  var filePath = RxnString();
+
   RxString selectedImagePath = ''.obs;
   RxString selectedImageSize = ''.obs;
   Rx<UserModel> userData = UserModel().obs;
   Rx<RazorPayModel> razorPayModel = RazorPayModel().obs;
   Rx<XFile>? imgXfile;
   String? username;
+  final ImagePicker _picker = ImagePicker();
+
   int? amount;
   UserRepository userRepo = UserRepository();
   @override
   void onInit() {
     super.onInit();
     getData();
-    // razorPay = Razorpay();
-    // razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    // razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    // razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    razorPay = Razorpay();
+    razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
   @override
@@ -115,90 +124,119 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
   // }
 
   // ignore: unused_element
-  // Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
-  //   log('Payment success: ${response.signature}');
-  //   final String? signature = response.signature;
-  //   final String? orderId = razorPayModel.value.packageId;
-  //   final String? paymentId = response.paymentId;
+  Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    log('Payment success: ${response.signature}');
+    final String? signature = response.signature;
+    final String? orderId = razorPayModel.value.packageId;
+    final String? paymentId = response.paymentId;
 
-  //   final ApiResponse<bool> res =
-  //       await RazorPayRepository().verifyPayment(paymentId, signature, orderId);
-  //   try {
-  //     if (res.status == ApiResponseStatus.completed && res.data!) {
-  //       log('Payment verification succeeded.');
-  //     } else {
-  //       log('Payment verification failed: ${res.message}');
-  //     }
-  //   } catch (e) {
-  //     log('Error while handling payment success: $e');
-  //   }
-  // }
+    final ApiResponse<bool> res =
+        await RazorPayRepository().verifyPayment(paymentId, signature, orderId);
+    try {
+      if (res.status == ApiResponseStatus.completed && res.data!) {
+        log('Payment verification succeeded.');
+      } else {
+        log('Payment verification failed: ${res.message}');
+      }
+    } catch (e) {
+      log('Error while handling payment success: $e');
+    }
+  }
 
-  // void _handlePaymentError(PaymentFailureResponse response) {
-  //   log('Payment error: ${response.code} - ${response.message}');
-  // }
+  void _handlePaymentError(PaymentFailureResponse response) {
+    log('Payment error: ${response.code} - ${response.message}');
+  }
 
-  // void _handleExternalWallet(ExternalWalletResponse response) {
-  //   log('External wallet: ${response.walletName}');
-  // }
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    log('External wallet: ${response.walletName}');
+  }
 
-  // Future<void> onClickPayment() async {
-  //   isloading.value = true;
-  //   final RazorPayModel razorPaymodel = RazorPayModel(
-  //     amount: amount,
-  //     contact: userData.value.phoneNumber,
-  //     currency: 'INR',
-  //     name: userData.value.userName,
-  //   );
-  //   final ApiResponse<RazorPayModel> res =
-  //       await RazorPayRepository().createPayment(razorPaymodel);
-  //   try {
-  //     // log('adeeb ${res.message}');
-  //     // log('adeeb ${res.data}');
-  //     if (res.data != null) {
-  //       razorPayModel.value = res.data!;
-  //       // log('adeeb razorpa ${razorPayModel.value.packageId}');
-  //       openRazorPay(razorPayModel.value.packageId.toString(), amount!);
-  //     } else {
-  //       // log(' adeeb raz emp ');
-  //     }
-  //   } catch (e) {
-  //     log('raz catch $e');
-  //   }
-  //   isloading.value = false;
-  // }
+  Future<void> onClickPayment() async {
+    isloading.value = true;
+    final RazorPayModel razorPaymodel = RazorPayModel(
+      amount: 1000,
+      contact: userData.value.phoneNumber,
+      currency: 'INR',
+      name: userData.value.name,
+    );
+    final ApiResponse<RazorPayModel> res =
+        await RazorPayRepository().createPayment(razorPaymodel);
+    try {
+      log('adeeb ${res.message}');
+      log('adeeb ${res.data}');
+      if (res.data != null) {
+        razorPayModel.value = res.data!;
+        log('adeeb razorpa ${razorPayModel.value.packageId}');
+        openRazorPay(razorPayModel.value.packageId.toString(), 1000);
+      } else {
+        // log(' adeeb raz emp ');
+      }
+    } catch (e) {
+      log('raz catch $e');
+    }
+    isloading.value = false;
+  }
 
-  // void openRazorPay(String orderId, int amount) {
-  //   final Map<String, Object?> options = <String, Object?>{
-  //     'key': 'rzp_test_P4CbygdUfrhYr3',
-  //     'amount': amount * 100, // convert to paise
-  //     'name': userData.value.userName,
-  //     'description': 'Test Payment',
-  //     'order_id': orderId,
-  //     'prefill': <String, Object?>{
-  //       // 'email': widget.email,
-  //       'contact': userData.value.phoneNumber,
-  //     },
-  //     'external': <String, Object?>{
-  //       'wallets': ['paytm'],
-  //     },
-  //   };
+  void openRazorPay(String orderId, int amount) {
+    final Map<String, Object?> options = <String, Object?>{
+      'key': 'rzp_test_P4CbygdUfrhYr3',
+      'amount': 10000 * 100, // convert to paise
+      'name': userData.value.name,
+      'description': 'Test Payment',
+      'order_id': orderId,
+      'prefill': <String, Object?>{
+        // 'email': widget.email,
+        'contact': userData.value.phoneNumber,
+      },
+      'external': <String, Object?>{
+        'wallets': ['paytm'],
+      },
+    };
 
-  //   try {
-  //     razorPay.open(options);
-  //   } catch (e) {
-  //     log('Error opening Razorpay checkout: $e');
-  //   }
-  // }
-  // onPickedFromGallery() async {
-  //   await _picker
-  //       .pickImage(source: ImageSource.gallery)
-  //       .then((XFile? xfile) => xfile != null ? cropImage(xfile.path) : null);
-  // }
+    try {
+      razorPay.open(options);
+    } catch (e) {
+      log('Error opening Razorpay checkout: $e');
+    }
+  }
 
-  // onPickedFromCamera() async {
-  //   await _picker
-  //       .pickImage(source: ImageSource.camera)
-  //       .then((XFile? xfile) => xfile != null ? cropImage(xfile.path) : null);
-  // }
+  onPickedFromGallery() async {
+    await _picker.pickImage(source: ImageSource.gallery).then((XFile? xfile) =>
+        xfile != null ? cropImage(xfile.path.toString()) : null);
+  }
+
+  onPickedFromCamera() async {
+    await _picker.pickImage(source: ImageSource.camera).then((XFile? xfile) =>
+        xfile != null ? cropImage(xfile.path.toString()) : null);
+  }
+
+  cropImage(String fPath) async {
+    await ImageCropper()
+        .cropImage(
+      sourcePath: fPath,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+      ],
+      compressFormat: ImageCompressFormat.jpg,
+      compressQuality: 50,
+      uiSettings: [
+        AndroidUiSettings(
+            toolbarColor: englishlinearViolet,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.square,
+            lockAspectRatio: true,
+            activeControlsWidgetColor: englishViolet),
+
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+        // WebUiSettings(
+        //   context: context,
+        // ),
+      ],
+    )
+        .then((croppedFile) {
+      return filePath.value = croppedFile?.path;
+    });
+  }
 }

@@ -11,8 +11,11 @@ import '../../../data/models/destinations_model.dart';
 import '../../../data/models/package_model.dart';
 import '../../../data/repo/category_repo.dart';
 import '../../../data/repo/destination_repo.dart';
+import '../../../data/repo/filter_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
+import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/custom_errorscreen.dart';
 import '../views/filter_screen_view.dart';
 
 class FilterScreenController extends GetxController
@@ -22,15 +25,13 @@ class FilterScreenController extends GetxController
   RxList<bool> isSelected = <bool>[].obs;
   RxBool isLoading = false.obs;
   RxBool showDomesticTours = false.obs;
-  RxList<bool> isSelectedBudget =
-      List<bool>.filled(budgetList.length, false).obs;
-  Rx<Budget?> selectedBudget = Rx<Budget?>(null);
+  Rx<Budget> selectedBudget = Budget(title: '', value: '').obs;
   RxInt selectedIndex = 0.obs;
-  RxDouble sliderValue = 0.0.obs;
-  final RxInt count = 0.obs;
   dynamic selectedDestinationsList;
-  List<String> selectedDestinationNames = <String>[];
+  dynamic selectedCategoryList;
   List<DestinationsModel> selectedDestinations = <DestinationsModel>[];
+  List<CategoryModel> selectedCategories = <CategoryModel>[];
+  Rx<String> duration = ''.obs;
 
   @override
   void onInit() {
@@ -49,11 +50,11 @@ class FilterScreenController extends GetxController
   }
 
   Future<void> loadData() async {
-    await getAllDestinations();
-    await getAllCategories();
+    await listAllDestinations();
+    await listCategories();
   }
 
-  Future<void> getAllCategories() async {
+  Future<void> listCategories() async {
     change(null, status: RxStatus.loading());
     final ApiResponse<List<CategoryModel>> res =
         await CategoryRepository().getAllCategory();
@@ -70,14 +71,7 @@ class FilterScreenController extends GetxController
     }
   }
 
-  void printSelectedDestinations() {
-    selectedDestinationsList = selectedDestinations
-        .map((DestinationsModel d) => d.destination)
-        .join(', ');
-    log('Selected destinations: $selectedDestinationsList');
-  }
-
-  Future<void> getAllDestinations() async {
+  Future<void> listAllDestinations() async {
     change(null, status: RxStatus.loading());
     final ApiResponse<List<DestinationsModel>> res =
         await DestinationRepository().getAllDestinations();
@@ -94,50 +88,155 @@ class FilterScreenController extends GetxController
     }
   }
 
-  Future<void> onSelectDestinations() async {
+  Future<void> filterbyDestinations() async {
     log('destinations');
     isLoading.value = true;
-    change(null, status: RxStatus.loading());
 
-    try {
-      final destinations =
-          showDomesticTours.value ? true : selectedDestinationsList;
-      log('resfd $destinations');
+    if (selectedDestinationsList != null) {
+      change(null, status: RxStatus.loading());
 
-      if (destinations.isNotEmpty == true) {
-        // if (res.status == ApiResponseStatus.completed) {
-        // final List<PackageModel> data = res.data!;
-        log('adeeb fil $destinations');
-        Get.toNamed(Routes.TOURS_VIEW, arguments: [destinations]);
+      log('selected destination');
+      final ApiResponse<List<PackageModel>> res =
+          await FilterRepository().getDestination(selectedDestinationsList);
+      log('adeeb ${res.status}');
+      log('adeeb ${res.message}');
+      log('adeeb ${res.data}');
+      if (res.status == ApiResponseStatus.completed) {
+        Get.toNamed(Routes.TOURS_VIEW, arguments: res.data)!
+            .whenComplete(() => loadData());
         change(null, status: RxStatus.success());
-        // } else {
-        //   log('empty');
-        //   change(null, status: RxStatus.empty());
-        // }
       } else {
-        Get.snackbar('Nothing selected', 'Select at least one destination',
-            backgroundColor: englishViolet, colorText: Colors.white);
-        log('hii');
+        Get.to(
+          const Scaffold(
+            appBar: CustomAppBar(),
+            body: Center(
+              child: CustomErrorScreen(
+                errorText: 'sorry Nothing \n Found here',
+              ),
+            ),
+          ),
+        )!
+            .whenComplete(() => loadData());
+        change(null, status: RxStatus.empty());
       }
-    } catch (e) {
-      log('filter screen catch $e');
+    } else if (showDomesticTours.value == true) {
+      change(null, status: RxStatus.loading());
+
+      log('show domestic');
+      final ApiResponse<List<PackageModel>> res =
+          await FilterRepository().getDomesticTours();
+      if (res.status == ApiResponseStatus.completed) {
+        log('dafa');
+        final List<PackageModel> domesticTours = res.data!;
+        Get.toNamed(Routes.TOURS_VIEW, arguments: domesticTours)!
+            .whenComplete(() => loadData());
+        change(null, status: RxStatus.success());
+      } else {
+        Get.to(
+          const Scaffold(
+            appBar: CustomAppBar(),
+            body: Center(
+              child: CustomErrorScreen(
+                errorText: 'sorry Nothing \n Found here',
+              ),
+            ),
+          ),
+        )!
+            .whenComplete(() => loadData());
+        change(null, status: RxStatus.empty());
+      }
+    } else {
+      log('empty');
+      Get.snackbar(
+        'Please Select a destination',
+        'select atleast one destination',
+        backgroundColor: englishViolet,
+        colorText: Colors.white,
+      );
     }
+
     isLoading.value = false;
   }
 
-  void onSelectBudget() {
+  Future<void> filterbyBudget() async {
     log('budget');
+    change(null, status: RxStatus.loading());
+
+    final ApiResponse<List<PackageModel>> res =
+        await FilterRepository().getToursbyBudget(selectedBudget.value.value);
+    if (res.status == ApiResponseStatus.completed) {
+      Get.toNamed(Routes.TOURS_VIEW, arguments: res.data)!
+          .whenComplete(() => loadData());
+      change(null, status: RxStatus.success());
+    } else {
+      Get.to(
+        const Scaffold(
+          appBar: CustomAppBar(),
+          body: Center(
+            child: CustomErrorScreen(
+              errorText: 'sorry Nothing \n Found here',
+            ),
+          ),
+        ),
+      )!
+          .whenComplete(() => loadData());
+      change(null, status: RxStatus.empty());
+    }
   }
 
-  void onSelectedCategory() {
+  Future<void> filterbyCategory() async {
     log('category');
+    log('budget');
+    change(null, status: RxStatus.loading());
+
+    final ApiResponse<List<PackageModel>> res =
+        await FilterRepository().getCategory(selectedCategoryList);
+    if (res.status == ApiResponseStatus.completed) {
+      Get.toNamed(Routes.TOURS_VIEW, arguments: res.data)!
+          .whenComplete(() => loadData());
+      change(null, status: RxStatus.success());
+    } else {
+      Get.to(
+        const Scaffold(
+          appBar: CustomAppBar(),
+          body: Center(
+            child: CustomErrorScreen(
+              errorText: 'sorry Nothing \n Found here',
+            ),
+          ),
+        ),
+      )!
+          .whenComplete(() => loadData());
+      change(null, status: RxStatus.empty());
+    }
   }
 
-  void onSelectDuration() {
-    log('duration');
+  Future<void> filterbyDuration() async {
+    change(null, status: RxStatus.loading());
+
+    final ApiResponse<List<PackageModel>> res =
+        await FilterRepository().getToursByDuration(duration.value);
+    if (res.status == ApiResponseStatus.completed) {
+      Get.toNamed(Routes.TOURS_VIEW, arguments: res.data)!
+          .whenComplete(() => loadData());
+      change(null, status: RxStatus.success());
+    } else {
+      Get.to(
+        const Scaffold(
+          appBar: CustomAppBar(),
+          body: Center(
+            child: CustomErrorScreen(
+              errorText: 'sorry Nothing \n Found here',
+            ),
+          ),
+        ),
+      )!
+          .whenComplete(() => loadData());
+      change(null, status: RxStatus.empty());
+    }
   }
 
-  void onFilterDestinations(bool? value, int index) {
+  void onDestinationCheck(bool? value, int index) {
     isSelected[index] = value ?? false;
 
     if (value != null && value) {
@@ -164,24 +263,42 @@ class FilterScreenController extends GetxController
     printSelectedDestinations();
   }
 
-  void onBudgetCheck(int index) {
-    for (int i = 0; i < isSelected.length; i++) {
-      if (i == index) {
-        isSelected[i] = true;
+  void onCategoryCheck(bool? value, int index) {
+    isSelected[index] = value ?? false;
+    if (value != null && value) {
+      if (selectedCategories.length < 5) {
+        selectedCategories.add(categoryList[index]);
+        final CategoryModel res = selectedCategories.last;
+        log('last selected destination: $res');
       } else {
-        isSelected[i] = false;
+        // Automatically remove the first selected item
+        final CategoryModel removedItem = selectedCategories.removeAt(0);
+        isSelected[categoryList.indexOf(removedItem)] = false;
+        // Add the newly selected item to the end of the list
+        selectedCategories.add(categoryList[index]);
       }
     }
-    selectedBudget.value = budgetList[index];
-    log(selectedBudget.value!.value);
+    update(); // Update the isSelected list
+    printSelectedCategories();
   }
 
-  // void onBudgetCheck(bool? value, int index) {
-  //   if (value == true) {
-  //     selectedBudget.value = budgetList[index];
-  //   } else {
-  //     selectedBudget.value = null;
-  //   }
-  //   isSelected.assignAll(List.generate(isSelected.length, (i) => i == index));
-  // }
+  void onBudgetCheck(bool? value, Budget budget) {
+    if (value ?? false) {
+      selectedBudget.value = budget;
+      log(selectedBudget.value.value);
+    }
+  }
+
+  void printSelectedCategories() {
+    selectedCategoryList =
+        selectedCategories.map((CategoryModel d) => d.name).join(',');
+    log('Selected category: $selectedCategoryList');
+  }
+
+  void printSelectedDestinations() {
+    selectedDestinationsList = selectedDestinations
+        .map((DestinationsModel d) => d.destination)
+        .join(',');
+    log('Selected category: $selectedDestinationsList');
+  }
 }

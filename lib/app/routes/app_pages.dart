@@ -72,13 +72,13 @@ class AppPages {
 
   static final List<GetPage<dynamic>> routes = <GetPage<dynamic>>[
     GetPage<dynamic>(
+      transition: Transition.zoom,
       name: _Paths.HOME,
       page: () => const HomeView(),
       binding: HomeBinding(),
     ),
     GetPage<dynamic>(
-      transition: Transition.zoom,
-      curve: Curves.easeInOut,
+      transition: Transition.fadeIn,
       name: _Paths.SPLASH_SCREEN,
       page: () => const SplashScreenView(),
       binding: SplashScreenBinding(),

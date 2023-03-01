@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../../data/models/package_model.dart';
 import '../../../data/repo/destination_repo.dart';
+import '../../../data/repo/filter_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/search_details_view.dart';
@@ -37,9 +38,8 @@ class SearchDetailsController extends GetxController
       destinationValue = Get.arguments as String;
       log('dse');
       try {
-        final ApiResponse<List<PackageModel>> res =
-            await DestinationRepository()
-                .getDestination(destinationValue.toString());
+        final ApiResponse<List<PackageModel>> res = await FilterRepository()
+            .getDestination(destinationValue.toString());
         if (res.status == ApiResponseStatus.completed) {
           destinations.value = res.data!;
           change(null, status: RxStatus.success());

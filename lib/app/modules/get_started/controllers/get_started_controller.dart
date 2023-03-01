@@ -64,9 +64,9 @@ class GetStartedController extends GetxController with StateMixin<dynamic> {
   Future<void> onVerifyPhoneNumber() async {
     if (formKey.currentState!.validate()) {
       log('valid');
-      // ignore: always_specify_types
-      await Future.delayed(const Duration(seconds: 1));
       isloading.value = true;
+
+      await Future.delayed(const Duration(seconds: 1));
       try {
         final String phoneNumber = '+${selectedCountry.value.phoneCode}$phone';
         final FirebaseAuth auth = FirebaseAuth.instance;
@@ -76,15 +76,16 @@ class GetStartedController extends GetxController with StateMixin<dynamic> {
           phoneNumber: phoneNumber,
           timeout: const Duration(seconds: 60),
           verificationCompleted: (PhoneAuthCredential authCredential) async {
-            log('verification completed');
-            auth.signInWithCredential(authCredential);
-            log('auth cred token ${authCredential.token}');
-            log('auth cred smscode${authCredential.smsCode}');
-            log('auth cred verif ${authCredential.verificationId}');
-            verificationid = authCredential.verificationId;
-            log('auth cred accesstok ${authCredential.accessToken}');
-            log('auth cred provider id ${authCredential.providerId}');
-            log('auth cred sign in method ${authCredential.signInMethod}');
+            // log('adeeb verification cpmpleted');
+            // log('verification completed');
+            // auth.signInWithCredential(authCredential);
+            // log('auth cred token ${authCredential.token}');
+            // log('auth cred smscode${authCredential.smsCode}');
+            // log('auth cred verif ${authCredential.verificationId}');
+            // verificationid = authCredential.verificationId;
+            // log('auth cred accesstok ${authCredential.accessToken}');
+            // log('auth cred provider id ${authCredential.providerId}');
+            // log('auth cred sign in method ${authCredential.signInMethod}');
           },
           verificationFailed: (FirebaseAuthException authException) {
             log('Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
@@ -114,15 +115,10 @@ class GetStartedController extends GetxController with StateMixin<dynamic> {
             .catchError((dynamic e) {
           log('catch err get started $e');
         });
-        // ignore: always_specify_types
-        await Future.delayed(Duration(
-          seconds: isFinished.value != true ? 1 : 15,
-        ));
 
         isloading.value = false;
-        // update();
       } catch (e) {
-        log('carch $e');
+        log('get started verify catch $e');
       }
     } else {
       log('not valid');

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../data/models/package_model.dart';
 import '../../../data/models/single_category_model.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_errorscreen.dart';
@@ -16,7 +17,7 @@ class SingleCategoryView extends GetView<SingleCategoryController> {
   Widget build(BuildContext context) {
     final SingleCategoryController controller =
         Get.put(SingleCategoryController());
-    final RxList<SingleCategoryModel> data = controller.singleCategoryList;
+    final RxList<PackageModel> data = controller.singleCategoryList;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: const CustomAppBar(),
@@ -60,7 +61,7 @@ class SingleCategoryView extends GetView<SingleCategoryController> {
                       physics: const BouncingScrollPhysics(),
                       itemCount: controller.singleCategoryList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        if (data[index].offerAmount == null) {
+                        if (data[index].amount == null) {
                           return Obx(() {
                             return SingleTourTile(
                               image: data[index].image.toString(),
@@ -70,7 +71,7 @@ class SingleCategoryView extends GetView<SingleCategoryController> {
                               days: '${data[index].days} ',
                               nights: '${data[index].nights}',
                               onPressed: () => controller
-                                  .onSingleTourPressed(data[index].iD!),
+                                  .onSingleTourPressed(data[index].id!),
                               isClickedFavourites:
                                   controller.isClickedFavorites.value,
                               onClickFavourites: () =>
@@ -85,11 +86,11 @@ class SingleCategoryView extends GetView<SingleCategoryController> {
                               tourName: data[index].name.toString(),
                               tourcode: data[index].tourCode.toString(),
                               isHaveoffer: true,
-                              offerAmount: data[index].offerAmount.toString(),
+                              offerAmount: data[index].amount.toString(),
                               days: '${data[index].days} ',
                               nights: '${data[index].nights}',
                               onPressed: () => controller
-                                  .onSingleTourPressed(data[index].iD!),
+                                  .onSingleTourPressed(data[index].id!),
                               isClickedFavourites:
                                   controller.isClickedFavorites.value,
                               onClickFavourites: () =>

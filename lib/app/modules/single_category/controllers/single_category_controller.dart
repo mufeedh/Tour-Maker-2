@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 
+import '../../../data/models/package_model.dart';
 import '../../../data/models/single_category_model.dart';
 import '../../../data/models/wishlist_model.dart';
 import '../../../data/repo/category_repo.dart';
@@ -12,7 +13,7 @@ import '../views/single_category_view.dart';
 
 class SingleCategoryController extends GetxController
     with StateMixin<SingleCategoryView> {
-  RxList<SingleCategoryModel> singleCategoryList = <SingleCategoryModel>[].obs;
+  RxList<PackageModel> singleCategoryList = <PackageModel>[].obs;
   Rx<String> categoryName = ''.obs;
   Rx<String> categoryImage = ''.obs;
   Rx<bool> isHaveOffer = false.obs;
@@ -41,8 +42,11 @@ class SingleCategoryController extends GetxController
       try {
         change(null, status: RxStatus.loading());
 
-        final ApiResponse<List<SingleCategoryModel>> res =
+        final ApiResponse<List<PackageModel>> res =
             await CategoryRepository().getCategorybycategoryName(categoryName);
+        log('Adeeb categ ${res.status}');
+        log('Adeeb categ ${res.message}');
+        log('Adeeb categ ${res.data}');
         if (res.status == ApiResponseStatus.completed) {
           singleCategoryList.value = res.data!;
           change(null, status: RxStatus.success());
@@ -65,14 +69,15 @@ class SingleCategoryController extends GetxController
     // }
   }
   Future<void> onClickFavourites(int index) async {
-    final tourId = singleCategoryList[index].tourId!;
-    final ApiResponse<List<WishListModel>> res =
-        await WishListRepo().createFav(tourId);
+    //   final int tourId = singleCategoryList[index].tourId!;
+    //   final ApiResponse<List<WishListModel>> res =
+    //       await WishListRepo().createFav(tourId);
 
-    if (res.status == ApiResponseStatus.completed) {
-      isClickedFavorites.value = true;
-    } else {
-      isClickedFavorites.value = false;
-    }
+    //   if (res.status == ApiResponseStatus.completed) {
+    //     isClickedFavorites.value = true;
+    //   } else {
+    //     isClickedFavorites.value = false;
+    //   }
+    // }
   }
 }

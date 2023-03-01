@@ -13,6 +13,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
   Widget build(BuildContext context) {
     final FilterScreenController controller = Get.put(FilterScreenController());
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -54,32 +55,38 @@ class FilterScreenView extends GetView<FilterScreenController> {
   Container buildSearchButton(
       BuildContext context, FilterScreenController controller) {
     return Container(
-        width: MediaQuery.of(context).size.width,
-        // height: MediaQuery.of(context).size.height * 0.70,
-        margin: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(
-          // color: englishViolet,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
-          ),
+      width: MediaQuery.of(context).size.width,
+      // height: MediaQuery.of(context).size.height * 0.70,
+      margin: const EdgeInsets.all(10),
+      decoration: const BoxDecoration(
+        // color: englishViolet,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(50),
+          topRight: Radius.circular(50),
         ),
-        child: Center(
-            child: CustomButton().showIconButtonWithGradient(
+      ),
+      child: Center(
+        child: Obx(
+          () {
+            return CustomButton().showIconButtonWithGradient(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.10,
                 isLoading: controller.isLoading.value,
                 text: '   Show Results',
                 onPressed: () {
                   controller.selectedIndex.value == 0
-                      ? controller.onSelectDestinations()
+                      ? controller.filterbyDestinations()
                       : controller.selectedIndex.value == 1
-                          ? controller.onSelectBudget()
+                          ? controller.filterbyBudget()
                           : controller.selectedIndex.value == 2
-                              ? controller.onSelectedCategory()
-                              : controller.onSelectDuration();
+                              ? controller.filterbyCategory()
+                              : controller.filterbyDuration();
                 },
-                bgColor: englishViolet)));
+                bgColor: englishViolet);
+          },
+        ),
+      ),
+    );
   }
 
   SizedBox buildFilterScreenSection(
@@ -99,6 +106,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
 
   Column buildFilterButtonSection(FilterScreenController controller) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(
           // width: double.infinity,
@@ -112,15 +120,18 @@ class FilterScreenView extends GetView<FilterScreenController> {
                   ? englishViolet
                   : Colors.transparent,
               shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(18),
-                topLeft: Radius.circular(18),
-              )),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(18),
+                  topLeft: Radius.circular(18),
+                ),
+              ),
             ),
             onPressed: () {
               controller.selectedIndex.value = 0;
             },
-            child: const Text('Destinations'),
+            child: const Text(
+              'Destinations',
+            ),
           ),
         ),
         SizedBox(
@@ -235,7 +246,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
               value: controller.showDomesticTours.value,
               onChanged: (bool? value) {
                 controller.showDomesticTours.value = value ?? false;
-                if (value == true) {
+                if (value ?? false) {
                   // Clear the selected destinations when "Show Domestic Tours" is selected
                   controller.selectedDestinations.clear();
                   for (int i = 0; i < controller.isSelected.length; i++) {
@@ -261,7 +272,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
       return CheckboxListTile(
           value: controller.isSelected[index],
           onChanged: (bool? value) =>
-              controller.onFilterDestinations(value, index),
+              controller.onDestinationCheck(value, index),
           activeColor: englishViolet,
           checkboxShape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -273,66 +284,53 @@ class FilterScreenView extends GetView<FilterScreenController> {
     });
   }
 
-  Widget buildBudgetList(FilterScreenController controller, int index) {
-    final budget = budgetList[index];
-    return Obx(() {
-      return RadioListTile<Budget>(
-        value: budget,
-        groupValue: controller.selectedBudget.value,
-        onChanged: (Budget? value) => controller.onBudgetCheck(index),
-        activeColor: englishViolet,
-        title: Column(
-          children: <Widget>[
-            Text(
-              budget.title,
-              style: subheading2,
-            ),
-            Text(
-              budget.value,
-              style: subheading2,
-            ),
-          ],
-        ),
-      );
-    });
-  }
   // Widget buildBudgetList(FilterScreenController controller, int index) {
+  //   final Budget budget = budgetList[index];
   //   return Obx(() {
-  //     final budget = budgetList[index];
-  //     return CheckboxListTile(
-  //       value: controller.selectedBudget.value?.title == budget.title,
-  //       onChanged: (bool? value) => controller.onBudgetCheck(value, index),
+  //     return RadioListTile<Budget>(
+  //       value: budget,
+  //       groupValue: controller.selectedBudget.value,
+  //       onChanged: (Budget? value) => controller.onBudgetCheck(index),
   //       activeColor: englishViolet,
-  //       checkboxShape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(5),
-  //       ),
-  //       controlAffinity: ListTileControlAffinity.leading,
-  //       title: Text(
-  //         budget.title,
-  //         style: subheading2,
+  //       title: Column(
+  //         children: <Widget>[
+  //           Text(
+  //             budget.title,
+  //             style: subheading2,
+  //           ),
+  //           Text(
+  //             budget.value,
+  //             style: subheading2,
+  //           ),
+  //         ],
   //       ),
   //     );
   //   });
   // }
+  Widget buildBudgetList(FilterScreenController controller, int index) {
+    return Obx(() {
+      final Budget budget = budgetList[index];
+      return Column(
+        children: <Widget>[
+          CheckboxListTile(
+            value: controller.selectedBudget.value == budget,
+            onChanged: (bool? value) => controller.onBudgetCheck(value, budget),
+            activeColor: englishViolet,
+            checkboxShape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Text(budget.title, style: subheading2),
+          ),
+        ],
+      );
+    });
+  }
 
   Widget buildcategoriesList(FilterScreenController controller, int index) {
     return Obx(() {
       return CheckboxListTile(
           value: controller.isSelected[index],
-          onChanged: (bool? value) {
-            controller.isSelected[index] = value ?? false;
-
-            // log('message ${controller.isSelected[index]}');
-            if (value!) {
-              controller.selectedDestinations
-                  .add(controller.destinationList[index]);
-            } else {
-              controller.selectedDestinations
-                  .remove(controller.destinationList[index]);
-            }
-
-            controller.printSelectedDestinations();
-          },
+          onChanged: (bool? value) => controller.onCategoryCheck(value, index),
           activeColor: englishViolet,
           checkboxShape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -347,28 +345,40 @@ class FilterScreenView extends GetView<FilterScreenController> {
   Widget buildDurationView(FilterScreenController controller) {
     return Padding(
       padding: const EdgeInsets.all(28.0),
-      child: Column(
-        children: <Widget>[
-          const Text('Enter the Duration'),
-          SizedBox(
-            width: 60,
-            height: 40,
-            child: TextField(
-              decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(7),
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(7),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(7),
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const Text('Enter the Duration'),
+            SizedBox(
+              width: 60,
+              height: 40,
+              child: Center(
+                child: SizedBox(
+                  height: 40,
+                  child: TextField(
+                    textAlign: TextAlign.center,
+                    cursorColor: englishViolet,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.zero,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                    ),
+                    onChanged: (String value) =>
+                        controller.duration.value = value,
+                  ),
                 ),
               ),
             ),
-          ),
-          const Text('Days')
-        ],
+            const Text('Days'),
+          ],
+        ),
       ),
     );
   }
@@ -379,14 +389,14 @@ class Budget {
     required this.title,
     required this.value,
   });
-  final String title;
-  final String value;
+  String title;
+  String value;
 }
 
 List<Budget> budgetList = <Budget>[
-  Budget(title: 'Under Rs.', value: '100000'),
-  Budget(title: 'Under Rs.', value: '50000'),
-  Budget(title: 'Under Rs.', value: '10000'),
-  Budget(title: 'Under Rs.', value: '5000'),
-  Budget(title: 'Under Rs.', value: '3000'),
+  Budget(title: 'Under Rs. 100000', value: '100000'),
+  Budget(title: 'Under Rs. 50000', value: '50000'),
+  Budget(title: 'Under Rs. 10000', value: '10000'),
+  Budget(title: 'Under Rs. 5000', value: '5000'),
+  Budget(title: 'Under Rs. 3000', value: '3000'),
 ];

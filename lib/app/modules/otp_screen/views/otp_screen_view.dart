@@ -51,9 +51,11 @@ class OtpScreenView extends GetView<OtpScreenController> {
                         onCodeChanged: (String? code) async {
                           log('code changed');
                           controller.otpCode.value = code!;
-                          if (controller.otpCode.value.length == 6) {
-                            log('sign in');
+                          if (controller.textEditorController.text.length ==
+                              6) {
+                            log('adeeb sign in auto fill text field');
                             await controller.signIn();
+                            controller.countDownController.pause();
                           }
                           controller.countDownController.pause();
                           // await controller.signIn();

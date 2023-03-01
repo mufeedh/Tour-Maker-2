@@ -44,9 +44,8 @@ class MainScreenController extends GetxController
   Future<void> loadData() async {
     log('laopd');
     change(null, status: RxStatus.loading());
-
     await getCategory();
-    // await getTrending();
+    await getTrending();
   }
 
   Future<void> getCategory() async {
@@ -55,6 +54,7 @@ class MainScreenController extends GetxController
     await CategoryRepository()
         .getAllCategory()
         .then((ApiResponse<List<CategoryModel>> res) async {
+      log('Adeeb ${res.data}');
       if (res.status == ApiResponseStatus.completed) {
         categoryList.value = res.data!;
         log('cygd ${categoryList.length}');

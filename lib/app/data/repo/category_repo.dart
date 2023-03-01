@@ -2,11 +2,11 @@ import 'package:dio/dio.dart';
 
 import '../../services/network_services/dio_client.dart';
 import '../models/category_model.dart';
-import '../models/single_category_model.dart';
+import '../models/package_model.dart';
 
 class CategoryRepository {
   List<CategoryModel> categoryList = <CategoryModel>[];
-  List<SingleCategoryModel> singleCategoryList = <SingleCategoryModel>[];
+  List<PackageModel> singleCategoryList = <PackageModel>[];
   final Dio dio = Client().init();
   Future<ApiResponse<List<CategoryModel>>> getAllCategory() async {
     try {
@@ -29,28 +29,30 @@ class CategoryRepository {
     }
   }
 
-  Future<ApiResponse<List<SingleCategoryModel>>> getCategorybycategoryName(
+  Future<ApiResponse<List<PackageModel>>> getCategorybycategoryName(
       dynamic categoryname) async {
     try {
       final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
       final Response<Map<String, dynamic>> response = await dio.getUri(
           Uri.parse('tours/packages?category=$categoryname'),
           options: Options(headers: authHeader));
+      // log('Adeeb ${response.data}');
+      // log('Adeeb ${response.statusMessage}');
       if (response.statusCode == 200) {
         singleCategoryList =
             (response.data!['result'] as List<dynamic>).map((dynamic e) {
-          return SingleCategoryModel.fromJson(e as Map<String, dynamic>);
+          return PackageModel.fromJson(e as Map<String, dynamic>);
         }).toList();
-        return ApiResponse<List<SingleCategoryModel>>.completed(
-            singleCategoryList);
+        // log('Adeeb rep ${response.data}');
+        // log('Adeeb rep ${singleCategoryList[0].name}');
+        return ApiResponse<List<PackageModel>>.completed(singleCategoryList);
       } else {
-        return ApiResponse<List<SingleCategoryModel>>.error(
-            response.statusMessage);
+        return ApiResponse<List<PackageModel>>.error(response.statusMessage);
       }
     } on DioError catch (de) {
-      return ApiResponse<List<SingleCategoryModel>>.error(de.error.toString());
+      return ApiResponse<List<PackageModel>>.error(de.error.toString());
     } catch (e) {
-      return ApiResponse<List<SingleCategoryModel>>.error(e.toString());
+      return ApiResponse<List<PackageModel>>.error(e.toString());
     }
   }
 }

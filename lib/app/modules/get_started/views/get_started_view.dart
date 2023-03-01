@@ -92,7 +92,6 @@ class GetStartedView extends GetView<GetStartedController> {
             child: SizedBox(
               height: 42.h,
               child: Column(
-                // ignore: prefer_const_literals_to_create_immutables
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
