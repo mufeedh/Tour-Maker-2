@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:get/get.dart';
 
 import '../../../data/models/package_model.dart';
-import '../../../data/models/single_category_model.dart';
 import '../../../data/models/wishlist_model.dart';
 import '../../../data/repo/category_repo.dart';
 import '../../../data/repo/wishlist_repo.dart';
@@ -13,12 +12,10 @@ import '../views/single_category_view.dart';
 
 class SingleCategoryController extends GetxController
     with StateMixin<SingleCategoryView> {
-  RxList<PackageModel> singleCategoryList = <PackageModel>[].obs;
+  RxList<PackageModel> packageList = <PackageModel>[].obs;
   Rx<String> categoryName = ''.obs;
   Rx<String> categoryImage = ''.obs;
-  Rx<bool> isHaveOffer = false.obs;
-  Rx<bool> isClickedFavorites = false.obs;
-
+  RxList<WishListModel> wishList = <WishListModel>[].obs;
   @override
   void onInit() {
     super.onInit();
@@ -27,57 +24,87 @@ class SingleCategoryController extends GetxController
 
   Future<void> loadData() async {
     await getData();
-    loadOffers();
+    await getWishList();
   }
 
-  void onSingleTourPressed(int id) {
-    Get.toNamed(Routes.SINGLE_TOUR, arguments: <int>[id]);
+  void onSingleTourPressed(PackageModel pckg) {
+    Get.toNamed(Routes.SINGLE_TOUR, arguments: <int>[pckg.id!])!
+        .whenComplete(() => getData());
   }
 
   Future<void> getData() async {
+    change(null, status: RxStatus.loading());
     if (Get.arguments != null) {
       categoryName.value = Get.arguments[0] as String;
       categoryImage.value = Get.arguments[1] as String;
       log('catname $categoryName');
-      try {
-        change(null, status: RxStatus.loading());
-
-        final ApiResponse<List<PackageModel>> res =
-            await CategoryRepository().getCategorybycategoryName(categoryName);
-        log('Adeeb categ ${res.status}');
-        log('Adeeb categ ${res.message}');
-        log('Adeeb categ ${res.data}');
-        if (res.status == ApiResponseStatus.completed) {
-          singleCategoryList.value = res.data!;
-          change(null, status: RxStatus.success());
-        } else {
-          change(null, status: RxStatus.empty());
-        }
-      } catch (e) {
-        log('catch $e');
-      }
+      await loadCategoryPackages(categoryName.value);
     } else {
       log('no arguments');
     }
   }
 
-  void loadOffers() {
-    // if () {
-
-    // } else {
-
-    // }
+  Future<void> getWishList() async {
+    final ApiResponse<List<WishListModel>> res =
+        await WishListRepo().getAllFav();
+    if (res.status == ApiResponseStatus.completed) {
+      wishList.value = res.data!;
+    }
   }
-  Future<void> onClickFavourites(int index) async {
-    //   final int tourId = singleCategoryList[index].tourId!;
-    //   final ApiResponse<List<WishListModel>> res =
-    //       await WishListRepo().createFav(tourId);
 
-    //   if (res.status == ApiResponseStatus.completed) {
-    //     isClickedFavorites.value = true;
-    //   } else {
-    //     isClickedFavorites.value = false;
-    //   }
-    // }
+  Future<void> toggleFavorite(int productId) async {
+    log('kumbalangi  toggled');
+    try {
+      final bool isInWishList =
+          wishList.any((WishListModel package) => package.id == productId);
+      if (isInWishList) {
+        await WishListRepo().deleteFav(productId);
+        wishList
+            .removeWhere((WishListModel package) => package.id == productId);
+        log('kumbalangi isinWishlist =true ');
+      } else {
+        await WishListRepo().createFav(productId);
+        // final PackageModel package = singleCategoryList
+        //     .firstWhere((PackageModel package) => package.id == productId);
+        // wishlists.add(package as WishListModel);
+        final PackageModel package = packageList
+            .firstWhere((PackageModel package) => package.id == productId);
+        final WishListModel wishlistItem = WishListModel(
+          id: package.id,
+          name: package.name,
+          // add any other properties that are required for the wishlist item
+        );
+        wishList.add(wishlistItem);
+
+        log('kumbalangi  isinwishlist nott true');
+      }
+    } catch (e) {
+      log('kumbalangi  Error toggling favorite: $e');
+    }
+  }
+
+  RxBool isFavorite(int productId) =>
+      RxBool(wishList.any((WishListModel package) => package.id == productId));
+
+  Future<void> loadCategoryPackages(String categoryName) async {
+    try {
+      final ApiResponse<List<PackageModel>> res =
+          await CategoryRepository().getCategorybycategoryName(categoryName);
+      log('Adeeb categ sts ${res.status}');
+      log('Adeeb categ msg ${res.message}');
+      log('Adeeb categ  data ${res.data}');
+      if (res.status == ApiResponseStatus.completed) {
+        if (res.data!.isNotEmpty) {
+          packageList.value = res.data!;
+          change(null, status: RxStatus.success());
+        } else {
+          change(null, status: RxStatus.empty());
+        }
+      } else {
+        change(null, status: RxStatus.empty());
+      }
+    } catch (e) {
+      log('catch $e');
+    }
   }
 }

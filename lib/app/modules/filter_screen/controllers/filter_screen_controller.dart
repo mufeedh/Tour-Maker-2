@@ -22,7 +22,8 @@ class FilterScreenController extends GetxController
     with StateMixin<FilterScreenView> {
   RxList<DestinationsModel> destinationList = <DestinationsModel>[].obs;
   RxList<CategoryModel> categoryList = <CategoryModel>[].obs;
-  RxList<bool> isSelected = <bool>[].obs;
+  RxList<bool> isSelectedDestinations = <bool>[].obs;
+  RxList<bool> isSelectedCategories = <bool>[].obs;
   RxBool isLoading = false.obs;
   RxBool showDomesticTours = false.obs;
   Rx<Budget> selectedBudget = Budget(title: '', value: '').obs;
@@ -50,17 +51,20 @@ class FilterScreenController extends GetxController
   }
 
   Future<void> loadData() async {
+    change(null, status: RxStatus.loading());
+
     await listAllDestinations();
-    await listCategories();
+    await listAllCategories();
   }
 
-  Future<void> listCategories() async {
-    change(null, status: RxStatus.loading());
+  Future<void> listAllCategories() async {
     final ApiResponse<List<CategoryModel>> res =
         await CategoryRepository().getAllCategory();
     try {
       if (res != null) {
         categoryList.value = res.data!;
+        isSelectedCategories
+            .assignAll(List<bool>.filled(res.data!.length, false));
 
         change(null, status: RxStatus.success());
       } else {
@@ -72,13 +76,13 @@ class FilterScreenController extends GetxController
   }
 
   Future<void> listAllDestinations() async {
-    change(null, status: RxStatus.loading());
     final ApiResponse<List<DestinationsModel>> res =
         await DestinationRepository().getAllDestinations();
     try {
       if (res != null) {
         destinationList.value = res.data!;
-        isSelected.assignAll(List<bool>.filled(res.data!.length, false));
+        isSelectedDestinations
+            .assignAll(List<bool>.filled(res.data!.length, false));
         change(null, status: RxStatus.success());
       } else {
         change(null, status: RxStatus.error());
@@ -93,8 +97,6 @@ class FilterScreenController extends GetxController
     isLoading.value = true;
 
     if (selectedDestinationsList != null) {
-      change(null, status: RxStatus.loading());
-
       log('selected destination');
       final ApiResponse<List<PackageModel>> res =
           await FilterRepository().getDestination(selectedDestinationsList);
@@ -237,7 +239,7 @@ class FilterScreenController extends GetxController
   }
 
   void onDestinationCheck(bool? value, int index) {
-    isSelected[index] = value ?? false;
+    isSelectedDestinations[index] = value ?? false;
 
     if (value != null && value) {
       if (selectedDestinations.length < 5) {
@@ -247,7 +249,7 @@ class FilterScreenController extends GetxController
       } else {
         // Automatically remove the first selected item
         final DestinationsModel removedItem = selectedDestinations.removeAt(0);
-        isSelected[destinationList.indexOf(removedItem)] = false;
+        isSelectedDestinations[destinationList.indexOf(removedItem)] = false;
         // Add the newly selected item to the end of the list
         selectedDestinations.add(destinationList[index]);
       }
@@ -264,7 +266,7 @@ class FilterScreenController extends GetxController
   }
 
   void onCategoryCheck(bool? value, int index) {
-    isSelected[index] = value ?? false;
+    isSelectedCategories[index] = value ?? false;
     if (value != null && value) {
       if (selectedCategories.length < 5) {
         selectedCategories.add(categoryList[index]);
@@ -273,7 +275,7 @@ class FilterScreenController extends GetxController
       } else {
         // Automatically remove the first selected item
         final CategoryModel removedItem = selectedCategories.removeAt(0);
-        isSelected[categoryList.indexOf(removedItem)] = false;
+        isSelectedCategories[categoryList.indexOf(removedItem)] = false;
         // Add the newly selected item to the end of the list
         selectedCategories.add(categoryList[index]);
       }

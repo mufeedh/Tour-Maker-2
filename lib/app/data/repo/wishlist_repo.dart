@@ -21,7 +21,7 @@ class WishListRepo {
         wishList = (res.data!['result'] as List<dynamic>).map((dynamic e) {
           return WishListModel.fromJson(e as Map<String, dynamic>);
         }).toList();
-        log('hi val ${wishList.length}');
+        log('hi val ${wishList.elementAt(0)}');
         return ApiResponse<List<WishListModel>>.completed(wishList);
       } else {
         log('message ${res.statusMessage}');
@@ -34,28 +34,55 @@ class WishListRepo {
     }
   }
 
-  Future<ApiResponse<List<WishListModel>>> createFav(int id) async {
+  Future<ApiResponse<Map<String, dynamic>>> createFav(int? id) async {
     try {
       final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
-      final Response<Map<String, dynamic>> res = await dio.postUri(
-          Uri.parse('user/create_favourites?id=$id'),
-          options: Options(headers: authHeader));
+      final Response<Map<String, dynamic>> res =
+          await dio.postUri(Uri.parse('user/create_favourites'),
+              // ignore: prefer_single_quotes
+              data: <String, dynamic>{"tour_id": id},
+              options: Options(headers: authHeader));
       if (res.statusCode == 200) {
-        wishList = (res.data!['result'] as List<dynamic>).map((dynamic e) {
-          return WishListModel.fromJson(e as Map<String, dynamic>);
-        }).toList();
+        // wishList = (res.data!['result'] as List<dynamic>).map((dynamic e) {
+        //   return WishListModel.fromJson(e as Map<String, dynamic>);
+        // }).toList();
         log('hi rep ${res.data}');
 
         log('hi val ${wishList.length}');
 
-        return ApiResponse<List<WishListModel>>.completed(wishList);
+        return ApiResponse<Map<String, dynamic>>.completed(res.data);
       } else {
-        return ApiResponse<List<WishListModel>>.error(res.statusMessage);
+        return ApiResponse<Map<String, dynamic>>.error(res.statusMessage);
       }
     } on DioError catch (de) {
-      return ApiResponse<List<WishListModel>>.error(de.error.toString());
+      return ApiResponse<Map<String, dynamic>>.error(de.error.toString());
     } catch (e) {
-      return ApiResponse<List<WishListModel>>.error(e.toString());
+      return ApiResponse<Map<String, dynamic>>.error(e.toString());
+    }
+  }
+
+  Future<ApiResponse<Map<String, dynamic>>> deleteFav(int? id) async {
+    try {
+      final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
+      final Response<Map<String, dynamic>> res = await dio.deleteUri(
+          Uri.parse('user/delete_favourites?tour_id=$id'),
+          options: Options(headers: authHeader));
+      if (res.statusCode == 200) {
+        // wishList = (res.data!['result'] as List<dynamic>).map((dynamic e) {
+        //   return WishListModel.fromJson(e as Map<String, dynamic>);
+        // }).toList();
+        log('hi rep ${res.data}');
+
+        log('hi val ${wishList.length}');
+
+        return ApiResponse<Map<String, dynamic>>.completed(res.data);
+      } else {
+        return ApiResponse<Map<String, dynamic>>.error(res.statusMessage);
+      }
+    } on DioError catch (de) {
+      return ApiResponse<Map<String, dynamic>>.error(de.error.toString());
+    } catch (e) {
+      return ApiResponse<Map<String, dynamic>>.error(e.toString());
     }
   }
 }

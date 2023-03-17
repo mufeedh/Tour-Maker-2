@@ -1,22 +1,25 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sizer/sizer.dart';
 
 import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
 
-GetStorage getStorage = GetStorage();
-final User? currentUser = FirebaseAuth.instance.currentUser;
+String? currentUserPhoneNumber;
+Rxn<Directory> tempDir = Rxn<Directory>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await getTemporaryDirectory()
+      .then((Directory value) => tempDir.value = value);
+
   HttpOverrides.global = MyHttpOverrides();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
@@ -27,37 +30,16 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // log('CHECKING . . . . ');
-
-  // try {
-  //   if (currentUser != null) {
-  //     log('USER EXISTS ON FIREBASE');
-  //     final String token = await currentUser!.getIdToken(true);
-  //     log('tokken $token');
-  //     await getStorage.write('token', token);
-  //     final ApiResponse<Map<String, dynamic>> res =
-  //         await UserRepository().checkUserExists();
-  //     if (res.status == ApiResponseStatus.completed) {
-  //       log('USER EXISTS ON DB');
-  //       await Get.offAllNamed(Routes.HOME);
-  //       // Get.offAllNamed(Routes.TOKEN_SCREEN, arguments: token);
-  //     } else {
-  //       await Get.offAllNamed(Routes.LOGIN);
-  //       log('USER SIGNED IN FIREBASE');
-  //     }
-  //   } else {
-  //     log('NEW USER');
-  //     await Get.offAllNamed(Routes.GET_STARTED);
-  //   }
-  // } catch (e) {
-  //   log('catch $e');
-  // }
   runApp(
     Sizer(builder:
         (BuildContext context, Orientation orientation, DeviceType deviceType) {
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+        theme: ThemeData(
+            scaffoldBackgroundColor: Colors.grey.shade100,
+            inputDecorationTheme: const InputDecorationTheme(
+              alignLabelWithHint: true, // center both hint text and prefix icon
+            )),
         title: 'Application',
         initialRoute: AppPages.INITIAL,
         getPages: AppPages.routes,

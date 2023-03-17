@@ -10,8 +10,8 @@ class Client {
   Dio init(
       {String baseUrl =
           'https://uuuhc8u0vk.execute-api.ap-south-1.amazonaws.com/development_api/'}) {
-    // 'https://etnh73oqgjtljkgfrqy5ojcysi0tgmza.lambda-url.ap-south-1.on.aws/'}) {
     final Dio dio = Dio();
+
     dio.interceptors.add(PrettyDioLogger(
       requestHeader: true,
       requestBody: true,

@@ -1,13 +1,14 @@
 class WishListModel {
   WishListModel({
-    this.baseAmount,
     this.category,
     this.days,
+    this.description,
     this.destination,
     this.exclusiveTour,
     this.id,
     this.image,
     this.itinerary,
+    this.minAmount,
     this.name,
     this.nights,
     this.priority,
@@ -17,14 +18,15 @@ class WishListModel {
     this.travelType,
     this.trending,
   });
-  int? baseAmount;
   String? category;
   int? days;
+  String? description;
   String? destination;
   String? exclusiveTour;
   int? id;
   String? image;
   String? itinerary;
+  int? minAmount;
   String? name;
   int? nights;
   int? priority;
@@ -35,14 +37,15 @@ class WishListModel {
   bool? trending;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'base_amount': baseAmount,
         'category': category,
         'days': days,
+        'description': description,
         'destination': destination,
         'exclusive_tour': exclusiveTour,
         'id': id,
         'image': image,
         'itinerary': itinerary,
+        'min_amount': minAmount,
         'name': name,
         'nights': nights,
         'priority': priority,
@@ -53,14 +56,15 @@ class WishListModel {
         'trending': trending,
       };
   static WishListModel fromJson(Map<String, dynamic> json) => WishListModel(
-        baseAmount: json['base_amount'] as int,
         category: json['category'] as String,
         days: json['days'] as int,
+        description: json['description'] as String,
         destination: json['destination'] as String,
         exclusiveTour: json['exclusive_tour'] as String,
         id: json['id'] as int,
         image: json['image'] as String,
         itinerary: json['itinerary'] as String,
+        minAmount: json['min_amount'] as int,
         name: json['name'] as String,
         nights: json['nights'] as int,
         priority: json['priority'] as int,

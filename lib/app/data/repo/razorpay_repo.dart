@@ -13,7 +13,7 @@ class RazorPayRepository {
     try {
       final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
       final Response<Map<String, dynamic>> response = await dio.postUri(
-          Uri.parse('createPayment'),
+          Uri.parse('createInitialpayment'),
           options: Options(headers: authHeader),
           data: razorPayModel.toJson());
       if (response.statusCode == 200) {
@@ -39,12 +39,12 @@ class RazorPayRepository {
     try {
       final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
       final Response<Map<String, dynamic>> response = await dio.postUri(
-          Uri.parse('verifyPayment'),
+          Uri.parse('verifyInitialpayment'),
           options: Options(headers: authHeader),
           data: <String, dynamic>{
-            'orderId': orderID,
-            'merchantPaymentId': paymentID,
-            'merchantSignature': signature
+            'order_id': orderID,
+            'merchant_payment_id': paymentID,
+            'merchant_signature': signature
           });
       if (response.statusCode == 200) {
         log('adeeb ${response.statusMessage}');

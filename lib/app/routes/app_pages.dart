@@ -2,16 +2,10 @@ import 'package:flutter/animation.dart';
 
 import 'package:get/get.dart';
 
+import '../modules/add_passenger/bindings/add_passenger_binding.dart';
+import '../modules/add_passenger/views/add_passenger_view.dart';
 import '../modules/booking_screen/bindings/booking_screen_binding.dart';
 import '../modules/booking_screen/views/booking_screen_view.dart';
-import '../modules/budget/bindings/budget_binding.dart';
-import '../modules/budget/views/budget_view.dart';
-import '../modules/category/bindings/category_binding.dart';
-import '../modules/category/views/category_view.dart';
-import '../modules/destinations/bindings/destinations_binding.dart';
-import '../modules/destinations/views/destinations_view.dart';
-import '../modules/duration/bindings/duration_binding.dart';
-import '../modules/duration/views/duration_view.dart';
 import '../modules/favourites_screen/bindings/favourites_screen_binding.dart';
 import '../modules/favourites_screen/views/favourites_screen_view.dart';
 import '../modules/filter_screen/bindings/filter_screen_binding.dart';
@@ -38,10 +32,10 @@ import '../modules/payment_screen/bindings/payment_screen_binding.dart';
 import '../modules/payment_screen/views/payment_screen_view.dart';
 import '../modules/payment_summary/bindings/payment_summary_binding.dart';
 import '../modules/payment_summary/views/payment_summary_view.dart';
+import '../modules/pdf_view/bindings/pdf_view_binding.dart';
+import '../modules/pdf_view/views/pdf_view_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
-import '../modules/razorpay/bindings/razorpay_binding.dart';
-import '../modules/razorpay/views/razorpay_view.dart';
 import '../modules/rewards/bindings/rewards_binding.dart';
 import '../modules/rewards/views/rewards_view.dart';
 import '../modules/search_details/bindings/search_details_binding.dart';
@@ -60,6 +54,8 @@ import '../modules/token_screen/bindings/token_screen_binding.dart';
 import '../modules/token_screen/views/token_screen_view.dart';
 import '../modules/tours_view/bindings/tours_view_binding.dart';
 import '../modules/tours_view/views/tours_view_view.dart';
+import '../modules/user_registerscreen/bindings/user_registerscreen_binding.dart';
+import '../modules/user_registerscreen/views/user_registerscreen_view.dart';
 
 // ignore_for_file: always_specify_types
 
@@ -162,26 +158,6 @@ class AppPages {
       binding: FilterScreenBinding(),
     ),
     GetPage<dynamic>(
-      name: _Paths.DESTINATIONS,
-      page: () => const DestinationsView(),
-      binding: DestinationsBinding(),
-    ),
-    GetPage<dynamic>(
-      name: _Paths.BUDGET,
-      page: () => const BudgetView(),
-      binding: BudgetBinding(),
-    ),
-    GetPage<dynamic>(
-      name: _Paths.CATEGORY,
-      page: () => const CategoryView(),
-      binding: CategoryBinding(),
-    ),
-    GetPage<dynamic>(
-      name: _Paths.DURATION,
-      page: () => const DurationView(),
-      binding: DurationBinding(),
-    ),
-    GetPage<dynamic>(
       transition: Transition.circularReveal,
       curve: Curves.easeInOut,
       name: _Paths.SEARCH_VIEW,
@@ -199,11 +175,6 @@ class AppPages {
       name: _Paths.REWARDS,
       page: () => const RewardsView(),
       binding: RewardsBinding(),
-    ),
-    GetPage(
-      name: _Paths.RAZORPAY,
-      page: () => const RazorpayView(),
-      binding: RazorpayBinding(),
     ),
     GetPage(
       transition: Transition.leftToRightWithFade,
@@ -248,6 +219,23 @@ class AppPages {
       name: _Paths.TOURS_VIEW,
       page: () => const ToursViewView(),
       binding: ToursViewBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADD_PASSENGER,
+      page: () => const AddPassengerView(),
+      binding: AddPassengerBinding(),
+    ),
+    GetPage(
+      name: _Paths.PDF_VIEW,
+      page: () => const PdfViewView(),
+      binding: PdfViewBinding(),
+    ),
+    GetPage(
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(seconds: 1),
+      name: _Paths.USER_REGISTERSCREEN,
+      page: () => const UserRegisterscreenView(),
+      binding: UserRegisterscreenBinding(),
     ),
   ];
 }

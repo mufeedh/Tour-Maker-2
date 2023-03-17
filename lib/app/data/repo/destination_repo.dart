@@ -25,7 +25,7 @@ class DestinationRepository {
         return ApiResponse<List<DestinationsModel>>.error(res.statusMessage);
       }
     } on DioError catch (de) {
-      return ApiResponse<List<DestinationsModel>>.error(de.error as String);
+      return ApiResponse<List<DestinationsModel>>.error(de.error.toString());
     } catch (e) {
       return ApiResponse<List<DestinationsModel>>.error(e.toString());
     }

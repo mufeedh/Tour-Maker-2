@@ -5,6 +5,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/custom_errorscreen.dart';
 import '../../../widgets/payment.dart';
 import '../controllers/payment_screen_controller.dart';
 
@@ -12,6 +13,8 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
   const PaymentScreenView({super.key});
   @override
   Widget build(BuildContext context) {
+    final PaymentScreenController controller =
+        Get.put(PaymentScreenController());
     return Scaffold(
         extendBody: true,
         appBar: const CustomAppBar(titleText: 'Payments'),
@@ -26,7 +29,7 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
                   width: 100.w,
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(15),
                     color: const Color(0xFFF1F1F1),
                   ),
                   child: Row(
@@ -84,48 +87,81 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
         ));
   }
 
-  ListView buildProcessingView() {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: 115,
-      itemBuilder: (BuildContext context, int index) => GestureDetector(
-        onTap: () => controller.onTapSingleProcessingPayment(),
-        child:const PaymentTile(
-          tourName: 'Kasmmir',
-          tourAmount: '19000',
-          tourCode: 'CK2E',
-        ),
-      ),
-    );
+  Widget buildProcessingView() {
+    return Obx(() {
+      return RefreshIndicator(
+        onRefresh: controller.loadData,
+        child: controller.pendingPayments.isNotEmpty
+            ? ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: controller.processingPayments.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    GestureDetector(
+                  onTap: () => controller.onTapSingleProcessingPayment(),
+                  child: PaymentTile(
+                    tourName: controller.processingPayments[index].tourName
+                        .toString(),
+                    tourAmount: controller.processingPayments[index].amountPaid
+                        .toString(),
+                    tourCode: controller.processingPayments[index].customTourId
+                        .toString(),
+                  ),
+                ),
+              )
+            : const CustomErrorScreen(errorText: 'Nothing founs . . . '),
+      );
+    });
   }
 
-  ListView buildPendingView() {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: 115,
-      itemBuilder: (BuildContext context, int index) => GestureDetector(
-        onTap: () => controller.onTapSinglePendingPayment(),
-        child: const PaymentTile(
-          tourName: 'Kasmmir',
-          tourAmount: '500000',
-          tourCode: 'CK2E',
-        ),
-      ),
-    );
+  Widget buildPendingView() {
+    return Obx(() {
+      return RefreshIndicator(
+        onRefresh: controller.loadData,
+        child: controller.processingPayments.isNotEmpty
+            ? ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: controller.processingPayments.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    GestureDetector(
+                  onTap: () => controller.onTapSingleProcessingPayment(),
+                  child: PaymentTile(
+                    tourName: controller.processingPayments[index].tourName
+                        .toString(),
+                    tourAmount: controller.processingPayments[index].amountPaid
+                        .toString(),
+                    tourCode: controller.processingPayments[index].customTourId
+                        .toString(),
+                  ),
+                ),
+              )
+            : const CustomErrorScreen(errorText: 'Nothing founs . . . '),
+      );
+    });
   }
 
-  ListView buildPaidView() {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: 115,
-      itemBuilder: (BuildContext context, int index) => GestureDetector(
-        onTap: () => controller.onTapSinglePaidView(),
-        child: const PaymentTile(
-          tourName: 'Kasmmir',
-          tourAmount: '500000',
-          tourCode: 'CK2E',
-        ),
-      ),
-    );
+  Widget buildPaidView() {
+    return Obx(() {
+      return RefreshIndicator(
+        onRefresh: controller.loadData,
+        child: controller.paidPayments.isNotEmpty
+            ? ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: controller.paidPayments.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    GestureDetector(
+                  onTap: () => controller.onTapSingleProcessingPayment(),
+                  child: PaymentTile(
+                    tourName:
+                        controller.paidPayments[index].tourName.toString(),
+                    tourAmount:
+                        controller.paidPayments[index].amountPaid.toString(),
+                    tourCode:
+                        controller.paidPayments[index].customTourId.toString(),
+                  ),
+                ),
+              )
+            : const CustomErrorScreen(errorText: 'Nothing founs . . . '),
+      );
+    });
   }
 }

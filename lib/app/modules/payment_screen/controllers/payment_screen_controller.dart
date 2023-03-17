@@ -3,16 +3,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../data/models/payment_model.dart';
+import '../../../data/repo/payment_repo.dart';
 import '../../../routes/app_pages.dart';
+import '../../../services/network_services/dio_client.dart';
 
 class PaymentScreenController extends GetxController
     with StateMixin<dynamic>, GetSingleTickerProviderStateMixin {
   late final TabController tabcontroller =
       TabController(length: 3, vsync: this);
+  RxList<PaymentModel> processingPayments = <PaymentModel>[].obs;
+  RxList<PaymentModel> pendingPayments = <PaymentModel>[].obs;
+  RxList<PaymentModel> paidPayments = <PaymentModel>[].obs;
   @override
   void onInit() {
     super.onInit();
-    change(null, status: RxStatus.success());
+    loadData();
   }
 
   @override
@@ -46,4 +52,35 @@ class PaymentScreenController extends GetxController
   }
 
   void onTapSinglePaidView() {}
+
+  Future<void> loadData() async {
+    await loadProcessingPayments();
+    await loadPendingPayments();
+    await loadPaidPayments();
+    change(null, status: RxStatus.success());
+  }
+
+  Future<void> loadProcessingPayments() async {
+    final ApiResponse<List<PaymentModel>> res =
+        await PaymentRepository().getAllPayments('processing');
+    if (res.status == ApiResponseStatus.completed) {
+      processingPayments.value = res.data!;
+    } else {}
+  }
+
+  Future<void> loadPendingPayments() async {
+    final ApiResponse<List<PaymentModel>> res =
+        await PaymentRepository().getAllPayments('pending');
+    if (res.status == ApiResponseStatus.completed) {
+      pendingPayments.value = res.data!;
+    } else {}
+  }
+
+  Future<void> loadPaidPayments() async {
+    final ApiResponse<List<PaymentModel>> res =
+        await PaymentRepository().getAllPayments('paid');
+    if (res.status == ApiResponseStatus.completed) {
+      paidPayments.value = res.data!;
+    } else {}
+  }
 }

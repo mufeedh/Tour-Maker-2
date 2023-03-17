@@ -73,7 +73,6 @@ class OtpScreenView extends GetView<OtpScreenController> {
                           child: Text('Resend OTP ', style: subheading3),
                         );
                       } else {
-                        controller.isLoading.value = true;
                         return Text(
                           "Trying to automatically get OTP in ${currentRemainingtime.toString().length == 4 ? " ${currentRemainingtime.toString().substring(0, 2)}" : " ${currentRemainingtime.toString().substring(0, 1)} seconds"}",
                         );

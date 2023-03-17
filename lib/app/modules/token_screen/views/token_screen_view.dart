@@ -12,6 +12,19 @@ class TokenScreenView extends GetView<TokenScreenController> {
     final TokenScreenController controller = Get.put(TokenScreenController());
     return Scaffold(
       appBar: AppBar(
+        bottom: TabBar(
+          controller: controller.tabController,
+          tabs: const <Widget>[
+            Tab(
+              // icon: Icon(Icons.add),
+              text: 'user token',
+            ),
+            Tab(
+              // icon: Icon(Icons.add),
+              text: 'FCM',
+            ),
+          ],
+        ),
         actions: <Widget>[
           IconButton(
               onPressed: () {
@@ -23,18 +36,41 @@ class TokenScreenView extends GetView<TokenScreenController> {
         title: const Text('TestView'),
         centerTitle: true,
       ),
-      body: controller.obx(
-        (dynamic state) => Center(
-          child: Container(
-            decoration: BoxDecoration(border: Border.all()),
-            padding: const EdgeInsets.all(28.0),
-            margin: const EdgeInsets.all(28.0),
-            child: TextFormField(
-                keyboardType: TextInputType.streetAddress,
-                maxLines: 100,
-                initialValue: controller.tok.toString(),
-                onChanged: (String value) => controller.tok = value,),
-          ),
+      body: controller.obx((dynamic state) =>
+          TabBarView(controller: controller.tabController, children: <Widget>[
+            buildTokenView(controller),
+            buildFCMTokenView(controller),
+          ])),
+    );
+  }
+
+  Center buildTokenView(TokenScreenController controller) {
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(border: Border.all()),
+        padding: const EdgeInsets.all(28.0),
+        margin: const EdgeInsets.all(28.0),
+        child: TextFormField(
+          keyboardType: TextInputType.streetAddress,
+          maxLines: 100,
+          initialValue: controller.tok.toString(),
+          onChanged: (String value) => controller.tok = value,
+        ),
+      ),
+    );
+  }
+
+  Center buildFCMTokenView(TokenScreenController controller) {
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(border: Border.all()),
+        padding: const EdgeInsets.all(28.0),
+        margin: const EdgeInsets.all(28.0),
+        child: TextFormField(
+          keyboardType: TextInputType.streetAddress,
+          maxLines: 100,
+          initialValue: controller.fcmtok.toString(),
+          onChanged: (String value) => controller.fcmtok = value,
         ),
       ),
     );

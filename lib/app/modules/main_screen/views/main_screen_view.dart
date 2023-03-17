@@ -1,4 +1,6 @@
-import 'package:badges/badges.dart' as badges;
+// ignore_for_file: prefer_single_quotes
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,10 +11,6 @@ import '../../../../core/tour_maker_icons.dart';
 import '../../../widgets/custom_loadinscreen.dart';
 import '../controllers/main_screen_controller.dart';
 
-//? hiii
-//! dmvl
-//* dfd
-
 class MainScreenView extends GetView<MainScreenController> {
   const MainScreenView({super.key});
   @override
@@ -21,80 +19,60 @@ class MainScreenView extends GetView<MainScreenController> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      // extendBody: true,
+      extendBodyBehindAppBar: true,
       body: controller.obx(
         onLoading: const CustomLoadingScreen(),
-        (MainScreenView? state) => SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              buildHeadSection(screenHeight, context),
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    buildCategories(screenHeight),
-                    const SizedBox(height: 20),
-                    Row(
+        (MainScreenView? state) => RefreshIndicator(
+          onRefresh: controller.loadData,
+          color: englishViolet,
+          child: SizedBox(
+            width: screenWidth,
+            height: screenHeight,
+            child: SingleChildScrollView(
+              physics: const RangeMaintainingScrollPhysics(),
+              child: Column(
+                children: <Widget>[
+                  //search field for Home Screen
+                  buildHeadSection(screenHeight, context),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Text('Trending', style: paragraph1),
+                        //Categories Section
+                        buildCategories(screenHeight),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: <Widget>[
+                            Text('     Trending', style: paragraph1),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        //Trending tours secction
+                        buildTrending(screenHeight),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: <Widget>[
+                            Text('     Exclusive Tours', style: paragraph1),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        //Exclusive tour Section
+                        buildExclusive(screenHeight, screenWidth),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: <Widget>[
+                            Text('     Travel Types', style: paragraph1)
+                          ],
+                        ),
+                        //Travel types tours section
+                        buildTravelTypes(screenHeight, screenWidth),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    buildTrending(screenHeight),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: <Widget>[
-                        Text('Exclusive Tours', style: paragraph1),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    buildExclusive(screenHeight, screenWidth),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: <Widget>[
-                        Text('Travel Types', style: paragraph1),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    buildTravelTypes(screenHeight),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Container buildTravelTypes(double screenHeight) {
-    return Container(
-      height: screenHeight,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: ListView.builder(
-        itemCount: 15,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (BuildContext context, int index) => Material(
-          borderRadius: BorderRadius.circular(18),
-          // borderOnForeground: false,
-          type: MaterialType.transparency,
-          elevation: 5,
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            // padding: const EdgeInsets.all(10),
-            height: 88,
-            // width: screenWidth * 0.75,
-            decoration: BoxDecoration(
-              image: const DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(
-                  'assets/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg',
-                ),
-              ),
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(30),
             ),
           ),
         ),
@@ -102,126 +80,54 @@ class MainScreenView extends GetView<MainScreenController> {
     );
   }
 
-  Container buildExclusive(double screenHeight, double screenWidth) {
-    return Container(
-      height: screenHeight * 0.30,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: ListView.builder(
-        itemCount: 10,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (BuildContext context, int index) => Material(
-          borderRadius: BorderRadius.circular(18),
-          // borderOnForeground: false,
-          type: MaterialType.transparency,
-          elevation: 5,
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            padding: const EdgeInsets.all(10),
-            // height: 100,
-            width: screenWidth * 0.75,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                  imageData[index],
-                ),
-              ),
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(30),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildTrending(double screenHeight) {
+  Widget buildTravelTypes(double screenHeight, double screenWidth) {
     return Obx(
-      () => controller.trendingToursList.isEmpty
+      () => controller.travelTypesToursList.isEmpty
           ? const CustomLoadingScreen()
-          : Container(
-              height: screenHeight * 0.30,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: RefreshIndicator(
-                onRefresh: () => controller.getTrending(),
-                child: ListView.builder(
-                  itemCount: controller.trendingToursList.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) => Hero(
-                    tag: controller.trendingToursList[index],
-                    child: Material(
-                      borderRadius: BorderRadius.circular(18),
-                      // borderOnForeground: false,
-
-                      type: MaterialType.transparency,
-                      elevation: 5,
-                      child: Container(
-                        margin: const EdgeInsets.all(10),
-                        // height: 100,
-                        width: 171,
+          : ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: controller.travelTypesToursList.length,
+              itemBuilder: (BuildContext context, int index) => GestureDetector(
+                onTap: () => controller.onClickedSingleTravelTypeTour(
+                    controller.travelTypesToursList[index].name),
+                child: Hero(
+                  tag: controller.travelTypesToursList[index],
+                  transitionOnUserGestures: true,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(18),
+                    type: MaterialType.transparency,
+                    elevation: 5,
+                    child: CachedNetworkImage(
+                      imageUrl: controller.travelTypesToursList[index].image
+                          .toString(),
+                      imageBuilder: (BuildContext context,
+                              ImageProvider<Object> imageProvider) =>
+                          Container(
+                        margin: const EdgeInsets.all(7),
+                        padding: const EdgeInsets.all(10),
+                        height: 100,
+                        width: screenWidth * 0.75,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              controller.trendingToursList[index].image
-                                  .toString(),
-                            ),
-                          ),
-                          color: Colors.blue,
+                              fit: BoxFit.cover, image: imageProvider),
+                          color: englishlinearViolet,
                           borderRadius: BorderRadius.circular(18),
                         ),
                         child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              const SizedBox(height: 40),
                               Column(
                                 children: <Widget>[
                                   Text(
-                                    controller
-                                        .trendingToursList[index].destination
+                                    controller.travelTypesToursList[index].name
                                         .toString(),
-                                    style: const TextStyle(
-                                      fontFamily: 'Tahu',
-                                      fontSize: 30,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const Text(
-                                    'Tours',
-                                    style: TextStyle(
-                                      fontFamily: 'Tahu',
-                                      fontSize: 20,
-                                      color: Colors.amber,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  Text(
-                                    'Starting From: ',
+                                    overflow: TextOverflow.clip,
                                     style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 24,
                                       color: Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    controller
-                                        .trendingToursList[index].minAmount
-                                        .toString(),
-                                    style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12,
-                                      color: Colors.amber,
                                     ),
                                   ),
                                 ],
@@ -238,88 +144,302 @@ class MainScreenView extends GetView<MainScreenController> {
     );
   }
 
+  Widget buildExclusive(double screenHeight, double screenWidth) {
+    return Obx(
+      () => controller.exclusiveToursList.isEmpty
+          ? const CustomLoadingScreen()
+          : Container(
+              height: screenHeight * 0.35,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: ListView.builder(
+                physics: const RangeMaintainingScrollPhysics(),
+                itemCount: controller.exclusiveToursList.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int index) =>
+                    GestureDetector(
+                  onTap: () => controller.onClickSingleExclusiveTour(
+                      controller.exclusiveToursList[index].name),
+                  child: Hero(
+                    tag: controller.exclusiveToursList[index],
+                    transitionOnUserGestures: true,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(18),
+                      type: MaterialType.transparency,
+                      elevation: 5,
+                      child: CachedNetworkImage(
+                        imageUrl: controller.exclusiveToursList[index].image ==
+                                ""
+                            ? 'assets/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg'
+                            : controller.categoryList[index].image.toString(),
+                        imageBuilder: (BuildContext context,
+                                ImageProvider<Object> imageProvider) =>
+                            Container(
+                          margin: const EdgeInsets.all(7),
+                          padding: const EdgeInsets.all(10),
+                          // height: 100,
+                          width: screenWidth * 0.75,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: imageProvider,
+                            ),
+                            color: englishlinearViolet,
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    Text(
+                                      controller.exclusiveToursList[index].name
+                                          .toString(),
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 24,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+
+  Widget buildTrending(double screenHeight) {
+    return Obx(
+      () => controller.trendingToursList.isEmpty
+          ? const CustomLoadingScreen()
+          : Container(
+              height: screenHeight * 0.30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: ListView.builder(
+                physics: const PageScrollPhysics(),
+                itemCount: controller.trendingToursList.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int index) =>
+                    GestureDetector(
+                  onTap: () => controller.onClickSingleTrendingTour(
+                      controller.trendingToursList[index].destination),
+                  child: Hero(
+                    tag: controller.trendingToursList[index],
+                    transitionOnUserGestures: true,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(18),
+                      // borderOnForeground: false,
+
+                      type: MaterialType.transparency,
+                      elevation: 5,
+                      child: CachedNetworkImage(
+                        imageUrl: controller.trendingToursList[index].image ==
+                                ""
+                            ? 'https://images.unsplash.com/photo-1589802829985-817e51171b92?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Nnx8fGVufDB8fHx8&w=1000&q=80'
+                            : controller.trendingToursList[index].image
+                                .toString(),
+                        imageBuilder: (BuildContext context,
+                                ImageProvider<Object> imageProvider) =>
+                            Container(
+                          margin: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
+                          // height: 100,
+                          width: 171,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: imageProvider,
+                            ),
+                            color: englishlinearViolet,
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text(
+                                        controller.trendingToursList[index]
+                                            .destination
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontFamily: 'Tahu',
+                                          fontSize: 18.sp,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const Text(
+                                        'Tours',
+                                        style: TextStyle(
+                                          fontFamily: 'Tahu',
+                                          fontSize: 20,
+                                          color: Colors.amber,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    Text(
+                                      'Starting From: ',
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      controller
+                                          .trendingToursList[index].minAmount
+                                          .toString(),
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: Colors.amber,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+
   Material buildCategories(double screenHeight) {
     return Material(
       elevation: 3,
       borderRadius: BorderRadius.circular(30),
       child: Container(
-          height: screenHeight * 0.35,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 18.0, top: 18),
-                    child: Text('     category', style: paragraph2),
-                  ),
-                ],
-              ),
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 7.0),
-                  child: SizedBox(
-                    height: 190,
-                    child: Obx(
-                      () => controller.categoryList.isEmpty
-                          ? const CustomLoadingScreen()
-                          : GridView.builder(
-                              itemCount: controller.categoryList.length,
-                              physics: controller.categoryList.length <= 8
-                                  ? const NeverScrollableScrollPhysics()
-                                  : const BouncingScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisSpacing: 1,
-                                mainAxisSpacing: 5,
-                                crossAxisCount: 4,
-                              ),
-                              itemBuilder: (BuildContext context, int index) {
-                                return GestureDetector(
-                                  onTap: () =>
-                                      controller.onClickedSingleCategory(
-                                          controller.categoryList[index].name
-                                              .toString(),
-                                          controller.categoryList[index].image
-                                              .toString()),
+        height: screenHeight * 0.35,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 18.0, top: 18),
+                  child: Text('     category', style: paragraph2),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 7.0),
+                child: SizedBox(
+                  height: double.infinity,
+                  child: Obx(
+                    () => controller.categoryList.isEmpty
+                        ? const CustomLoadingScreen()
+                        : GridView.builder(
+                            itemCount: controller.categoryList.length,
+                            physics: controller.categoryList.length <= 8
+                                ? const NeverScrollableScrollPhysics()
+                                : const BouncingScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisSpacing: 1,
+                              mainAxisSpacing: 5,
+                              crossAxisCount: 4,
+                            ),
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () =>
+                                    controller.onClickedSingleCategoryTour(
+                                  controller.categoryList[index].name
+                                      .toString(),
+                                  controller.categoryList[index].image
+                                      .toString(),
+                                ),
+                                child: Hero(
+                                  transitionOnUserGestures: true,
+                                  tag: controller.categoryList[index],
                                   child: SizedBox(
                                     height: 73,
                                     width: 73,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        Container(
-                                          width: 53,
-                                          height: 53,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: NetworkImage(
-                                                  controller
-                                                      .categoryList[index].image
-                                                      .toString(),
-                                                ),
-                                              ),
+                                        CachedNetworkImage(
+                                          imageUrl: controller
+                                                      .categoryList[index]
+                                                      .image ==
+                                                  ""
+                                              ? 'assets/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg'
+                                              : controller
+                                                  .categoryList[index].image
+                                                  .toString(),
+                                          imageBuilder: (BuildContext context,
+                                                  ImageProvider<Object>
+                                                      imageProvider) =>
+                                              Container(
+                                            width: 55,
+                                            height: 55,
+                                            decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              color: Colors.blue),
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          placeholder: (BuildContext context,
+                                                  String url) =>
+                                              CircularProgressIndicator(
+                                                  color: englishViolet),
+                                          errorWidget: (BuildContext context,
+                                                  String url, dynamic error) =>
+                                              const Icon(Icons.error),
                                         ),
+                                        const SizedBox(height: 3),
                                         Text(
-                                            controller.categoryList[index].name
-                                                .toString(),
-                                            style: paragraph4),
+                                          controller.categoryList[index].name
+                                              .toString(),
+                                          overflow: TextOverflow.clip,
+                                          style: paragraph4,
+                                        ),
                                       ],
                                     ),
                                   ),
-                                );
-                              },
-                            ),
-                    ),
-                  )),
-            ],
-          )),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -328,41 +448,41 @@ class MainScreenView extends GetView<MainScreenController> {
       children: <Widget>[
         Container(
           height: screenHeight * 0.4,
-          decoration: const BoxDecoration(
-            color: Colors.blue,
-            image: DecorationImage(
+          decoration: BoxDecoration(
+            color: englishlinearViolet,
+            image: const DecorationImage(
               image: AssetImage(
                   'assets/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg'),
               fit: BoxFit.cover,
             ),
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(40),
               bottomRight: Radius.circular(40),
             ),
           ),
         ),
+        // Padding(
+        //   padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 80.w),
+        //   child: badges.Badge(
+        //     badgeContent: Text(
+        //       '3',
+        //       style: GoogleFonts.montserrat(
+        //         fontWeight: FontWeight.w500,
+        //         fontSize: 12,
+        //         color: Colors.white,
+        //       ),
+        //     ),
+        //     badgeAnimation: const badges.BadgeAnimation.fade(),
+        //     ignorePointer: true,
+        //     badgeStyle: badges.BadgeStyle(
+        //       borderRadius: BorderRadius.circular(50),
+        //     ),
+        //     position: badges.BadgePosition.topEnd(end: -28, top: -12),
+        //     child: Icon(TourMaker.notification, color: englishViolet),
+        //   ),
+        // ),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 80.w),
-          child: badges.Badge(
-            badgeContent: Text(
-              '3',
-              style: GoogleFonts.montserrat(
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-                color: Colors.white,
-              ),
-            ),
-            badgeAnimation: const badges.BadgeAnimation.fade(),
-            ignorePointer: true,
-            badgeStyle: badges.BadgeStyle(
-              borderRadius: BorderRadius.circular(50),
-            ),
-            position: badges.BadgePosition.topEnd(end: -28, top: -12),
-            child: Icon(TourMaker.notification, color: englishViolet),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 100),
+          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 100),
           child: Image.asset('assets/Logo.png', height: 50),
         ),
         Padding(
@@ -376,15 +496,6 @@ class MainScreenView extends GetView<MainScreenController> {
               focusNode: controller.searchFocusNode,
               controller: controller.textController,
               onTap: () => controller.onSearchClicked(),
-
-              // Future.delayed(const Duration(milliseconds: 100), () {
-              //   showSearch(
-              //     useRootNavigator: true,
-              //     context: context,
-              // delegate: MyCustomSearchDelegate(),
-              //   );
-              // });
-              // },
               decoration: InputDecoration(
                 suffixIcon: Padding(
                   padding: const EdgeInsets.only(right: 10.0),
@@ -412,32 +523,4 @@ class MainScreenView extends GetView<MainScreenController> {
       ],
     );
   }
-
-  Widget buildExc() => Container(
-        width: 100.w,
-        height: 170,
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.circular(18),
-        ),
-      );
-  Widget buildCont() => Column(
-        children: <Widget>[
-          Container(
-            width: 50,
-            height: 50,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(
-                    'assets/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg'),
-              ),
-            ),
-          ),
-          const Text('Mountai')
-        ],
-      );
 }

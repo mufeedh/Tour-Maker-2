@@ -65,7 +65,7 @@ class GetStartedController extends GetxController with StateMixin<dynamic> {
     if (formKey.currentState!.validate()) {
       log('valid');
       isloading.value = true;
-
+      // ignore: always_specify_types
       await Future.delayed(const Duration(seconds: 1));
       try {
         final String phoneNumber = '+${selectedCountry.value.phoneCode}$phone';
@@ -75,23 +75,11 @@ class GetStartedController extends GetxController with StateMixin<dynamic> {
             .verifyPhoneNumber(
           phoneNumber: phoneNumber,
           timeout: const Duration(seconds: 60),
-          verificationCompleted: (PhoneAuthCredential authCredential) async {
-            // log('adeeb verification cpmpleted');
-            // log('verification completed');
-            // auth.signInWithCredential(authCredential);
-            // log('auth cred token ${authCredential.token}');
-            // log('auth cred smscode${authCredential.smsCode}');
-            // log('auth cred verif ${authCredential.verificationId}');
-            // verificationid = authCredential.verificationId;
-            // log('auth cred accesstok ${authCredential.accessToken}');
-            // log('auth cred provider id ${authCredential.providerId}');
-            // log('auth cred sign in method ${authCredential.signInMethod}');
-          },
+          verificationCompleted: (PhoneAuthCredential authCredential) async {},
           verificationFailed: (FirebaseAuthException authException) {
             log('Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
           },
           codeSent: (String verificationId, [int? forceResendingToken]) {
-            // first stage after enter otp
             log('force resending token $forceResendingToken');
             log('code sent');
             verificationid = verificationId;

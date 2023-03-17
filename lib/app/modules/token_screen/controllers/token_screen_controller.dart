@@ -2,18 +2,22 @@
 
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-class TokenScreenController extends GetxController with StateMixin<dynamic> {
+class TokenScreenController extends GetxController
+    with StateMixin<dynamic>, GetSingleTickerProviderStateMixin {
   String? tok;
-  final RxInt count = 0.obs;
+  String? fcmtok;
+  late TabController tabController;
 
   GetStorage getstorage = GetStorage();
   @override
   void onInit() {
     super.onInit();
     loadData();
+    tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -24,9 +28,8 @@ class TokenScreenController extends GetxController with StateMixin<dynamic> {
   @override
   void onClose() {
     super.onClose();
+    tabController.dispose();
   }
-
-  void increment() => count.value++;
 
   Future<void> loadData() async {
     log('1');
@@ -34,7 +37,9 @@ class TokenScreenController extends GetxController with StateMixin<dynamic> {
 
     if (Get.arguments != null) {
       log('2');
-      tok = Get.arguments as String;
+      tok = Get.arguments[0] as String;
+      fcmtok = Get.arguments[1] as String;
+      await getstorage.write('fcmtok', fcmtok);
       // tok.value = res;
       log('hi $tok');
       change(null, status: RxStatus.success());
@@ -43,6 +48,7 @@ class TokenScreenController extends GetxController with StateMixin<dynamic> {
 
       // tok = token;
       tok = getstorage.read('token');
+      fcmtok = getstorage.read('fcmtok');
       log('hbsdfj');
       // change(null, status: RxStatus.success());
     }

@@ -16,12 +16,15 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final HomeController controller = Get.put(HomeController());
     return Scaffold(
-        body: PageView(
-          controller: controller.pageViewController,
-          onPageChanged: (int value) => controller.onPageViewChanged(value),
-          children: getScreens(),
-        ),
-        bottomNavigationBar: Obx(() => bottomNavigationBar()));
+      body: PageView(
+        controller: controller.pageViewController,
+        onPageChanged: (int value) => controller.onPageViewChanged(value),
+        children: getScreens(),
+      ),
+      bottomNavigationBar: Obx(
+        () => bottomNavigationBar(),
+      ),
+    );
   }
 
   CurvedNavigationBar bottomNavigationBar() {
@@ -40,8 +43,8 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  List<StatelessWidget> getScreens() {
-    return <StatelessWidget>[
+  List<Widget> getScreens() {
+    return <Widget>[
       const MainScreenView(),
       const FavouritesScreenView(),
       const BookingScreenView(),

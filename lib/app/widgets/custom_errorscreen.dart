@@ -5,6 +5,7 @@ import '../../core/theme/style.dart';
 class CustomErrorScreen extends StatelessWidget {
   const CustomErrorScreen({super.key, required this.errorText});
   final String errorText;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -13,7 +14,11 @@ class CustomErrorScreen extends StatelessWidget {
         children: <Widget>[
           Image.asset('assets/empty screen.png'),
           const SizedBox(height: 40),
-          Text(errorText, style: subheading1)
+          Text(
+            errorText,
+            style: subheading1,
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );

@@ -19,6 +19,9 @@ class CustomTextFormField extends StatelessWidget {
     this.suffix,
     this.padding,
     this.isBorder = false,
+    this.initialValue,
+    this.textInputAction,
+    this.maxLines,
   })  : isPassword = isPassword ?? false,
         errorTextColor = errorTextColor ?? Colors.red;
   final String? Function(String?)? validator;
@@ -34,7 +37,9 @@ class CustomTextFormField extends StatelessWidget {
   final Widget? suffix;
   final bool isPassword;
   final Color errorTextColor;
-
+  final String? initialValue;
+  final TextInputAction? textInputAction;
+  final int? maxLines;
   @override
   Widget build(BuildContext context) {
     final RxBool passwordVisible = isPassword.obs;
@@ -55,12 +60,15 @@ class CustomTextFormField extends StatelessWidget {
       child: Obx(() {
         return TextFormField(
           autovalidateMode: AutovalidateMode.onUserInteraction,
+          textInputAction: textInputAction,
+          maxLines: maxLines,
           validator: validator,
           onChanged: onChanged,
           controller: controller,
           obscureText: passwordVisible.value,
           keyboardType: keyboardType,
           style: subheading1,
+          initialValue: initialValue,
           decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.only(left: 10, bottom: 40, right: 10),

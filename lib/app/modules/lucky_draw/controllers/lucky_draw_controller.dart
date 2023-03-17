@@ -79,7 +79,7 @@ class LuckyDrawController extends GetxController {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   CustomButton().showIconButton(
-                    height: 12.h,
+                    height: 70,
                     isLoading: isLoading.value,
                     // width: 100.h,
                     text: '      Pay Rs 424+GST',

@@ -5,33 +5,29 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-
-import '../../../../core/theme/style.dart';
 import '../../../data/models/razorpay_model.dart';
 import '../../../data/models/user_model.dart';
 import '../../../data/repo/razorpay_repo.dart';
 import '../../../data/repo/user_repo.dart';
+import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/profile_view.dart';
 
 class ProfileController extends GetxController with StateMixin<ProfileView> {
   late Razorpay razorPay;
   RxBool isloading = false.obs;
-  var filePath = RxnString();
-
-  RxString selectedImagePath = ''.obs;
-  RxString selectedImageSize = ''.obs;
   Rx<UserModel> userData = UserModel().obs;
   Rx<RazorPayModel> razorPayModel = RazorPayModel().obs;
-  Rx<XFile>? imgXfile;
   String? username;
-  final ImagePicker _picker = ImagePicker();
 
   int? amount;
   UserRepository userRepo = UserRepository();
+  Rx<ImageProvider<Object>> image = Image.asset('assets/Avatar.png').image.obs;
+
+  final ImagePicker picker = ImagePicker();
+
   @override
   void onInit() {
     super.onInit();
@@ -61,69 +57,16 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
   Future<void> getData() async {
     change(null, status: RxStatus.loading());
     final ApiResponse<UserModel> res = await userRepo.getUserDetails();
-    log('adeeb status${res.status}');
-    log('adeeb message${res.message}');
-    log('adeeb data${res.data}');
+
     if (res.status == ApiResponseStatus.completed && res.data != null) {
       userData.value = res.data!;
       username = userData.value.name;
-      log('user ${userData.value.name}');
       change(null, status: RxStatus.success());
     } else {
       change(null, status: RxStatus.empty());
     }
   }
 
-  // Future<void> getImageFromCamera() async {
-  //   imgXfile?.value =
-  //       (await ImagePicker().pickImage(source: ImageSource.camera))!;
-  // }
-
-  // Future<void> getImage(ImageSource imageSource) async {
-  //   final XFile? pickedFile =
-  //       await ImagePicker().pickImage(source: imageSource);
-  //   if (pickedFile != null) {
-  //     selectedImagePath.value = pickedFile.path;
-  //     selectedImageSize.value =
-  //         '${(File(selectedImagePath.value).lengthSync() / 124 / 124).toStringAsFixed(2)} Mb';
-  //   } else {
-  //     Get.snackbar('err', 'No  Image Selected');
-  //   }
-  // }
-
-  // void onClickCamera() {}
-  // Future<String> cropImage(String fPath) async {
-  //   final String? file = await ImageCropper()
-  //       .cropImage(
-  //     sourcePath: fPath,
-  //     aspectRatioPresets: <CropAspectRatioPreset>[
-  //       CropAspectRatioPreset.square,
-  //     ],
-  //     compressQuality: 50,
-  //     uiSettings: <PlatformUiSettings>[
-  //       AndroidUiSettings(
-  //           toolbarColor: englishViolet,
-  //           toolbarWidgetColor: Colors.white,
-  //           initAspectRatio: CropAspectRatioPreset.square,
-  //           lockAspectRatio: true,
-  //           activeControlsWidgetColor: englishViolet),
-
-  //       IOSUiSettings(
-  //         title: 'Cropper',
-  //       ),
-  //       // WebUiSettings(
-  //       //   context: context,
-  //       // ),
-  //     ],
-  //   )
-  //       .then((CroppedFile? croppedFile) {
-  //     return croppedFile?.path;
-  //     // filePath.value =
-  //   });
-  //   return file.toString();
-  // }
-
-  // ignore: unused_element
   Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     log('Payment success: ${response.signature}');
     final String? signature = response.signature;
@@ -135,6 +78,10 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
     try {
       if (res.status == ApiResponseStatus.completed && res.data!) {
         log('Payment verification succeeded.');
+        showRegisterBttomSheet(
+            userData.value.name.toString(),
+            userData.value.state.toString(),
+            userData.value.phoneNumber.toString());
       } else {
         log('Payment verification failed: ${res.message}');
       }
@@ -177,9 +124,9 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
     isloading.value = false;
   }
 
-  void openRazorPay(String orderId, int amount) {
+  Future<void> openRazorPay(String orderId, int amount) async {
     final Map<String, Object?> options = <String, Object?>{
-      'key': 'rzp_test_P4CbygdUfrhYr3',
+      'key': 'rzp_test_yAFypxWUiCD7H7',
       'amount': 10000 * 100, // convert to paise
       'name': userData.value.name,
       'description': 'Test Payment',
@@ -189,7 +136,7 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
         'contact': userData.value.phoneNumber,
       },
       'external': <String, Object?>{
-        'wallets': ['paytm'],
+        'wallets': <String>['paytm'],
       },
     };
 
@@ -200,43 +147,33 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
     }
   }
 
-  onPickedFromGallery() async {
-    await _picker.pickImage(source: ImageSource.gallery).then((XFile? xfile) =>
-        xfile != null ? cropImage(xfile.path.toString()) : null);
+  Future<void> getImage(ImageSource source) async {
+    try {
+      final XFile? pickedFile = await picker.pickImage(source: source);
+
+      if (pickedFile != null) {
+        image.value = FileImage(File(pickedFile.path));
+        // final File file = File(pickedFile.path);
+
+        log('pickedfile ${pickedFile.path.split('/').last}');
+        final ApiResponse<Map<String, dynamic>> res =
+            await userRepo.addUserProfilePic(
+                pickedFile.path.split('/').last, pickedFile.path);
+        if (res.status == ApiResponseStatus.completed) {
+          log('completed');
+        }
+      } else {
+        log('No image selected.');
+      }
+    } catch (e) {
+      log('Error: $e');
+    }
   }
 
-  onPickedFromCamera() async {
-    await _picker.pickImage(source: ImageSource.camera).then((XFile? xfile) =>
-        xfile != null ? cropImage(xfile.path.toString()) : null);
-  }
-
-  cropImage(String fPath) async {
-    await ImageCropper()
-        .cropImage(
-      sourcePath: fPath,
-      aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-      ],
-      compressFormat: ImageCompressFormat.jpg,
-      compressQuality: 50,
-      uiSettings: [
-        AndroidUiSettings(
-            toolbarColor: englishlinearViolet,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.square,
-            lockAspectRatio: true,
-            activeControlsWidgetColor: englishViolet),
-
-        IOSUiSettings(
-          title: 'Cropper',
-        ),
-        // WebUiSettings(
-        //   context: context,
-        // ),
-      ],
-    )
-        .then((croppedFile) {
-      return filePath.value = croppedFile?.path;
-    });
+  void showRegisterBttomSheet(String name, String state, String phoneNumber) {
+    Get.offAllNamed(Routes.USER_REGISTERSCREEN,
+        arguments: <String>[name, state, phoneNumber]);
   }
 }
+
+RxBool isShowButton = true.obs;

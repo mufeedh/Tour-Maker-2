@@ -3,52 +3,80 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
+import '../../../data/models/package_model.dart';
 import '../../../data/models/wishlist_model.dart';
+import '../../../data/repo/package_repository.dart';
 import '../../../data/repo/wishlist_repo.dart';
 import '../../../routes/app_pages.dart';
-import '../../../services/network_services/dio_client.dart';
+import '../views/favourites_screen_view.dart';
 
-class FavouritesScreenController extends GetxController with StateMixin {
-  RxList<WishListModel> wishList = <WishListModel>[].obs;
+class FavouritesScreenController extends GetxController
+    with StateMixin<FavouritesScreenView> {
+  RxList<WishListModel> favouritesList = <WishListModel>[].obs;
+  RxList<PackageModel> packageList = <PackageModel>[].obs;
   @override
   void onInit() {
     super.onInit();
     loadData();
-    log('load');
   }
-
-  Future<void> onSingleTourPressed() async =>
-      await Get.toNamed(Routes.SINGLE_TOUR);
 
   Future<void> loadData() async {
-    await loadWishlists();
+    change(null, status: RxStatus.loading());
+    await getAllFavourites();
+    await getAllPackages();
   }
 
-  Future<void> loadWishlists() async {
-    log('kopa');
-    change(null, status: RxStatus.loading());
-    final ApiResponse<List<WishListModel>> res =
-        await WishListRepo().getAllFav();
-
-    try {
-      log('data ${res.data}');
-      log('res ${res.message}');
-      if (res.status == ApiResponseStatus.completed) {
-        log('cdsc');
-        wishList.value = res.data!;
-        log('jbfidfwefc ${wishList.length}');
-        change(null, status: RxStatus.success());
-      } else {
-        change(null, status: RxStatus.empty());
-        log('jbfidfwefc ${wishList.length}');
-      }
-    } catch (e) {
-      log('catch error $e');
+  Future<void> getAllFavourites() async {
+    final res = await WishListRepo().getAllFav();
+    if (res.data != null) {
+      favouritesList.value = res.data!;
+      change(null, status: RxStatus.success());
+    } else {
+      change(null, status: RxStatus.empty());
     }
   }
 
-  void loadWishlist() {}
+  Future<void> getAllPackages() async {
+    final res = await PackageRepository().getAllPackages();
+    if (res.data != null) {
+      packageList.value = res.data!;
+    }
+  }
+
+  Future<void> toggleFavorite(int productId) async {
+    log('kumbalangi  toggled');
+    try {
+      final bool isInWishList =
+          packageList.any((PackageModel package) => package.id == productId);
+      if (isInWishList) {
+        await WishListRepo().deleteFav(productId);
+        packageList
+            .removeWhere((PackageModel package) => package.id == productId);
+        log('kumbalangi isinWishlist =true ');
+      } else {
+        await WishListRepo().createFav(productId);
+        final WishListModel wishList = favouritesList
+            .firstWhere((WishListModel wishList) => wishList.id == productId);
+        final PackageModel pckg = PackageModel(
+          id: wishList.id,
+          name: wishList.name,
+          // add any other properties that are required for the wishlist item
+        );
+        packageList.add(pckg);
+
+        log('kumbalangi  isinwishlist nott true');
+      }
+    } catch (e) {
+      log('kumbalangi  Error toggling favorite: $e');
+    }
+  }
+
+  RxBool isFavorite(int productId) {
+    return RxBool(favouritesList.any((pckg) => pckg.id == productId));
+  }
+
+  Future<void> onSingleTourPressed(int id) async {
+    Get.toNamed(Routes.SINGLE_TOUR, arguments: <int>[id])!
+        .whenComplete(() => loadData());
+  }
 }
-// 5 beef bir
-// 5 meen fry 
-// 4 chick fry

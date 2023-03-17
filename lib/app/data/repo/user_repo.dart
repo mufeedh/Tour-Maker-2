@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:http_parser/http_parser.dart';
 
 import '../../services/network_services/dio_client.dart';
 import '../models/user_model.dart';
@@ -107,6 +108,143 @@ class UserRepository {
       if (res.statusCode == 200) {
         log('200');
 
+        return ApiResponse<Map<String, dynamic>>.completed(res.data);
+      } else {
+        log('adb');
+        return ApiResponse<Map<String, dynamic>>.error(res.statusMessage);
+      }
+    } on DioError catch (de) {
+      log('jnijk');
+      return ApiResponse<Map<String, dynamic>>.error(de.error.toString());
+    } catch (e) {
+      log('fgs');
+      return ApiResponse<Map<String, dynamic>>.error(e.toString());
+    }
+  }
+
+  Future<ApiResponse<Map<String, dynamic>>> addUserProfilePic(
+      String imageFile, String path) async {
+    try {
+      final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
+      log('auth hre $authHeader');
+
+      final FormData formData = FormData.fromMap(<String, dynamic>{
+        'image': await MultipartFile.fromFile(path,
+            filename: imageFile, contentType: MediaType('image', 'png')),
+      });
+      // final String imageData = base64Encode(await imageFile.readAsBytes());
+      // final FormData formData = FormData.fromMap(<String, dynamic>{
+      //   'image': imageData,
+      // });
+      // log('formvalue of phot $imageData');
+      final Response<Map<String, dynamic>> res = await dio.put(
+        'user/updateuser',
+        options: Options(headers: authHeader),
+        data: formData,
+      );
+      if (res.statusCode == 200) {
+        log('200');
+        return ApiResponse<Map<String, dynamic>>.completed(res.data);
+      } else {
+        log('adb');
+        return ApiResponse<Map<String, dynamic>>.error(res.statusMessage);
+      }
+    } on DioError catch (de) {
+      log('jnijk${de.message}');
+      return ApiResponse<Map<String, dynamic>>.error(de.error.toString());
+    } catch (e) {
+      log('fgs');
+      return ApiResponse<Map<String, dynamic>>.error(e.toString());
+    }
+  }
+
+  Future<ApiResponse<Map<String, dynamic>>> updateUser(
+      String categoryOFuser,
+      String districtOFuser,
+      String emailOFuser,
+      String genderOFuser,
+      String nameOFuser,
+      String stateOFuser,
+      String phoneNumberOfuser,
+      String addressOFuser,
+      String enterpriseNameOFuser,
+      String tAndCStatusOfUser) async {
+    try {
+      final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
+      log('auth hre $authHeader');
+      final FormData formData = FormData.fromMap(<String, dynamic>{
+        'address': addressOFuser,
+        'category': categoryOFuser,
+        'district': districtOFuser,
+        'email': emailOFuser,
+        'enterprise_name': enterpriseNameOFuser,
+        'gender': genderOFuser,
+        'name': nameOFuser,
+        'phone_number': phoneNumberOfuser,
+        'state': stateOFuser,
+        't_and_c_status': tAndCStatusOfUser,
+      });
+      final Response<Map<String, dynamic>> res = await dio.putUri(
+        Uri.parse('user/updateuser'),
+        options: Options(headers: authHeader),
+        data: formData,
+      );
+      if (res.statusCode == 200) {
+        log('200');
+        return ApiResponse<Map<String, dynamic>>.completed(res.data);
+      } else {
+        log('adb');
+        return ApiResponse<Map<String, dynamic>>.error(res.statusMessage);
+      }
+    } on DioError catch (de) {
+      log('jnijk');
+      return ApiResponse<Map<String, dynamic>>.error(de.error.toString());
+    } catch (e) {
+      log('fgs');
+      return ApiResponse<Map<String, dynamic>>.error(e.toString());
+    }
+  }
+
+  Future<ApiResponse<Map<String, dynamic>>> postFCMToken(
+      String fcmToken) async {
+    try {
+      final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
+      log('auth hre $authHeader');
+
+      final Response<Map<String, dynamic>> res = await dio.postUri(
+        Uri.parse('fcmtoken'),
+        options: Options(headers: authHeader),
+        data: <String, dynamic>{'fcm_token': fcmToken},
+      );
+      if (res.statusCode == 200) {
+        log('200');
+        return ApiResponse<Map<String, dynamic>>.completed(res.data);
+      } else {
+        log('adb');
+        return ApiResponse<Map<String, dynamic>>.error(res.statusMessage);
+      }
+    } on DioError catch (de) {
+      log('jnijk');
+      return ApiResponse<Map<String, dynamic>>.error(de.error.toString());
+    } catch (e) {
+      log('fgs');
+      return ApiResponse<Map<String, dynamic>>.error(e.toString());
+    }
+  }
+
+  // ignore: always_specify_types
+  Future<ApiResponse<Map<String, dynamic>>> putFCMToken(var fcmToken) async {
+    try {
+      final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
+      log('auth hre $authHeader');
+
+      final Response<Map<String, dynamic>> res = await dio.putUri(
+        Uri.parse('fcmtoken'),
+        options: Options(headers: authHeader),
+        data: <String, dynamic>{'fcm_token': fcmToken},
+      );
+      if (res.statusCode == 200) {
+        log('200');
         return ApiResponse<Map<String, dynamic>>.completed(res.data);
       } else {
         log('adb');

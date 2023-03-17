@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -37,26 +35,13 @@ class ProfileView extends GetView<ProfileController> {
                 Stack(
                   children: <Widget>[
                     Obx(
-                      () => controller.filePath.value == null
-                          ? const SizedBox(
-                              height: 180,
-                              child: CircleAvatar(
-                                radius: 60,
-                                backgroundImage: AssetImage(
-                                  'assets/Avatar.png',
-                                ),
-                              ),
-                            )
-                          : SizedBox(
-                              height: 180,
-                              child: CircleAvatar(
-                                radius: 60,
-                                backgroundImage: AssetImage(
-                                  Image.file(File(controller.filePath.value!))
-                                      .toString(),
-                                ),
-                              ),
-                            ),
+                      () => SizedBox(
+                        height: 180,
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage: controller.image.value,
+                        ),
+                      ),
                     ),
                     Positioned(
                       top: 130,
@@ -102,18 +87,22 @@ class ProfileView extends GetView<ProfileController> {
                       label: 'State',
                       data: controller.userData.value.state.toString());
                 }),
-                Obx(() {
-                  return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: CustomButton().showIconButtonWithGradient(
-                      height: 75,
-                      width: 100.h,
-                      isLoading: controller.isloading.value,
-                      text: '  Pay Service Charge Now',
-                      onPressed: () => controller.onClickPayment(),
-                    ),
-                  );
-                })
+                Obx(
+                  () => isShowButton.value
+                      ? Obx(() {
+                          return Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: CustomButton().showIconButtonWithGradient(
+                              height: 75,
+                              width: 100.h,
+                              isLoading: controller.isloading.value,
+                              text: '  Pay Service Charge Now',
+                              onPressed: () => controller.onClickPayment(),
+                            ),
+                          );
+                        })
+                      : const Text('Implement expanded tile'),
+                )
               ],
             ),
           ),
@@ -139,12 +128,18 @@ class ProfileView extends GetView<ProfileController> {
                 ListTile(
                     leading: Icon(Icons.image, color: englishViolet),
                     title: const Text('Gallery'),
-                    onTap: () => controller.onPickedFromGallery()),
+                    onTap: () {
+                      controller.getImage(ImageSource.gallery);
+                      Get.back();
+                    }),
                 ListTile(
-                  leading: Icon(Icons.camera_alt_rounded, color: englishViolet),
-                  title: const Text('Camera'),
-                  onTap: () => controller.onPickedFromCamera(),
-                ),
+                    leading:
+                        Icon(Icons.camera_alt_rounded, color: englishViolet),
+                    title: const Text('Camera'),
+                    onTap: () {
+                      controller.getImage(ImageSource.camera);
+                      Get.back();
+                    }),
               ],
             ),
           ),

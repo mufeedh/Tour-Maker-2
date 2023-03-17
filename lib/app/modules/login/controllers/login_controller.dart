@@ -32,6 +32,7 @@ class LoginController extends GetxController with StateMixin<dynamic> {
 
   Future<void> onClickContinue(BuildContext context) async {
     if (formKey.currentState!.validate()) {
+      isLoading.value = true;
       if (state.value == states[0]) {
         Get.snackbar('Select your district', 'please select your country');
       }
@@ -45,6 +46,7 @@ class LoginController extends GetxController with StateMixin<dynamic> {
       if (res.status == ApiResponseStatus.completed) {
         log('completed');
         Get.offAllNamed(Routes.TERMS_AND_CONDITIONS);
+        isLoading.value = false;
       } else {
         log('sdfgsg');
       }

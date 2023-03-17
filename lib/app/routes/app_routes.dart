@@ -32,7 +32,11 @@ abstract class Routes {
   static const String SEARCH_DETAILS = _Paths.SEARCH_DETAILS;
   static const String NOTIFICATIONS = _Paths.NOTIFICATIONS;
   static const String NOINTERNET = _Paths.NOINTERNET;
-  static const TOURS_VIEW = _Paths.TOURS_VIEW;
+  static const String TOURS_VIEW = _Paths.TOURS_VIEW;
+  static const String PDF = _Paths.PDF;
+  static const String ADD_PASSENGER = _Paths.ADD_PASSENGER;
+  static const String PDF_VIEW = _Paths.PDF_VIEW;
+  static const String USER_REGISTERSCREEN = _Paths.USER_REGISTERSCREEN;
 }
 
 abstract class _Paths {
@@ -66,5 +70,9 @@ abstract class _Paths {
   static const String SEARCH_DETAILS = '/search-details';
   static const String NOTIFICATIONS = '/notifications';
   static const String NOINTERNET = '/nointernet';
-  static const TOURS_VIEW = '/tours-view';
+  static const String TOURS_VIEW = '/tours-view';
+  static const String PDF = '/pdf';
+  static const String ADD_PASSENGER = '/add-passenger';
+  static const String PDF_VIEW = '/pdf-view';
+  static const String USER_REGISTERSCREEN = '/user-registerscreen';
 }

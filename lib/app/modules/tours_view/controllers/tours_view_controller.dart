@@ -1,14 +1,19 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'dart:developer';
 
 import 'package:get/get.dart';
 
 import '../../../data/models/package_model.dart';
+import '../../../routes/app_pages.dart';
 import '../views/tours_view_view.dart';
 
 class ToursViewController extends GetxController
     with StateMixin<ToursViewView> {
   // var data;
   List<PackageModel> dataList = <PackageModel>[];
+  Rx<bool> isFavorite = false.obs;
+  Rx<bool> isHaveOffer = false.obs;
   @override
   void onInit() {
     super.onInit();
@@ -36,6 +41,13 @@ class ToursViewController extends GetxController
       change(null, status: RxStatus.empty());
     }
   }
+
+  Future<void> onClickSingleTour(int id) async {
+    Get.toNamed(Routes.SINGLE_TOUR, arguments: <int>[id])!
+        .whenComplete(() => loadData());
+  }
+
+  void onClickFavourites(PackageModel dataList) {}
 
   // Future<void> getData(var data) async {
   //   final ApiResponse<List<PackageModel>> res =

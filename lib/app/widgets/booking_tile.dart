@@ -2,23 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/style.dart';
 import '../../core/tour_maker_icons.dart';
+import '../data/models/booking_model.dart';
 
 class BookingTile extends StatelessWidget {
-  const BookingTile(
-      {super.key,
-      required this.onTapIcon,
-      required this.tourName,
-      required this.tourAmount,
-      required this.tourCode,
-      required this.tourPersons,
-      required this.tourAmountCriteria});
+  const BookingTile({
+    super.key,
+    required this.onTapIcon,
+    required this.bm,
+    required this.totalTravellers,
+  });
   final void Function() onTapIcon;
+  final String totalTravellers;
+  final BookingsModel bm;
 
-  final String tourName;
-  final String tourAmount;
-  final String tourCode;
-  final String tourPersons;
-  final String tourAmountCriteria;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -39,8 +35,8 @@ class BookingTile extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Text(tourName, style: paragraph2),
-                  Text(tourAmountCriteria, style: paragraph4),
+                  Text(bm.tourName ?? 'toournae', style: paragraph2),
+                  Text(bm.orderStatus!, style: paragraph4),
                 ],
               ),
             ),
@@ -50,8 +46,8 @@ class BookingTile extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Text(tourCode, style: paragraph2),
-                  Text(tourAmount, style: paragraph4),
+                  Text(bm.tourCode.toString(), style: paragraph2),
+                  Text(bm.totalAmount.toString(), style: paragraph4),
                 ],
               ),
             ),
@@ -80,7 +76,7 @@ class BookingTile extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            tourPersons,
+                            totalTravellers,
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w800),

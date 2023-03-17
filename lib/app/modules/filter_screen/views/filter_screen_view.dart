@@ -249,8 +249,10 @@ class FilterScreenView extends GetView<FilterScreenController> {
                 if (value ?? false) {
                   // Clear the selected destinations when "Show Domestic Tours" is selected
                   controller.selectedDestinations.clear();
-                  for (int i = 0; i < controller.isSelected.length; i++) {
-                    controller.isSelected[i] = false;
+                  for (int i = 0;
+                      i < controller.isSelectedDestinations.length;
+                      i++) {
+                    controller.isSelectedDestinations[i] = false;
                   }
                 }
               },
@@ -270,7 +272,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
   Widget buildDestinationsList(FilterScreenController controller, int index) {
     return Obx(() {
       return CheckboxListTile(
-          value: controller.isSelected[index],
+          value: controller.isSelectedDestinations[index],
           onChanged: (bool? value) =>
               controller.onDestinationCheck(value, index),
           activeColor: englishViolet,
@@ -329,7 +331,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
   Widget buildcategoriesList(FilterScreenController controller, int index) {
     return Obx(() {
       return CheckboxListTile(
-          value: controller.isSelected[index],
+          value: controller.isSelectedCategories[index],
           onChanged: (bool? value) => controller.onCategoryCheck(value, index),
           activeColor: englishViolet,
           checkboxShape:
