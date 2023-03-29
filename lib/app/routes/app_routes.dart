@@ -37,6 +37,10 @@ abstract class Routes {
   static const String ADD_PASSENGER = _Paths.ADD_PASSENGER;
   static const String PDF_VIEW = _Paths.PDF_VIEW;
   static const String USER_REGISTERSCREEN = _Paths.USER_REGISTERSCREEN;
+  static const TRENDING_TOURS = _Paths.TRENDING_TOURS;
+  static const EXCLUSIVE_TOURS = _Paths.EXCLUSIVE_TOURS;
+  static const TRAVEL_TYPES = _Paths.TRAVEL_TYPES;
+  static const SINGLE_TRAVEL_TYPETOUR = _Paths.SINGLE_TRAVEL_TYPETOUR;
 }
 
 abstract class _Paths {
@@ -75,4 +79,8 @@ abstract class _Paths {
   static const String ADD_PASSENGER = '/add-passenger';
   static const String PDF_VIEW = '/pdf-view';
   static const String USER_REGISTERSCREEN = '/user-registerscreen';
+  static const TRENDING_TOURS = '/trending-tours';
+  static const EXCLUSIVE_TOURS = '/exclusive-tours';
+  static const TRAVEL_TYPES = '/travel-types';
+  static const SINGLE_TRAVEL_TYPETOUR = '/single-travel-typetour';
 }

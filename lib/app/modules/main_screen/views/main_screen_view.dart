@@ -19,8 +19,6 @@ class MainScreenView extends GetView<MainScreenController> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      // extendBody: true,
-      extendBodyBehindAppBar: true,
       body: controller.obx(
         onLoading: const CustomLoadingScreen(),
         (MainScreenView? state) => RefreshIndicator(

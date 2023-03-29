@@ -109,10 +109,11 @@ class FilterScreenView extends GetView<FilterScreenController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(
-          // width: double.infinity,
+          width: double.infinity,
           height: 50,
           child: TextButton(
             style: TextButton.styleFrom(
+              alignment: Alignment.centerLeft,
               foregroundColor: controller.selectedIndex.value == 0
                   ? Colors.white
                   : englishViolet,
@@ -130,7 +131,8 @@ class FilterScreenView extends GetView<FilterScreenController> {
               controller.selectedIndex.value = 0;
             },
             child: const Text(
-              'Destinations',
+              '   Destinations',
+              textAlign: TextAlign.left,
             ),
           ),
         ),
@@ -139,6 +141,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
           height: 50,
           child: TextButton(
             style: TextButton.styleFrom(
+              alignment: Alignment.centerLeft,
               foregroundColor: controller.selectedIndex.value == 1
                   ? Colors.white
                   : englishViolet,
@@ -154,7 +157,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
             onPressed: () {
               controller.selectedIndex.value = 1;
             },
-            child: const Text('Budget'),
+            child: const Text('   Budget'),
           ),
         ),
         SizedBox(
@@ -162,6 +165,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
           height: 50,
           child: TextButton(
             style: TextButton.styleFrom(
+              alignment: Alignment.centerLeft,
               foregroundColor: controller.selectedIndex.value == 2
                   ? Colors.white
                   : englishViolet,
@@ -177,7 +181,9 @@ class FilterScreenView extends GetView<FilterScreenController> {
             onPressed: () {
               controller.selectedIndex.value = 2;
             },
-            child: const Text('Category'),
+            child: const Text(
+              '   Category',
+            ),
           ),
         ),
         SizedBox(
@@ -185,6 +191,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
           height: 50,
           child: TextButton(
             style: TextButton.styleFrom(
+              alignment: Alignment.centerLeft,
               foregroundColor: controller.selectedIndex.value == 3
                   ? Colors.white
                   : englishViolet,
@@ -200,7 +207,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
             onPressed: () {
               controller.selectedIndex.value = 3;
             },
-            child: const Text('Duration'),
+            child: const Text('   Duration'),
           ),
         ),
       ],

@@ -22,7 +22,8 @@ class AddPassengerController extends GetxController
   Rx<OrderPaymentModel> orderPaymentModel = OrderPaymentModel().obs;
   final ImagePicker picker = ImagePicker();
   Rx<ImageProvider<Object>>? image;
-
+  final TextEditingController controller = TextEditingController();
+  final DateTime selectedDate = DateTime.now();
   RxBool isloading = false.obs;
   Rx<String> customerAddress = ''.obs;
   Rx<String> customerName = ''.obs;
@@ -63,6 +64,7 @@ class AddPassengerController extends GetxController
   Future<void> onRegisterClicked() async {
     if (formKey.currentState!.validate()) {
       isloading.value = true;
+      // var res = await PassengerRepository().
     }
 
     // Future<void> updateUser() async {

@@ -13,6 +13,8 @@ import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
 
 String? currentUserPhoneNumber;
+String? currentUserName;
+String? currentUserState;
 Rxn<Directory> tempDir = Rxn<Directory>();
 
 Future<void> main() async {

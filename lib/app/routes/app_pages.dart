@@ -6,6 +6,8 @@ import '../modules/add_passenger/bindings/add_passenger_binding.dart';
 import '../modules/add_passenger/views/add_passenger_view.dart';
 import '../modules/booking_screen/bindings/booking_screen_binding.dart';
 import '../modules/booking_screen/views/booking_screen_view.dart';
+import '../modules/exclusive_tours/bindings/exclusive_tours_binding.dart';
+import '../modules/exclusive_tours/views/exclusive_tours_view.dart';
 import '../modules/favourites_screen/bindings/favourites_screen_binding.dart';
 import '../modules/favourites_screen/views/favourites_screen_view.dart';
 import '../modules/filter_screen/bindings/filter_screen_binding.dart';
@@ -46,6 +48,7 @@ import '../modules/single_category/bindings/single_category_binding.dart';
 import '../modules/single_category/views/single_category_view.dart';
 import '../modules/single_tour/bindings/single_tour_binding.dart';
 import '../modules/single_tour/views/single_tour_view.dart';
+
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
 import '../modules/terms_and_conditions/bindings/terms_and_conditions_binding.dart';
@@ -54,6 +57,10 @@ import '../modules/token_screen/bindings/token_screen_binding.dart';
 import '../modules/token_screen/views/token_screen_view.dart';
 import '../modules/tours_view/bindings/tours_view_binding.dart';
 import '../modules/tours_view/views/tours_view_view.dart';
+import '../modules/travel_types/bindings/travel_types_binding.dart';
+import '../modules/travel_types/views/travel_types_view.dart';
+import '../modules/trending_tours/bindings/trending_tours_binding.dart';
+import '../modules/trending_tours/views/trending_tours_view.dart';
 import '../modules/user_registerscreen/bindings/user_registerscreen_binding.dart';
 import '../modules/user_registerscreen/views/user_registerscreen_view.dart';
 
@@ -236,6 +243,21 @@ class AppPages {
       name: _Paths.USER_REGISTERSCREEN,
       page: () => const UserRegisterscreenView(),
       binding: UserRegisterscreenBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRENDING_TOURS,
+      page: () => const TrendingToursView(),
+      binding: TrendingToursBinding(),
+    ),
+    GetPage(
+      name: _Paths.EXCLUSIVE_TOURS,
+      page: () => const ExclusiveToursView(),
+      binding: ExclusiveToursBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRAVEL_TYPES,
+      page: () => const TravelTypesView(),
+      binding: TravelTypesBinding(),
     ),
   ];
 }

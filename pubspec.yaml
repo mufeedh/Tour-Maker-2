@@ -18,7 +18,9 @@ dependencies:
   csc_picker: ^0.2.6
   cupertino_icons: ^1.0.2
   curved_navigation_bar: ^1.0.3
+  date_time_picker: ^2.1.0
   dio: ^5.0.1
+  expansion_tile_card: ^2.0.0
   firebase_app_check: ^0.1.1+8
   firebase_auth: ^4.2.5
   firebase_core: ^2.4.0
@@ -37,6 +39,8 @@ dependencies:
   get_storage: ^2.0.3
   google_fonts: ^4.0.3
   http: ^0.13.5
+  http_parser: ^4.0.2
+  image: ^4.0.15
   image_cropper: ^3.0.1
   image_picker: ^0.8.6+1
   internet_connection_checker: ^1.0.0+1

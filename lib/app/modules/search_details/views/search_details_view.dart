@@ -19,7 +19,7 @@ class SearchDetailsView extends GetView<SearchDetailsController> {
         Get.put(SearchDetailsController());
     return Scaffold(
         appBar: CustomAppBar(
-          titleText: controller.destinationValue.toString(),
+          title: Text(controller.destinationValue.toString()),
           actions: <Widget>[
             IconButton(
               onPressed: () => controller.onClickFilter(),

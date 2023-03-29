@@ -18,6 +18,7 @@ class FavouritesScreenController extends GetxController
   void onInit() {
     super.onInit();
     loadData();
+    log('loghdbhabsc ');
   }
 
   Future<void> loadData() async {
@@ -28,8 +29,9 @@ class FavouritesScreenController extends GetxController
 
   Future<void> getAllFavourites() async {
     final res = await WishListRepo().getAllFav();
+    log('ihdiv ${res.message}');
     if (res.data != null) {
-      favouritesList.value = res.data!;
+      favouritesList.value = res.data! as List<WishListModel>;
       change(null, status: RxStatus.success());
     } else {
       change(null, status: RxStatus.empty());
@@ -72,7 +74,7 @@ class FavouritesScreenController extends GetxController
   }
 
   RxBool isFavorite(int productId) {
-    return RxBool(favouritesList.any((pckg) => pckg.id == productId));
+    return RxBool(packageList.any((pckg) => pckg.id == productId));
   }
 
   Future<void> onSingleTourPressed(int id) async {

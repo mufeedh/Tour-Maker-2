@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../core/theme/style.dart';
 
@@ -34,16 +36,16 @@ class PackageTile extends StatelessWidget {
       child: GestureDetector(
         onTap: onPressed,
         child: Card(
+          margin: const EdgeInsets.all(12),
           elevation: 2,
           // type: MaterialType.transparency,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(15),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   CachedNetworkImage(
                     useOldImageOnUrlChange: true,
@@ -60,9 +62,9 @@ class PackageTile extends StatelessWidget {
                     imageBuilder: (BuildContext context,
                             ImageProvider<Object> imageProvider) =>
                         Container(
-                      margin: const EdgeInsets.all(15),
-                      width: 136,
-                      height: 150,
+                      margin: const EdgeInsets.only(left: 10),
+                      width: 143,
+                      height: 162,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         color: englishlinearViolet,
@@ -78,14 +80,17 @@ class PackageTile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Text(
                       tourName.split(' ').join('\n'),
-                      style: heading3,
-                      overflow: TextOverflow.fade,
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: fontColor,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    // const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     Text(tourCode, style: paragraph1),
                     const SizedBox(height: 12),
                     Text(
@@ -99,21 +104,21 @@ class PackageTile extends StatelessWidget {
               ),
               Container(
                 height: 180,
-                margin: const EdgeInsets.only(right: 13, top: 12),
+                margin: const EdgeInsets.only(right: 16, top: 15),
                 child: Column(
                   children: <Widget>[
                     GestureDetector(
                       onTap: onClickedFavourites,
                       child: isFavourite
-                          ? const Icon(
+                          ? Icon(
                               Icons.favorite,
                               color: Colors.red,
-                              size: 30,
+                              size: 20.sp,
                             )
                           : Icon(
                               Icons.favorite_border_outlined,
                               color: englishlinearViolet,
-                              size: 30,
+                              size: 20.sp,
                             ),
                     ),
                   ],

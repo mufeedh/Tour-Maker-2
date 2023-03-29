@@ -49,7 +49,29 @@ class Client {
 
       final Map<String, dynamic> header = <String, dynamic>{
         // "X-Requested-With": "XMLHttpRequest",
-        // HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $tok',
+      };
+      log('header $header');
+
+      return header;
+    } else {
+      return null;
+    }
+  }
+
+  Future<Map<String, String>?> getMultiPartAuthHeader() async {
+    final dynamic tok = await storage.read('token');
+    // var t=  storage.;
+    log('token in client $tok');
+
+    if (tok != null) {
+      log('tokenn != null');
+
+      final Map<String, String> header = <String, String>{
+        // "X-Requested-With": "XMLHttpRequest",
+        HttpHeaders.contentTypeHeader: 'multipart/form-data',
+        HttpHeaders.acceptHeader: 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $tok',
       };
       log('header $header');

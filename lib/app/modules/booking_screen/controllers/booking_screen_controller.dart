@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../data/models/booking_model.dart';
 import '../../../data/repo/booking_repo.dart';
@@ -55,13 +56,6 @@ class BookingScreenController extends GetxController
     tabcontroller.animateTo(1);
   }
 
-  void onTapSingleUpComingBooking() {
-    Get.toNamed(Routes.PAYMENT_SUMMARY)!.whenComplete(() => loadData());
-  }
-
-  void onTapIcon() =>
-      Get.toNamed(Routes.PASSENGER_DETAILS)!.whenComplete(() => loadData());
-
   Future<void> getAllUpcomingBookings() async {
     final ApiResponse<List<BookingsModel>> res =
         await BookingRepository().getAllBookings('pending');
@@ -89,4 +83,28 @@ class BookingScreenController extends GetxController
       cancelledList.value = res.data!;
     }
   }
+
+  void onTapIcon(BookingsModel upcomingList) {}
+  void onTapSingleUpComingBooking(BookingsModel upcomingList) {
+    Get.toNamed(Routes.PAYMENT_SUMMARY, arguments: upcomingList.id)!
+        .whenComplete(() => loadData());
+  }
+
+  int getTotalTravellers(int adults, int childrens) {
+    final int sum = adults + childrens;
+    return sum;
+  }
+
+  String getBookingDate(String dateofTravel) {
+    final DateTime inputDate = DateTime.parse(dateofTravel);
+    final DateFormat outputFormat = DateFormat('d MMM yy');
+    final String formattedDate = outputFormat.format(inputDate);
+    return formattedDate;
+  }
+
+  void onTapSingleCompletedBooking(BookingsModel completedList) {}
+  void onTapUpcomingBookingTravellers(BookingsModel upcomingList) {}
+  void onTapCancelledBookingTravellers(BookingsModel completedList) {}
+  void onTapCompleteddBookingTravellers(BookingsModel completedList) {}
+  void onTapSingleCancelledBooking(BookingsModel upcomingList) {}
 }

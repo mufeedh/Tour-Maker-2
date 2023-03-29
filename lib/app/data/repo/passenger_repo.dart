@@ -96,4 +96,37 @@ class PassengerRepository {
       return ApiResponse<bool>.error(e.toString());
     }
   }
+
+  Future<ApiResponse<bool>> addpassenger(
+    String? mpaymentID,
+    String? msignature,
+    String? orderID,
+  ) async {
+    try {
+      final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
+      final Response<Map<String, dynamic>> response = await dio.postUri(
+          Uri.parse('verifypayment'),
+          options: Options(headers: authHeader),
+          data: <String, dynamic>{
+            'order_id': orderID,
+            'merchant_payment_id': mpaymentID,
+            'merchant_signature': msignature
+          });
+      if (response.statusCode == 200) {
+        log('adeeb raz${response.statusMessage}');
+        log('adeeb ${response.data!['success']}');
+
+        // log('adeeb ${response.da}');
+        final bool razorpay = response.data!['success'] as bool;
+        log('adeeb messsage $razorpay');
+        return ApiResponse<bool>.completed(razorpay);
+      } else {
+        return ApiResponse<bool>.error(response.statusMessage);
+      }
+    } on DioError catch (de) {
+      return ApiResponse<bool>.error(de.error.toString());
+    } catch (e) {
+      return ApiResponse<bool>.error(e.toString());
+    }
+  }
 }

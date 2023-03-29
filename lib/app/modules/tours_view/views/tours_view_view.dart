@@ -15,29 +15,32 @@ class ToursViewView extends GetView<ToursViewController> {
   Widget build(BuildContext context) {
     final ToursViewController controller = Get.put(ToursViewController());
     return Scaffold(
-        appBar: const CustomAppBar(),
-        body: controller.obx(
-            onEmpty: const CustomErrorScreen(errorText: 'Nothing found Here'),
-            onLoading: const CustomLoadingScreen(),
-            (ToursViewView? state) => controller.dataList.isEmpty
-                ? const CustomErrorScreen(errorText: 'Nothing found Here')
-                : ListView.builder(
-                    itemCount: controller.dataList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final PackageModel package = controller.dataList[index];
-                      return PackageTile(
-                        isFavourite: controller.isFavorite.value,
-                        onClickedFavourites: () => controller
-                            .onClickFavourites(controller.dataList[index]),
-                        onPressed: () => controller
-                            .onClickSingleTour(controller.dataList[index].id!),
-                        tourAmount: package.amount.toString(),
-                        tourCode: package.tourCode.toString(),
-                        tourDays: package.days.toString(),
-                        tourImage: package.image.toString(),
-                        tourName: package.name.toString(),
-                        tournights: package.nights.toString(),
-                      );
-                    })));
+      appBar: const CustomAppBar(),
+      body: controller.obx(
+        onEmpty: const CustomErrorScreen(errorText: 'Nothing found Here'),
+        onLoading: const CustomLoadingScreen(),
+        (ToursViewView? state) => controller.dataList.isEmpty
+            ? const CustomErrorScreen(errorText: 'Nothing found Here')
+            : ListView.builder(
+                itemCount: controller.dataList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final PackageModel package = controller.dataList[index];
+                  return PackageTile(
+                    isFavourite: controller.isFavorite.value,
+                    onClickedFavourites: () => controller
+                        .onClickFavourites(controller.dataList[index]),
+                    onPressed: () => controller
+                        .onClickSingleTour(controller.dataList[index].id!),
+                    tourAmount: package.amount.toString(),
+                    tourCode: package.tourCode.toString(),
+                    tourDays: package.days.toString(),
+                    tourImage: package.image.toString(),
+                    tourName: package.name.toString(),
+                    tournights: package.nights.toString(),
+                  );
+                },
+              ),
+      ),
+    );
   }
 }

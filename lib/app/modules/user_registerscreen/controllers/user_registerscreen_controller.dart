@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 import '../../../data/repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
-import '../../profile/controllers/profile_controller.dart';
 import '../views/user_registerscreen_view.dart';
 
 class UserRegisterscreenController extends GetxController
@@ -156,7 +155,6 @@ class UserRegisterscreenController extends GetxController
     if (res.status == ApiResponseStatus.completed) {
       log('Adeeb updated');
       isloading.value = false;
-      isShowButton.value = false;
       Get.offAllNamed(Routes.SPLASH_SCREEN);
     } else {
       log('Adeeb not updated');

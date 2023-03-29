@@ -123,25 +123,24 @@ class UserRepository {
   }
 
   Future<ApiResponse<Map<String, dynamic>>> addUserProfilePic(
-      String imageFile, String path) async {
+      String path, String fullPath) async {
     try {
-      final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
-      log('auth hre $authHeader');
+      final Map<String, dynamic>? authHeader =
+          await Client().getMultiPartAuthHeader();
 
       final FormData formData = FormData.fromMap(<String, dynamic>{
-        'image': await MultipartFile.fromFile(path,
-            filename: imageFile, contentType: MediaType('image', 'png')),
+        'image': await MultipartFile.fromFile(
+          fullPath, contentType: MediaType('image', 'jpeg'), //important
+        ),
       });
-      // final String imageData = base64Encode(await imageFile.readAsBytes());
-      // final FormData formData = FormData.fromMap(<String, dynamic>{
-      //   'image': imageData,
-      // });
-      // log('formvalue of phot $imageData');
+      log('huigyuyugyuhb n$fullPath');
+      log('for data ${formData.files}');
       final Response<Map<String, dynamic>> res = await dio.put(
         'user/updateuser',
         options: Options(headers: authHeader),
         data: formData,
       );
+      log('KGF ROCKY BHAAI ${res.data}');
       if (res.statusCode == 200) {
         log('200');
         return ApiResponse<Map<String, dynamic>>.completed(res.data);
@@ -150,7 +149,12 @@ class UserRepository {
         return ApiResponse<Map<String, dynamic>>.error(res.statusMessage);
       }
     } on DioError catch (de) {
-      log('jnijk${de.message}');
+      log('jnijk err ${de.error}');
+      log('jnijk msg ${de.message}');
+      log('jnijk opt ${de.requestOptions}');
+      log('jnijk resp ${de.response}');
+      log('jnijk stktrc ${de.stackTrace}');
+      log('jnijk type ${de.type}');
       return ApiResponse<Map<String, dynamic>>.error(de.error.toString());
     } catch (e) {
       log('fgs');

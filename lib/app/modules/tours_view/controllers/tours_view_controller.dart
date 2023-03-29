@@ -48,15 +48,4 @@ class ToursViewController extends GetxController
   }
 
   void onClickFavourites(PackageModel dataList) {}
-
-  // Future<void> getData(var data) async {
-  //   final ApiResponse<List<PackageModel>> res =
-  //       await DestinationRepository().getDestination(data.toString());
-  //   if (res.status == ApiResponseStatus.completed) {
-  //     dataList.value = res.data!;
-  //     change(null, status: RxStatus.success());
-  //   } else {
-  //     change(null, status: RxStatus.empty());
-  //   }
-  // }
 }

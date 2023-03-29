@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../../core/theme/style.dart';
+import '../../../../main.dart';
+import '../../../widgets/custom_dialogue.dart';
 import '../controllers/lucky_draw_controller.dart';
 
 class LuckyDrawView extends GetView<LuckyDrawController> {
@@ -10,51 +13,61 @@ class LuckyDrawView extends GetView<LuckyDrawController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 18.0),
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                Center(
-                  child: AnimatedTextKit(
-                    isRepeatingAnimation: false,
-                    onFinished: () => controller.onFinished(),
-                    animatedTexts: <AnimatedText>[
-                      TypewriterAnimatedText(
-                        controller.tokenText,
-                        // curve: Curves.easeInOutCirc,
-                        speed: const Duration(milliseconds: 50), //50),
-                        textAlign: TextAlign.left,
-                        textStyle: const TextStyle(
-                            letterSpacing: 3,
-                            leadingDistribution: TextLeadingDistribution.even,
-                            wordSpacing: 4,
-                            fontFamily: 'Mesa',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ],
+        body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 18.0),
+          child: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Center(
+                    child: AnimatedTextKit(
+                      isRepeatingAnimation: false,
+                      onFinished: () => controller.onFinished(),
+                      animatedTexts: <AnimatedText>[
+                        TypewriterAnimatedText(
+                          controller.tokenText,
+                          speed: const Duration(milliseconds: 50), //50),
+                          textAlign: TextAlign.left,
+                          textStyle: const TextStyle(
+                              letterSpacing: 3,
+                              leadingDistribution: TextLeadingDistribution.even,
+                              wordSpacing: 4,
+                              fontFamily: 'Mesa',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 30),
-                // Obx(() => controller.isFinished.value
-                //     ? controller.showBottomSheet() as Widget
-                //     : const SizedBox()),
-                //  Padding(
-                //   padding: const EdgeInsets.all(10),
-                //   child: CustomButton().showIconButtonWithGradient(
-                //     height: 12.h,
-                //     width: 100.h,
-                //     text: '  Pay Service Charge Now',
-                //     onPressed: () => controller.onClickPayment(),
-                //   ),
-                // )
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
+        floatingActionButton: Obx(() {
+          return controller.isFinished.value
+              ? showFloatingButton()
+              : Container();
+        }));
+  }
+
+  Widget showFloatingButton() => FloatingActionButton(
+        autofocus: true,
+        backgroundColor: englishViolet,
+        onPressed: () {
+          showPaymentDialogue();
+        },
+        child: const Icon(Icons.arrow_forward),
+      );
+
+  void showPaymentDialogue() {
+    CustomDialog().showCustomDialog(
+      'Hi $currentUserName',
+      'Welcome to Tour Maker App',
+      confirmText: 'Pay Rs. 424 + GST',
+      cancelText: 'See a demo of the App',
+      onConfirm: () => controller.onClickPayment(),
+      onCancel: () => controller.onClickDemoApp(),
     );
   }
 }

@@ -11,7 +11,7 @@ class RewardsView extends GetView<RewardsController> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: CustomAppBar(titleText: 'Rewards'),
+      appBar: CustomAppBar(title: Text('Rewards')),
       body: CustomErrorScreen(
         errorText: 'NO rewards',
       ),

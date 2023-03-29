@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../main.dart';
 import '../../../data/models/user_model.dart';
 import '../../../data/repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
@@ -41,6 +42,8 @@ class LoginController extends GetxController with StateMixin<dynamic> {
         phoneNumber: phone.value,
         state: state.value,
       );
+      currentUserName = name.value;
+      currentUserState = state.value;
       final ApiResponse<Map<String, dynamic>> res =
           await userRepo.signUpTheUser(user);
       if (res.status == ApiResponseStatus.completed) {

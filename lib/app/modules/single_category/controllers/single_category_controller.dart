@@ -29,11 +29,12 @@ class SingleCategoryController extends GetxController
 
   void onSingleTourPressed(PackageModel pckg) {
     Get.toNamed(Routes.SINGLE_TOUR, arguments: <int>[pckg.id!])!
-        .whenComplete(() => getData());
+        .whenComplete(() => loadData());
   }
 
   Future<void> getData() async {
     change(null, status: RxStatus.loading());
+
     if (Get.arguments != null) {
       categoryName.value = Get.arguments[0] as String;
       categoryImage.value = Get.arguments[1] as String;
@@ -45,11 +46,11 @@ class SingleCategoryController extends GetxController
   }
 
   Future<void> getWishList() async {
-    final ApiResponse<List<WishListModel>> res =
-        await WishListRepo().getAllFav();
-    if (res.status == ApiResponseStatus.completed) {
-      wishList.value = res.data!;
-    }
+    final ApiResponse<dynamic> res = await WishListRepo().getAllFav();
+    log('ihdiv${res.message}');
+    if (res.data != null) {
+      wishList.value = res.data! as List<WishListModel>;
+    } else {}
   }
 
   Future<void> toggleFavorite(int productId) async {

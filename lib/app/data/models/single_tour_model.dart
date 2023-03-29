@@ -14,10 +14,12 @@ class SingleTourModel {
         tourData: json['tour_data'] != null
             ? TourData.fromJson(json['tour_data'] as Map<String, dynamic>)
             : null,
-        packageData: (json['package_data'] as List<dynamic>)
-            // ignore: always_specify_types
-            .map((e) => PackageData.fromJson(e as Map<String, dynamic>))
-            .toList(),
+        packageData: json['package_data'] != null
+            ? (json['package_data'] as List<dynamic>)
+                .map((dynamic e) =>
+                    PackageData.fromJson(e as Map<String, dynamic>))
+                .toList()
+            : null,
       );
 }
 

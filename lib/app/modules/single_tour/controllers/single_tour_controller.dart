@@ -20,27 +20,87 @@ class SingleTourController extends GetxController
     with StateMixin<SingleTourView>, GetSingleTickerProviderStateMixin {
   late final TabController tabcontroller =
       TabController(length: 2, vsync: this);
-  RxList<SingleTourModel> singleTour = <SingleTourModel>[].obs;
   late Razorpay razorPay;
+  final RxInt selectedDateIndex = 0.obs;
+  final RxList<int> favorites = <int>[].obs;
+  RxList<SingleTourModel> singleTour = <SingleTourModel>[].obs;
+  RxList<SingleTourModel> batchTours = <SingleTourModel>[].obs;
+  RxList<SingleTourModel> individualTours = <SingleTourModel>[].obs;
+  RxList<WishListModel> wishlists = <WishListModel>[].obs;
+  Rx<OrderPaymentModel> orderPaymentModel = OrderPaymentModel().obs;
   Rx<int> selectedIndex = 0.obs;
+  Rx<int> selectDate = 0.obs;
+  Rx<int> selectedBatchIndex = 0.obs;
   Rx<int> adult = 1.obs;
   Rx<int> children = 0.obs;
   Rx<bool> isLoading = false.obs;
   Rx<bool> isFavourite = false.obs;
   Rx<String> selectedDate = ' '.obs;
-  RxList<WishListModel> wishlists = <WishListModel>[].obs;
-  Rx<OrderPaymentModel> orderPaymentModel = OrderPaymentModel().obs;
-  // var selectedDateIndex = 0.obs;
-  // var selectedDate = ''.obs;
-  final RxInt selectedDateIndex = 0.obs;
-  final RxList<int> favorites = <int>[].obs;
+  Rx<String> formattedDate = ''.obs;
   int? tourID;
   int? order;
-
+  late int TOTALAMOUNT;
   @override
   void onInit() {
     super.onInit();
-    loadData();
+    log('Kumbalangi init');
+    getData();
+  }
+
+  @override
+  void onReady() {
+    log('Kumbalangi ready');
+    loadBatchTours(tourID!);
+    // getWishList();
+    super.onReady();
+  }
+
+  Future<void> getData() async {
+    change(null, status: RxStatus.loading());
+    final int id = await loadData();
+    await loadSingleTourData(id); //individual tours
+    await loadBatchTours(id); // batch tours
+    await getWishList(id);
+    change(null, status: RxStatus.success());
+  }
+
+  Future<int> loadData() async {
+    log('Kumbalangi loadData');
+
+    if (Get.arguments != null) {
+      log('Kumbalangi argument !=null');
+
+      tourID = Get.arguments[0] as int;
+      return tourID!;
+    }
+    return tourID!;
+  }
+
+  Future<void> loadSingleTourData(int tourID) async {
+    log('Kumbalangi loadsingletour');
+
+    final ApiResponse<List<SingleTourModel>> res =
+        await SingleTourRepository().getSingleTour(tourID);
+    log('Kumbalangi loadsingletour msg ${res.message}');
+    log('Kumbalangi loadsingletour status ${res.status}');
+    if (res.data != null) {
+      log('Kumbalangi single tour res.data != null');
+
+      singleTour.value = res.data!;
+    }
+  }
+
+  Future<void> loadBatchTours(int tourID) async {
+    log('Kumbalangi loadbatch');
+    final ApiResponse<List<SingleTourModel>> res =
+        await SingleTourRepository().getSingleTourBATCH(tourID);
+    log('Kumbalangi batch msg ${res.message}');
+    log('Kumbalangi batch status ${res.status}');
+    if (res.data != null) {
+      log('Kumbalangi batch tour !=null ');
+
+      batchTours.value = res.data!;
+    }
   }
 
   void onTapFixedDeparture() {
@@ -52,38 +112,14 @@ class SingleTourController extends GetxController
   }
 
   void onDateSelected(int index) {
+    log('Kumbalangi onDateSelecte ');
+
     selectedDateIndex.value = index;
     final DateTime inputDate =
         DateTime.parse('${singleTour[0].packageData?[index].dateOfTravel}');
     final DateFormat outputFormat = DateFormat('MMM d');
     final String formattedDate = outputFormat.format(inputDate);
     selectedDate.value = formattedDate;
-  }
-
-  Future<void> loadData() async {
-    change(null, status: RxStatus.loading());
-    if (Get.arguments != null) {
-      log('hi get erguments');
-      tourID = Get.arguments[0] as int;
-
-      await loadSingleTourData(tourID!);
-      getWishList();
-    } else {
-      change(null, status: RxStatus.empty());
-    }
-  }
-
-  Future<void> loadSingleTourData(int tourID) async {
-    log('load data from single blah blah blah');
-    final ApiResponse<List<SingleTourModel>> res =
-        await SingleTourRepository().getSingleTour(tourID);
-
-    if (res.status == ApiResponseStatus.completed) {
-      singleTour.value = res.data!;
-      change(null, status: RxStatus.success());
-    } else {
-      change(null, status: RxStatus.error());
-    }
   }
 
   Future<void> onViewItineraryClicked(String itinerary) async {
@@ -189,19 +225,32 @@ class SingleTourController extends GetxController
     return orderPaymentModel.value;
   }
 
-  Future<void> getWishList() async {
-    final ApiResponse<List<WishListModel>> res =
-        await WishListRepo().getAllFav();
-    if (res.data != null) {
-      wishlists.value = res.data!;
-      for (final WishListModel wm in wishlists) {
-        if (wm.id == singleTour[0].tourData?.iD) {
-          isFavourite.value = true;
-          break; // add a break statement here to stop the loop once isFavourite is set
-        } else {
-          isFavourite.value = false;
+  Future<void> getWishList(int id) async {
+    log('MUDAPPALLUR load wisgh');
+
+    final ApiResponse<dynamic> res = await WishListRepo().getAllFav();
+    log('MUDAPPALLUR wish sing tour msg ${res.message}');
+    log('MUDAPPALLUR wish sing tour data ${res.data}');
+    if (res.status == ApiResponseStatus.completed) {
+      log('MUDAPPALLUR wish  sing tour res.data!-nulls');
+
+      if (res.data != null) {
+        wishlists.value = res.data! as List<WishListModel>;
+        for (final WishListModel wm in wishlists) {
+          if (wm.id == id) {
+            log('MUDAPPALLUR sing wishtrue');
+            isFavourite.value = true;
+            break;
+          } else {
+            log('MUDAPPALLUR sing wishfalse');
+            isFavourite.value = false;
+          }
         }
       }
+    } else {
+      isFavourite.value = false;
+
+      log('Kumbalangi null wish');
     }
   }
 
@@ -231,5 +280,30 @@ class SingleTourController extends GetxController
     } catch (e) {
       log('Error while updating favorites: $e');
     }
+  }
+
+  String convertDates(String date) {
+    final DateTime inputDate = DateTime.parse(date);
+    final DateFormat outputFormat = DateFormat('d MMM yy');
+    final String formattedDate = outputFormat.format(inputDate);
+    return formattedDate;
+  }
+
+  int getTotalAmountOFtour(
+      int adultCount, int childcount, PackageData packageData, int index) {
+    int adultAmount;
+    int childAmount;
+    packageData.extraOffer != true
+        ? adultAmount = packageData.amount!
+        : adultAmount = packageData.offerAmount!;
+    packageData.kidsOfferAmount != null
+        ? childAmount = packageData.kidsOfferAmount!
+        : childAmount = packageData.kidsAmount!;
+    final int totalAdultAmount = adultCount * adultAmount;
+    final int totalChildrensAmount = childcount * childAmount;
+    // ignore: non_constant_identifier_names
+    TOTALAMOUNT = totalAdultAmount + totalChildrensAmount;
+
+    return TOTALAMOUNT;
   }
 }

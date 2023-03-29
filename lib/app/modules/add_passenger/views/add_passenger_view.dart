@@ -9,7 +9,7 @@ import '../../../../core/tour_maker_icons.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_loadinscreen.dart';
-import '../../../widgets/custom_textformfield.dart';
+import '../../../widgets/customdatepicker.dart';
 import '../controllers/add_passenger_controller.dart';
 
 class AddPassengerView extends GetView<AddPassengerController> {
@@ -36,6 +36,11 @@ class AddPassengerView extends GetView<AddPassengerController> {
                   Text(
                     'Enter Passenger Details',
                     style: heading2,
+                  ),
+                  const SizedBox(height: 7),
+                  Text(
+                    'Enter Passenger Details',
+                    style: subheading3,
                   ),
                   SizedBox(height: 25.h),
                   Center(
@@ -66,98 +71,6 @@ class AddPassengerView extends GetView<AddPassengerController> {
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: Form(
-                  //     key: controller.formKey,
-                  //     child: Column(
-                  //       children: <Widget>[
-                  //         CustomTextFormField(
-                  //           keyboardType: TextInputType.name,
-                  //           contentPadding: const EdgeInsets.all(8),
-                  //           prefix:
-                  //               Icon(TourMaker.profile_icon, color: fontColor),
-                  //           hintText: 'Name',
-                  //           validator: (String? value) =>
-                  //               controller.nameValidator(value),
-                  //           onChanged: (String value) =>
-                  //               controller.customerName.value = value,
-                  //           // initialValue: controller.incomingname.value,
-                  //         ),
-                  //         const SizedBox(height: 15),
-                  //         CustomTextFormField(
-                  //             keyboardType: TextInputType.phone,
-                  //             contentPadding: const EdgeInsets.all(8),
-                  //             hintText: 'Phone Number',
-                  //             validator: (String? value) =>
-                  //                 controller.phoneNumberValidator(value!),
-                  //             onChanged: (String? value) => controller
-                  //                 .customerPhone.value = value.toString(),
-                  //             // initialValue: controller.incomingPhone.value,
-                  //             prefix: Icon(TourMaker.call, color: fontColor)),
-                  //         const SizedBox(height: 15),
-                  //         TextFormField(
-                  //           maxLines: 10,
-                  //           minLines: 1,
-                  //           // validator: (String? value) =>
-                  //           //     controller.addressValidator(value),
-                  //           onChanged: (String? value) => controller
-                  //               .customerAddress.value = value.toString(),
-                  //           decoration: InputDecoration(
-                  //             contentPadding: const EdgeInsets.all(30),
-                  //             filled: true,
-                  //             fillColor: const Color(0xFFF6F6F6),
-                  //             hintText: 'Address',
-                  //             prefixIcon: Icon(
-                  //               TourMaker.location_icon,
-                  //               color: fontColor,
-                  //             ),
-                  //             border: OutlineInputBorder(
-                  //               borderSide:
-                  //                   const BorderSide(color: Colors.transparent),
-                  //               borderRadius: BorderRadius.circular(15),
-                  //             ),
-                  //             enabledBorder: OutlineInputBorder(
-                  //               borderSide:
-                  //                   const BorderSide(color: Colors.transparent),
-                  //               borderRadius: BorderRadius.circular(15),
-                  //             ),
-                  //             errorBorder: OutlineInputBorder(
-                  //               borderSide:
-                  //                   const BorderSide(color: Colors.transparent),
-                  //               borderRadius: BorderRadius.circular(15),
-                  //             ),
-                  //             focusedBorder: OutlineInputBorder(
-                  //               borderSide:
-                  //                   const BorderSide(color: Colors.transparent),
-                  //               borderRadius: BorderRadius.circular(15),
-                  //             ),
-                  //             disabledBorder: OutlineInputBorder(
-                  //               borderSide:
-                  //                   const BorderSide(color: Colors.transparent),
-                  //               borderRadius: BorderRadius.circular(15),
-                  //             ),
-                  //             focusedErrorBorder: OutlineInputBorder(
-                  //               borderSide:
-                  //                   const BorderSide(color: Colors.transparent),
-                  //               borderRadius: BorderRadius.circular(15),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         const SizedBox(height: 15),
-                  //         Obx(() {
-                  //           return CustomButton().showIconButtonWithGradient(
-                  //             height: 75,
-                  //             width: 100.h,
-                  //             isLoading: controller.isloading.value,
-                  //             text: '     Submit',
-                  //             onPressed: () => controller.onRegisterClicked(),
-                  //           );
-                  //         }),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // )
                 ],
               ),
             ),
@@ -178,17 +91,19 @@ class AddPassengerView extends GetView<AddPassengerController> {
       transitionCurve: Curves.easeInCubic,
       barrierDismissible: true,
       barrierColor: Colors.transparent,
-      transitionDuration: const Duration(milliseconds: 500),
+      transitionDuration: const Duration(milliseconds: 700),
       useSafeArea: true,
       Padding(
         padding: const EdgeInsets.all(20.0),
         child: Material(
+          color: Colors.grey.shade300,
           borderRadius: BorderRadius.circular(25),
           child: Padding(
             padding: const EdgeInsets.all(18.0),
             child: Form(
               key: controller.formKey,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -202,26 +117,100 @@ class AddPassengerView extends GetView<AddPassengerController> {
                       )
                     ],
                   ),
-                  CustomTextFormField(
+                  TextFormField(
                     keyboardType: TextInputType.name,
-                    contentPadding: const EdgeInsets.all(8),
-                    prefix: Icon(TourMaker.profile_icon, color: fontColor),
-                    hintText: 'Name',
+                    onChanged: (String? value) =>
+                        controller.customerName.value = value.toString(),
                     validator: (String? value) =>
                         controller.nameValidator(value),
-                    onChanged: (String value) =>
-                        controller.customerName.value = value,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(30),
+                      filled: true,
+                      fillColor: const Color(0xFFF6F6F6),
+                      hintText: 'Name',
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Icon(
+                          TourMaker.profile_icon,
+                          color: fontColor,
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 15),
-                  CustomTextFormField(
+                  TextFormField(
                     keyboardType: TextInputType.phone,
-                    contentPadding: const EdgeInsets.all(8),
-                    hintText: 'Phone Number',
-                    validator: (String? value) =>
-                        controller.phoneNumberValidator(value),
                     onChanged: (String? value) =>
                         controller.customerPhone.value = value.toString(),
-                    prefix: Icon(TourMaker.call, color: fontColor),
+                    validator: (String? value) =>
+                        controller.phoneNumberValidator(value),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(30),
+                      filled: true,
+                      fillColor: const Color(0xFFF6F6F6),
+                      hintText: 'Phone Number',
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Icon(
+                          TourMaker.call,
+                          color: fontColor,
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  CustomDatePickerField(
+                    labelName: 'Date Of Birth',
+                    validator: (value) {},
+                    onChange: (value) {},
                   ),
                   const SizedBox(height: 15),
                   TextFormField(
@@ -240,27 +229,27 @@ class AddPassengerView extends GetView<AddPassengerController> {
                       ),
                       border: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       errorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       disabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                   ),
@@ -269,18 +258,14 @@ class AddPassengerView extends GetView<AddPassengerController> {
                     padding:
                         const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(15),
+                      color: const Color(0xFFF6F6F6),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         const Text(
-                          '   Aadhar Card',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          '      Aadhar Card',
                         ),
                         IconButton(
                           icon: const Icon(Icons.camera_alt),
@@ -292,7 +277,7 @@ class AddPassengerView extends GetView<AddPassengerController> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 5),
                   Obx(() {
                     return CustomButton().showIconButtonWithGradient(
                       height: 75,

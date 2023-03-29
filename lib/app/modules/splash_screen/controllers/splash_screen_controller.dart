@@ -14,6 +14,9 @@ import '../../../data/repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 
+// ignore: non_constant_identifier_names
+dynamic FCMtoken;
+
 class SplashScreenController extends GetxController with StateMixin<dynamic> {
   final GetStorage getStorage = GetStorage();
   final User? currentUser = FirebaseAuth.instance.currentUser;
@@ -57,11 +60,11 @@ class SplashScreenController extends GetxController with StateMixin<dynamic> {
       if (currentUser != null) {
         log('adeeb phn ${currentUser?.phoneNumber}');
         currentUserPhoneNumber = currentUser?.phoneNumber;
-        log(' user is logged in firebase');
+
         final String token = await currentUser!.getIdToken(true);
         await getStorage.write('token', token);
         log('adeeb token frm splsh $token');
-        sendFCM();
+        sendFCM(token);
       } else {
         log(' user is not logged in firebase');
         await Get.offAllNamed(Routes.GET_STARTED);
@@ -71,18 +74,19 @@ class SplashScreenController extends GetxController with StateMixin<dynamic> {
     }
   }
 
-  Future<void> sendFCM() async {
+  Future<void> sendFCM(dynamic token) async {
     log('send fcm');
     final FirebaseMessaging messaging = FirebaseMessaging.instance;
     final NotificationSettings settings = await messaging.requestPermission();
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       //authorized
       final String? fcmToken = await messaging.getToken();
+      FCMtoken = fcmToken;
       log('fcm $fcmToken');
       final ApiResponse<Map<String, dynamic>> res =
           await UserRepository().putFCMToken(fcmToken);
       if (res.status == ApiResponseStatus.completed) {
-        checkUserExistsOnDB();
+        checkUserExistsOnDB(token, fcmToken);
       } else {
         log('req not send');
       }
@@ -91,12 +95,13 @@ class SplashScreenController extends GetxController with StateMixin<dynamic> {
     }
   }
 
-  Future<void> checkUserExistsOnDB() async {
+  Future<void> checkUserExistsOnDB(dynamic token, fcmToken) async {
     log('check user');
     final ApiResponse<Map<String, dynamic>> res =
         await UserRepository().checkUserExists();
-    if (res.status == ApiResponseStatus.completed) {
+    if (res.data!.isNotEmpty) {
       Get.offAllNamed(Routes.HOME);
+      // Get.offAllNamed(Routes.TOKEN_SCREEN, arguments: [token, fcmToken]);
     } else {
       Get.offAllNamed(Routes.LOGIN);
     }

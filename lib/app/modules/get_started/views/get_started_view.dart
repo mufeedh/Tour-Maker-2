@@ -7,7 +7,6 @@ import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../widgets/custom_elevated_button.dart';
-import '../../../widgets/custom_textformfield.dart';
 import '../controllers/get_started_controller.dart';
 
 class GetStartedView extends GetView<GetStartedController> {
@@ -87,32 +86,109 @@ class GetStartedView extends GetView<GetStartedController> {
               topLeft: Radius.circular(40), topRight: Radius.circular(40)),
         ),
         controller.obx(
-          (dynamic state) => Padding(
-            padding: EdgeInsets.symmetric(horizontal: 29, vertical: 22),
-            child: SizedBox(
-              height: 42.h,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text(
-                    'Welcome To TourMaker',
-                    style: heading3,
-                  ),
-                  Text(
-                    'Insert your phone number to continue',
-                    style: paragraph3,
-                  ),
-                  Form(
-                    key: controller.formKey,
-                    child: CustomTextFormField(
-                      keyboardType: TextInputType.phone,
-                      contentPadding: const EdgeInsets.all(8),
-                      hintText: 'Phone Number',
-                      validator: (String? value) =>
-                          controller.phoneNumberValidator(value!),
-                      onChanged: (String? value) => controller.phone = value,
-                      prefix: Obx(() {
+          (dynamic state) => SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 29, vertical: 22),
+              child: SizedBox(
+                height: 42.h,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Text(
+                      'Welcome To TourMaker',
+                      style: heading3,
+                    ),
+                    Text(
+                      'Insert your phone number to continue',
+                      style: paragraph3,
+                    ),
+                    Form(
+                      key: controller.formKey,
+                      child: TextFormField(
+                        keyboardType: TextInputType.phone,
+                        validator: (String? value) =>
+                            controller.phoneNumberValidator(value!),
+                        onChanged: (String? value) => controller.phone = value,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(30),
+                          filled: true,
+                          fillColor: const Color(0xFFF6F6F6),
+                          hintText: 'phone Number',
+                          prefixIcon: Obx(() {
+                            return GestureDetector(
+                              onTap: () =>
+                                  controller.onCountryCodeClicked(context),
+                              child: Container(
+                                width: 35,
+                                margin:
+                                    const EdgeInsets.only(right: 10, left: 12),
+                                height: 35,
+                                decoration: BoxDecoration(
+                                    // color: Colors.red,
+                                    // borderRadius: BorderRadius.circular(40),
+                                    ),
+                                clipBehavior: Clip.hardEdge,
+                                child: Center(
+                                  child: Text(
+                                    controller.selectedCountry.value.flagEmoji,
+                                    style: TextStyle(fontSize: 35),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                          border: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          disabledBorder: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () => CustomButton().showIconButtonWithGradient(
+                        height: 72,
+                        isLoading: controller.isloading.value,
+                        width: 100.w,
+                        text: '     Continue',
+                        onPressed: () => controller.onVerifyPhoneNumber(),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ));
+  }
+}
+/*Obx(() {
                         return GestureDetector(
                           onTap: () => controller.onCountryCodeClicked(context),
                           child: Container(
@@ -132,22 +208,4 @@ class GetStartedView extends GetView<GetStartedController> {
                             ),
                           ),
                         );
-                      }),
-                    ),
-                  ),
-                  Obx(
-                    () => CustomButton().showIconButtonWithGradient(
-                      height: 72,
-                      isLoading: controller.isloading.value,
-                      width: 100.w,
-                      text: '     Continue',
-                      onPressed: () => controller.onVerifyPhoneNumber(),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ));
-  }
-}
+                      }),*/

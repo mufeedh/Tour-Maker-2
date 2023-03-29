@@ -1,11 +1,11 @@
-// ignore_for_file: unnecessary_overrides
-
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../../../core/theme/style.dart';
 import '../../../data/models/recent_searchmodel.dart';
 import '../../../routes/app_pages.dart';
 import '../views/search_view_view.dart';
@@ -20,46 +20,43 @@ class SearchViewController extends GetxController
   @override
   void onInit() {
     super.onInit();
+
     loadRecentSearchesFromStorage();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   Future<void> onSubmitSearch(String value) async {
-    searchValue = value;
-    change(null, status: RxStatus.loading());
+    if (value.isNotEmpty) {
+      searchValue = value;
+      change(null, status: RxStatus.loading());
 
-    final String jsonString = '{"keyword":"$searchValue"}';
-    final Map<String, dynamic> jsonMap =
-        jsonDecode(jsonString) as Map<String, dynamic>;
-    final RecentSearch search = RecentSearch.fromJson(jsonMap);
-    // Check if the search is already in the list
-    final int existingIndex = recentSearches
-        .indexWhere((RecentSearch s) => s.keyword == search.keyword);
-    if (existingIndex >= 0) {
-      // Move the existing search to the top of the list
-      recentSearches.removeAt(existingIndex);
-      recentSearches.insert(0, search);
+      final String jsonString = '{"keyword":"$searchValue"}';
+      final Map<String, dynamic> jsonMap =
+          jsonDecode(jsonString) as Map<String, dynamic>;
+      final RecentSearch search = RecentSearch.fromJson(jsonMap);
+      // Check if the search is already in the list
+      final int existingIndex = recentSearches
+          .indexWhere((RecentSearch s) => s.keyword == search.keyword);
+      if (existingIndex >= 0) {
+        // Move the existing search to the top of the list
+        recentSearches.removeAt(existingIndex);
+        recentSearches.insert(0, search);
+      } else {
+        // Add the new search to the top of the list
+        recentSearches.insert(0, search);
+      }
+      storage.write('recentSearches', recentSearches.toList(growable: true));
+
+      await Get.toNamed(Routes.SEARCH_DETAILS, arguments: searchValue);
+      change(null, status: RxStatus.success());
     } else {
-      // Add the new search to the top of the list
-      recentSearches.insert(0, search);
+      Get.snackbar('Please enter a destination', '',
+          backgroundColor: englishViolet, colorText: Colors.white);
     }
-    storage.write('recentSearches', recentSearches.toList(growable: true));
-
-    await Get.toNamed(Routes.SEARCH_DETAILS, arguments: searchValue);
-    change(null, status: RxStatus.success());
   }
 
   Future<void> loadRecentSearchesFromStorage() async {
     change(null, status: RxStatus.loading());
+    log('girhgyurfhvjnrbvuhjrdhrjmessage');
     final List<dynamic> recentSearchesValue =
         storage.read<List<dynamic>>('recentSearches') ?? <dynamic>[];
     recentSearches.assignAll(recentSearchesValue
@@ -74,7 +71,7 @@ class SearchViewController extends GetxController
   }
 
   void onClickBack() {
-    Get.toNamed(Routes.MAIN_SCREEN);
+    Get.toNamed(Routes.HOME);
   }
 
   void onClickClearTextfIeld() => textController.clear();

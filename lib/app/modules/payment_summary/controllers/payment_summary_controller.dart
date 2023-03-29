@@ -1,11 +1,22 @@
 // ignore_for_file: unnecessary_overrides
 
+import 'dart:developer';
+
 import 'package:get/get.dart';
 
-class PaymentSummaryController extends GetxController {
+import '../../../data/models/single_booking_model.dart';
+import '../../../data/repo/booking_repo.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../views/payment_summary_view.dart';
+
+class PaymentSummaryController extends GetxController
+    with StateMixin<PaymentSummaryView> {
+  RxList<SingleBookingModel> bookingList = <SingleBookingModel>[].obs;
+  int? id;
   @override
   void onInit() {
     super.onInit();
+    loadData();
   }
 
   @override
@@ -16,5 +27,35 @@ class PaymentSummaryController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+  }
+
+  void loadData() {
+    change(null, status: RxStatus.loading());
+    if (Get.arguments != null) {
+      id = Get.arguments as int;
+      log('sfg $id');
+      loadBookingDetails(id!);
+    }
+  }
+
+  Future<void> loadBookingDetails(int id) async {
+    final ApiResponse<List<SingleBookingModel>> res =
+        await BookingRepository().getSingleBooking(id);
+    if (res.data != null) {
+      bookingList.value = res.data!;
+      change(null, status: RxStatus.success());
+    } else {
+      change(null, status: RxStatus.empty());
+    }
+  }
+
+  int getTotalTravellersCount() {
+    final int sum = bookingList[0].noOfAdults! + bookingList[0].noOfChildren!;
+    return sum;
+  }
+
+  int getRemainingAmount() {
+    final int sum = bookingList[0].payableAmount! - bookingList[0].amountPaid!;
+    return sum;
   }
 }

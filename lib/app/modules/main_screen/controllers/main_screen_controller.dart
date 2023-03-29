@@ -55,9 +55,7 @@ class MainScreenController extends GetxController
 
   void onSearchClicked() {
     searchFocusNode.unfocus();
-    change(null, status: RxStatus.loading());
     Get.toNamed(Routes.SEARCH_VIEW)!.whenComplete(() => loadData());
-    change(null, status: RxStatus.success());
   }
 
   Future<void> getCategory() async {
@@ -134,41 +132,18 @@ class MainScreenController extends GetxController
         .whenComplete(() => loadData());
   }
 
-  Future<void> onClickedSingleTravelTypeTour(String? name) async {
-    await TravelTypesRepository()
-        .getSingleTravelTypesTours(name!)
-        .then((ApiResponse<List<PackageModel>> res) async {
-      log('Adeeb res data${res.data}');
-      if (res.status == ApiResponseStatus.completed) {
-        packageList.value = res.data!;
-        Get.toNamed(Routes.TOURS_VIEW, arguments: packageList)!
-            .whenComplete(() => loadData());
-        log('cygd ${packageList.length}');
-        change(null, status: RxStatus.success());
-      } else {
-        change(null, status: RxStatus.error());
-        log('err ');
-      }
-    });
+  void onClickedSingleTravelTypeTour(String? name) {
+    Get.toNamed(Routes.TRAVEL_TYPES, arguments: name)!
+        .whenComplete(() => loadData());
   }
 
-  void onClickSingleExclusiveTour(String? name) {}
+  void onClickSingleExclusiveTour(String? name) {
+    Get.toNamed(Routes.EXCLUSIVE_TOURS, arguments: name)!
+        .whenComplete(() => loadData());
+  }
 
   Future<void> onClickSingleTrendingTour(String? destination) async {
-    await TrendingToursRepository()
-        .getSingleTrendingTours(destination!)
-        .then((ApiResponse<List<PackageModel>> res) async {
-      log('Adeeb res data${res.data}');
-      if (res.status == ApiResponseStatus.completed) {
-        packageList.value = res.data!;
-        Get.toNamed(Routes.TOURS_VIEW, arguments: packageList)!
-            .whenComplete(() => loadData());
-        log('cygd ${packageList.length}');
-        change(null, status: RxStatus.success());
-      } else {
-        change(null, status: RxStatus.error());
-        log('err ');
-      }
-    });
+    Get.toNamed(Routes.TRENDING_TOURS, arguments: destination)!
+        .whenComplete(() => loadData());
   }
 }

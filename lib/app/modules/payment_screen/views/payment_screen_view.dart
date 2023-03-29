@@ -6,6 +6,7 @@ import 'package:sizer/sizer.dart';
 import '../../../../core/theme/style.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_errorscreen.dart';
+import '../../../widgets/custom_loadinscreen.dart';
 import '../../../widgets/payment.dart';
 import '../controllers/payment_screen_controller.dart';
 
@@ -17,8 +18,9 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
         Get.put(PaymentScreenController());
     return Scaffold(
         extendBody: true,
-        appBar: const CustomAppBar(titleText: 'Payments'),
+        appBar: const CustomAppBar(title: Text('Payments')),
         body: controller.obx(
+          onLoading: const CustomLoadingScreen(),
           (dynamic state) => Column(
             children: <Widget>[
               Padding(
@@ -27,43 +29,37 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
                 child: Container(
                   height: 60,
                   width: 100.w,
-                  padding: const EdgeInsets.all(6),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     color: const Color(0xFFF1F1F1),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      TabBar(
-                        controller: controller.tabcontroller,
-                        isScrollable: true,
-                        indicatorColor: Colors.white,
-                        labelColor: Colors.white,
-                        unselectedLabelColor: Colors.black,
-                        indicator: BoxDecoration(
-                          color: englishViolet,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(25),
-                          ),
+                  child: TabBar(
+                    controller: controller.tabcontroller,
+                    indicatorColor: Colors.white,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.black,
+                    indicator: BoxDecoration(
+                      color: englishViolet,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(15),
+                      ),
+                    ),
+                    tabs: const <Widget>[
+                      Tab(
+                        child: Text(
+                          'Processing',
                         ),
-                        tabs: const <Widget>[
-                          Tab(
-                            child: Text(
-                              'Processing',
-                            ),
-                          ),
-                          Tab(
-                            child: Text(
-                              'Pending',
-                            ),
-                          ),
-                          Tab(
-                            child: Text(
-                              'Paid',
-                            ),
-                          ),
-                        ],
+                      ),
+                      Tab(
+                        child: Text(
+                          'Pending',
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Paid',
+                        ),
                       ),
                     ],
                   ),
@@ -76,8 +72,8 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
                     controller: controller.tabcontroller,
                     children: <Widget>[
                       buildProcessingView(),
-                      buildPaidView(),
                       buildPendingView(),
+                      buildPaidView(),
                     ],
                   ),
                 ),
@@ -88,32 +84,6 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
   }
 
   Widget buildProcessingView() {
-    return Obx(() {
-      return RefreshIndicator(
-        onRefresh: controller.loadData,
-        child: controller.pendingPayments.isNotEmpty
-            ? ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: controller.processingPayments.length,
-                itemBuilder: (BuildContext context, int index) =>
-                    GestureDetector(
-                  onTap: () => controller.onTapSingleProcessingPayment(),
-                  child: PaymentTile(
-                    tourName: controller.processingPayments[index].tourName
-                        .toString(),
-                    tourAmount: controller.processingPayments[index].amountPaid
-                        .toString(),
-                    tourCode: controller.processingPayments[index].customTourId
-                        .toString(),
-                  ),
-                ),
-              )
-            : const CustomErrorScreen(errorText: 'Nothing founs . . . '),
-      );
-    });
-  }
-
-  Widget buildPendingView() {
     return Obx(() {
       return RefreshIndicator(
         onRefresh: controller.loadData,
@@ -134,7 +104,34 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
                   ),
                 ),
               )
-            : const CustomErrorScreen(errorText: 'Nothing founs . . . '),
+            : const CustomErrorScreen(
+                errorText: 'No processing \n payments here'),
+      );
+    });
+  }
+
+  Widget buildPendingView() {
+    return Obx(() {
+      return RefreshIndicator(
+        onRefresh: controller.loadData,
+        child: controller.pendingPayments.isNotEmpty
+            ? ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: controller.pendingPayments.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    GestureDetector(
+                  onTap: () => controller.onTapSinglePendingPayment(),
+                  child: PaymentTile(
+                    tourName:
+                        controller.pendingPayments[index].tourName.toString(),
+                    tourAmount:
+                        controller.pendingPayments[index].amountPaid.toString(),
+                    tourCode: controller.pendingPayments[index].customTourId
+                        .toString(),
+                  ),
+                ),
+              )
+            : const CustomErrorScreen(errorText: 'No pending \n payments here'),
       );
     });
   }
@@ -149,7 +146,7 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
                 itemCount: controller.paidPayments.length,
                 itemBuilder: (BuildContext context, int index) =>
                     GestureDetector(
-                  onTap: () => controller.onTapSingleProcessingPayment(),
+                  onTap: () => controller.onTapSinglePaidView(),
                   child: PaymentTile(
                     tourName:
                         controller.paidPayments[index].tourName.toString(),
@@ -160,7 +157,7 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
                   ),
                 ),
               )
-            : const CustomErrorScreen(errorText: 'Nothing founs . . . '),
+            : const CustomErrorScreen(errorText: 'No paid \n payments here'),
       );
     });
   }

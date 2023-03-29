@@ -63,15 +63,15 @@ class PaymentScreenController extends GetxController
   Future<void> loadProcessingPayments() async {
     final ApiResponse<List<PaymentModel>> res =
         await PaymentRepository().getAllPayments('processing');
-    if (res.status == ApiResponseStatus.completed) {
+    if (res.data != null) {
       processingPayments.value = res.data!;
-    } else {}
+    }
   }
 
   Future<void> loadPendingPayments() async {
     final ApiResponse<List<PaymentModel>> res =
         await PaymentRepository().getAllPayments('pending');
-    if (res.status == ApiResponseStatus.completed) {
+    if (res.data != null) {
       pendingPayments.value = res.data!;
     } else {}
   }
@@ -79,7 +79,7 @@ class PaymentScreenController extends GetxController
   Future<void> loadPaidPayments() async {
     final ApiResponse<List<PaymentModel>> res =
         await PaymentRepository().getAllPayments('paid');
-    if (res.status == ApiResponseStatus.completed) {
+    if (res.data != null) {
       paidPayments.value = res.data!;
     } else {}
   }

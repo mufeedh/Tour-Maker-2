@@ -1,12 +1,14 @@
-// ignore_for_file: unnecessary_overrides
-
+import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import '../../../../core/theme/style.dart';
+import '../../../../main.dart';
 import '../../../data/models/razorpay_model.dart';
 import '../../../data/models/user_model.dart';
 import '../../../data/repo/razorpay_repo.dart';
@@ -17,17 +19,20 @@ import '../views/profile_view.dart';
 
 class ProfileController extends GetxController with StateMixin<ProfileView> {
   late Razorpay razorPay;
+  final GlobalKey<ExpansionTileCardState> cardA = GlobalKey();
+  final GlobalKey<ExpansionTileCardState> cardB = GlobalKey();
+  final ImagePicker picker = ImagePicker();
+  String? username;
+  String? base64Image;
+  int? amount;
+  Rx<bool> showUserPic = false.obs;
   RxBool isloading = false.obs;
+  RxBool isShowButton = true.obs;
+  Rx<String> address = ''.obs;
+  Rx<String> image = 'assets/Avatar.png'.obs;
   Rx<UserModel> userData = UserModel().obs;
   Rx<RazorPayModel> razorPayModel = RazorPayModel().obs;
-  String? username;
-
-  int? amount;
   UserRepository userRepo = UserRepository();
-  Rx<ImageProvider<Object>> image = Image.asset('assets/Avatar.png').image.obs;
-
-  final ImagePicker picker = ImagePicker();
-
   @override
   void onInit() {
     super.onInit();
@@ -39,19 +44,9 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
   }
 
   @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
   void dispose() {
     super.dispose();
     razorPay.clear();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   Future<void> getData() async {
@@ -61,6 +56,21 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
     if (res.status == ApiResponseStatus.completed && res.data != null) {
       userData.value = res.data!;
       username = userData.value.name;
+      currentUserName = userData.value.name;
+      if (userData.value.address != '') {
+        isShowButton.value = false;
+        final String input = userData.value.address.toString();
+        final List<String> parts =
+            input.split(',').map((String part) => part.trim()).toList();
+        address.value = parts.join(',\n');
+      } else {
+        isShowButton.value = true;
+      }
+      if (userData.value.profileImage != null) {
+        showUserPic.value = true;
+      } else {
+        showUserPic.value = false;
+      }
       change(null, status: RxStatus.success());
     } else {
       change(null, status: RxStatus.empty());
@@ -68,7 +78,6 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
   }
 
   Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    log('Payment success: ${response.signature}');
     final String? signature = response.signature;
     final String? orderId = razorPayModel.value.packageId;
     final String? paymentId = response.paymentId;
@@ -77,7 +86,6 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
         await RazorPayRepository().verifyPayment(paymentId, signature, orderId);
     try {
       if (res.status == ApiResponseStatus.completed && res.data!) {
-        log('Payment verification succeeded.');
         showRegisterBttomSheet(
             userData.value.name.toString(),
             userData.value.state.toString(),
@@ -91,10 +99,13 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
+    Get.snackbar('Payment error: ${response.code}', '${response.message}');
     log('Payment error: ${response.code} - ${response.message}');
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
+    Get.snackbar('Payment successed: ', 'on : ${response.walletName}');
+
     log('External wallet: ${response.walletName}');
   }
 
@@ -114,9 +125,9 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
       if (res.data != null) {
         razorPayModel.value = res.data!;
         log('adeeb razorpa ${razorPayModel.value.packageId}');
-        openRazorPay(razorPayModel.value.packageId.toString(), 1000);
+        openRazorPay(razorPayModel.value.packageId.toString());
       } else {
-        // log(' adeeb raz emp ');
+        log(' adeeb raz emp ');
       }
     } catch (e) {
       log('raz catch $e');
@@ -124,10 +135,9 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
     isloading.value = false;
   }
 
-  Future<void> openRazorPay(String orderId, int amount) async {
+  Future<void> openRazorPay(String orderId) async {
     final Map<String, Object?> options = <String, Object?>{
       'key': 'rzp_test_yAFypxWUiCD7H7',
-      'amount': 10000 * 100, // convert to paise
       'name': userData.value.name,
       'description': 'Test Payment',
       'order_id': orderId,
@@ -136,7 +146,18 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
         'contact': userData.value.phoneNumber,
       },
       'external': <String, Object?>{
-        'wallets': <String>['paytm'],
+        'wallets': <String>[
+          'paytm',
+          'freecharge',
+          'mobikwik',
+          'jiomoney',
+          'airtelmoney',
+          'payzapp',
+          'olamoney',
+          'phonepe',
+          'amazonpay',
+          'googlepay'
+        ],
       },
     };
 
@@ -149,24 +170,30 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
 
   Future<void> getImage(ImageSource source) async {
     try {
-      final XFile? pickedFile = await picker.pickImage(source: source);
+      final XFile? pickedFile = await picker.pickImage(
+          source: source, imageQuality: 50, maxHeight: 500, maxWidth: 500);
 
       if (pickedFile != null) {
-        image.value = FileImage(File(pickedFile.path));
-        // final File file = File(pickedFile.path);
+        final String fileName = pickedFile.path.split('/').last;
 
-        log('pickedfile ${pickedFile.path.split('/').last}');
         final ApiResponse<Map<String, dynamic>> res =
-            await userRepo.addUserProfilePic(
-                pickedFile.path.split('/').last, pickedFile.path);
+            await userRepo.addUserProfilePic(fileName, pickedFile.path);
         if (res.status == ApiResponseStatus.completed) {
-          log('completed');
+          // handle success
+          Get.snackbar(
+            'Profile pic added successfully!!!',
+            'Please refresh the page',
+            backgroundColor: englishViolet,
+            colorText: Colors.white,
+          );
+        } else {
+          // handle error
         }
       } else {
-        log('No image selected.');
+        // user did not pick an image
       }
     } catch (e) {
-      log('Error: $e');
+      // handle error
     }
   }
 
@@ -174,6 +201,10 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
     Get.offAllNamed(Routes.USER_REGISTERSCREEN,
         arguments: <String>[name, state, phoneNumber]);
   }
-}
 
-RxBool isShowButton = true.obs;
+  Uint8List getImageFromBytes() {
+    final String base64Image = userData.value.profileImage!;
+    final Uint8List bytes = base64.decode(base64Image.split(',').last);
+    return bytes;
+  }
+}

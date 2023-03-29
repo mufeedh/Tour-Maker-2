@@ -12,6 +12,8 @@ import 'package:timer_count_down/timer_controller.dart';
 import '../../../data/repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
+import '../../../widgets/custom_dialogue.dart';
+import '../../splash_screen/controllers/splash_screen_controller.dart';
 import '../views/otp_screen_view.dart';
 
 class OtpScreenController extends GetxController
@@ -24,6 +26,7 @@ class OtpScreenController extends GetxController
   int? forceToken;
   RxBool isLoading = false.obs;
   RxString otpCode = ''.obs;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -51,13 +54,12 @@ class OtpScreenController extends GetxController
       phone = Get.arguments[1] as String;
       forceToken = Get.arguments[2] as int;
       log('ver id $verID');
-      log('phoone $phone');
+      log('phone $phone');
     }
     change(null, status: RxStatus.success());
   }
 
   Future<void> signIn() async {
-    // try {
     log('sign in otp contr');
     isLoading.value = true;
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -65,50 +67,73 @@ class OtpScreenController extends GetxController
       verificationId: verID.toString(),
       smsCode: otpCode.toString(),
     );
-    await auth
-        .signInWithCredential(credential)
-        .then((UserCredential result) async {
-      //Genrate Token
-      final User user = auth.currentUser!;
-      final IdTokenResult idTokenResult = await user.getIdTokenResult(true);
-      final String token = idTokenResult.token!;
-      log('tok$token');
-      await storage.write('token', token).then((dynamic value) async {
-        checkUserExistsORnot();
-      });
-      log('token strg ${storage.read('token')}');
-    });
+    try {
+      final UserCredential userCredential =
+          await auth.signInWithCredential(credential);
+      final User user = userCredential.user!;
+      // Check if the user entered the correct OTP
+      if (user.uid != null) {
+        // Generate Token and store it
+        final IdTokenResult idTokenResult = await user.getIdTokenResult(true);
+        final String token = idTokenResult.token!;
+        await storage.write('token', token);
+        // Check if the user exists or not
+        await checkUserExistsORnot(token, FCMtoken);
+      }
+    } catch (e) {
+      // Handle incorrect OTP here
+      await CustomDialog().showCustomDialog(
+        'OOPS...!',
+        'You entered wrong OTP!!',
+        confirmText: 'Give me another OTP',
+        cancelText: 'Change my number',
+        onConfirm: () {
+          Get.back();
+          onResendinOTP();
+        },
+        onCancel: () {
+          Get.offAllNamed(Routes.GET_STARTED);
+        },
+      );
+      log('Invalid OTP');
+      isLoading.value = false;
+    }
   }
 
   Future<void> onResendinOTP() async {
     log('resend pressed');
+    change(null, status: RxStatus.loading());
     final FirebaseAuth auth = FirebaseAuth.instance;
-    void verificationCompleted(AuthCredential phoneAuthCredential) {
-      auth.signInWithCredential(phoneAuthCredential);
-    }
+    void verificationCompleted(AuthCredential phoneAuthCredential) {}
 
-    void verificationFailed(FirebaseAuthException exception) {
-      log('nf adeeb${exception.message}');
-    }
+    void verificationFailed(FirebaseAuthException exception) {}
 
     Future<void> codeSent(String verificationId,
-        [int? forceResendingToken]) async {}
+        [int? forceResendingToken]) async {
+      final String verificationid = verificationId;
+      log(phone.toString());
+      Get.toNamed(
+        Routes.OTP_SCREEN,
+        arguments: <dynamic>[verificationid, phone.toString(), forceToken],
+      );
+      change(null, status: RxStatus.success());
+    }
 
     void codeAutoRetrievalTimeout(String verificationId) {}
 
-    await auth
-        .verifyPhoneNumber(
-          phoneNumber: phone.toString(),
-          timeout: const Duration(seconds: 5),
-          verificationCompleted: verificationCompleted,
-          verificationFailed: verificationFailed,
-          codeSent: codeSent,
-          codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
-        )
-        .then((dynamic value) => Get.toNamed(Routes.OTP_SCREEN));
+    await auth.verifyPhoneNumber(
+      phoneNumber: phone.toString(),
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: verificationCompleted,
+      verificationFailed: verificationFailed,
+      codeSent: codeSent,
+      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+    );
+    textEditorController.text = '';
+    change(null, status: RxStatus.success());
   }
 
-  Future<void> checkUserExistsORnot() async {
+  Future<void> checkUserExistsORnot(dynamic token, dynamic fcmtok) async {
     log('adeeb check user');
     final ApiResponse<Map<String, dynamic>> res =
         await UserRepository().checkUserExists();
@@ -119,7 +144,7 @@ class OtpScreenController extends GetxController
 
         Get.offAllNamed(Routes.HOME);
         isLoading.value = false;
-        // Get.offAllNamed(Routes.TOKEN_SCREEN, arguments: token);
+        // Get.offAllNamed(Routes.TOKEN_SCREEN, arguments: [token, fcmtok]);
       } else {
         log('adeeb login');
         postFcm();
@@ -145,9 +170,6 @@ class OtpScreenController extends GetxController
       } else {
         log('req not send');
       }
-    } else {
-      SystemNavigator.pop();
-      //not authorized
     }
   }
 

@@ -1,5 +1,7 @@
 // ignore_for_file: unnecessary_overrides
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,16 +11,19 @@ class HomeController extends GetxController {
   RxInt currentIndex = 0.obs;
   @override
   void onInit() {
+    log('lOGITWCXH init');
     super.onInit();
   }
 
   @override
   void onReady() {
+    log('lOGITWCXH ready');
     super.onReady();
   }
 
   @override
   void onClose() {
+    log('lOGITWCXH close');
     super.onClose();
   }
 

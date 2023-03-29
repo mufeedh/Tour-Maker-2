@@ -3,16 +3,22 @@
 import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
+import '../../../../main.dart';
+import '../../../data/models/razorpay_model.dart';
+import '../../../data/repo/razorpay_repo.dart';
 import '../../../routes/app_pages.dart';
-import '../../../widgets/custom_elevated_button.dart';
+import '../../../services/network_services/dio_client.dart';
 
 class LuckyDrawController extends GetxController {
+  dynamic userName;
+  late Razorpay razorPay;
+  Rx<RazorPayModel> razorPayModel = RazorPayModel().obs;
+
   String tokenText =
-      '''Welcome USER!\nGet ready for a chance to win big!\nwe're excited to announce that once we reach 10,000 users, we'll be conducting a lucky draw contest.\nstay tuned for more information on how to participate and the prizes you can win.\nin the meantime, invite your friends and family to join the app and increase your chances of being one of the lucky winners. \n LET'S REACH OUR GOAL TOGETHER!  ''';
+      '''Welcome $currentUserName!\nGet ready for a chance to win big!\nwe're excited to announce that once we reach 10,000 users, we'll be conducting a lucky draw contest.\nstay tuned for more information on how to participate and the prizes you can win.\nin the meantime, invite your friends and family to join the app and increase your chances of being one of the lucky winners. \n LET'S REACH OUR GOAL TOGETHER!  ''';
   final RxInt count = 0.obs;
   RxBool isLoading = false.obs;
   RxBool isFinished = false.obs;
@@ -24,6 +30,10 @@ class LuckyDrawController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    razorPay = Razorpay();
+    razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
   @override
@@ -48,55 +58,85 @@ class LuckyDrawController extends GetxController {
   Future<void> onFinished() async {
     isFinished.value = true;
     await audioPlayer.pause();
-    showSheet();
   }
 
   void onClickDemoApp() {
     Get.offAllNamed(Routes.HOME);
   }
 
-  void onClickPayment() {}
-
-  void showSheet() {
-    Get.bottomSheet(
-      enterBottomSheetDuration: const Duration(milliseconds: 600),
-      exitBottomSheetDuration: const Duration(milliseconds: 600),
-      isDismissible: true,
-      isScrollControlled: false,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 29, vertical: 22),
-        child: SizedBox(
-          height: 42.h,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  CustomButton().showIconButton(
-                    height: 70,
-                    isLoading: isLoading.value,
-                    // width: 100.h,
-                    text: '      Pay Rs 424+GST',
-                    onPressed: () => onClickPayment(),
-                  ),
-                  CustomButton().showButtonWithGradient(
-                      height: 12.h,
-                      isLoading: isLoading.value,
-                      // width: 100.h,
-                      text: 'See a demo of the App',
-                      onPressed: () => onClickDemoApp()),
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
+  Future<void> onClickPayment() async {
+    final RazorPayModel razorPaymodel = RazorPayModel(
+      amount: 1000,
+      contact: currentUserPhoneNumber,
+      currency: 'INR',
+      name: currentUserName,
     );
+    final ApiResponse<RazorPayModel> res =
+        await RazorPayRepository().createPayment(razorPaymodel);
+    try {
+      if (res.data != null) {
+        razorPayModel.value = res.data!;
+        openRazorPay(razorPayModel.value.packageId.toString(), 1000);
+      } else {
+        // log(' adeeb raz emp ');
+      }
+    } catch (e) {
+      // log('raz catch $e');
+    }
+  }
+
+  Future<void> openRazorPay(String orderId, int amount) async {
+    final Map<String, Object?> options = <String, Object?>{
+      'key': 'rzp_test_yAFypxWUiCD7H7',
+      'amount': 10000 * 100, // convert to paise
+      'name': currentUserName,
+      'description': 'Test Payment',
+      'order_id': orderId,
+      'prefill': <String, Object?>{
+        'contact': currentUserPhoneNumber,
+      },
+      'external': <String, Object?>{
+        'wallets': <String>['paytm'],
+      },
+    };
+
+    try {
+      razorPay.open(options);
+    } catch (e) {
+      log('Error opening Razorpay checkout: $e');
+    }
+  }
+
+  Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    log('Payment success: ${response.signature}');
+    final String? signature = response.signature;
+    final String? orderId = razorPayModel.value.packageId;
+    final String? paymentId = response.paymentId;
+
+    final ApiResponse<bool> res =
+        await RazorPayRepository().verifyPayment(paymentId, signature, orderId);
+    try {
+      if (res.status == ApiResponseStatus.completed && res.data!) {
+        // log('Payment verification succeeded.');
+        showRegisterBttomSheet(currentUserName.toString(),
+            currentUserState.toString(), currentUserPhoneNumber.toString());
+      } else {
+        // log('Payment verification failed: ${res.message}');
+      }
+    } catch (e) {
+      // log('Error while handling payment success: $e');
+    }
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // log('Payment error: ${response.code} - ${response.message}');
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // log('External wallet: ${response.walletName}');
+  }
+  void showRegisterBttomSheet(String name, String state, String phoneNumber) {
+    Get.offAllNamed(Routes.USER_REGISTERSCREEN,
+        arguments: <String>[name, state, phoneNumber]);
   }
 }

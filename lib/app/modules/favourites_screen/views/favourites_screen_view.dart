@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/theme/style.dart';
+import '../../../data/models/package_model.dart';
 import '../../../data/models/wishlist_model.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_errorscreen.dart';
@@ -17,12 +18,12 @@ class FavouritesScreenView extends GetView<FavouritesScreenController> {
     final FavouritesScreenController controller =
         Get.put(FavouritesScreenController());
     return Scaffold(
-      // extendBody: true,
-      extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(titleText: 'Favourites'),
+      appBar: const CustomAppBar(title: Text('Favourites')),
       body: controller.obx(
-        onEmpty:
-            const CustomErrorScreen(errorText: 'No Packages \n Wishlisted'),
+        onEmpty: CustomErrorScreen(
+          errorText: 'No Packages \n Wishlisted',
+          onRefresh: () => controller.loadData(),
+        ),
         onLoading: const CustomLoadingScreen(),
         (FavouritesScreenView? state) => RefreshIndicator(
           triggerMode: RefreshIndicatorTriggerMode.anywhere,
@@ -38,26 +39,33 @@ class FavouritesScreenView extends GetView<FavouritesScreenController> {
                     itemBuilder: (BuildContext context, int index) {
                       final WishListModel pckg =
                           controller.favouritesList[index];
-                      final bool isFavorite =
-                          controller.isFavorite(pckg.id!).value;
-                      return PackageTile(
-                        tourAmount: pckg.minAmount.toString(),
-                        tourCode: pckg.tourCode.toString(),
-                        tourDays: pckg.days.toString(),
-                        tourImage: pckg.image.toString(),
-                        tourName: pckg.name.toString(),
-                        tournights: pckg.nights.toString(),
-                        isFavourite: isFavorite,
-                        onClickedFavourites: () =>
-                            controller.toggleFavorite(pckg.id!),
-                        onPressed: () =>
-                            controller.onSingleTourPressed(pckg.id!),
-                      );
+                      for (final PackageModel wm in controller.packageList) {
+                        if (wm.id == controller.packageList[index].id) {
+                          controller.isFavorite(pckg.id!).value = true;
+                        } else {
+                          controller.isFavorite(pckg.id!).value = false;
+                        }
+                      }
+                      return Obx(() {
+                        return PackageTile(
+                          tourAmount: pckg.minAmount.toString(),
+                          tourCode: pckg.tourCode.toString(),
+                          tourDays: pckg.days.toString(),
+                          tourImage: pckg.image.toString(),
+                          tourName: pckg.name.toString(),
+                          tournights: pckg.nights.toString(),
+                          isFavourite: controller.isFavorite(pckg.id!).value,
+                          onClickedFavourites: () =>
+                              controller.toggleFavorite(pckg.id!),
+                          onPressed: () =>
+                              controller.onSingleTourPressed(pckg.id!),
+                        );
+                      });
                     },
                   )
-                : const CustomErrorScreen(
-                    errorText: 'No Packages \n Wishlisted',
-                  ),
+                : CustomErrorScreen(
+                    onRefresh: () => controller.loadData(),
+                    errorText: 'No Packages \n Wishlisted'),
           ),
         ),
       ),

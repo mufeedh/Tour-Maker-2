@@ -12,7 +12,7 @@ class PassengerDetailsView extends GetView<PassengerDetailsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(titleText: 'Passenger Details'),
+      appBar: const CustomAppBar(title: Text('Passenger Details')),
       body: Padding(
           padding: const EdgeInsets.all(24),
           child: Expanded(

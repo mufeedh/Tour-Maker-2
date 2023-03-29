@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -11,12 +14,11 @@ import '../data/models/user_model.dart';
 import '../routes/app_pages.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key, this.controller});
+  MyDrawer({super.key, this.controller});
   final UserModel? controller;
-
+  final Rx<bool> isNotificationON = true.obs;
   @override
   Widget build(BuildContext context) {
-    final Rx<bool> isNotificationON = true.obs;
     return Drawer(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 10.0),
@@ -74,7 +76,7 @@ class MyDrawer extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.all(18.0),
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Container(
                   width: double.infinity,
                   height: 50,
@@ -88,22 +90,22 @@ class MyDrawer extends StatelessWidget {
                       const Text('Notifications'),
                       Obx(() {
                         return Switch(
-                          value: isNotificationON.value,
-                          activeColor: englishViolet,
-                          onChanged: (bool value) {
-                            isNotificationON.value = value;
-                          },
-                        );
+                            value: isNotificationON.value,
+                            activeColor: englishViolet,
+                            onChanged: (bool value) =>
+                                onToggleNotification(value));
                       }),
                     ],
                   ),
                 ),
               ),
               ListTile(
+                onTap: () => onClickPrivacyPolicy(context),
                 leading: Icon(TourMaker.group_2, color: englishViolet),
                 title: const Text('Privacy Policy'),
               ),
               ListTile(
+                onTap: () => onClickTermsOFuse(context),
                 leading: Icon(TourMaker.group, color: englishViolet),
                 title: const Text('Terms Of Use'),
               ),
@@ -113,6 +115,7 @@ class MyDrawer extends StatelessWidget {
                 title: const Text('Help'),
               ),
               ListTile(
+                onTap: () => onClickAbout(context),
                 leading: SvgPicture.asset('assets/about.svg', height: 25),
                 title: const Text('about'),
               ),
@@ -156,20 +159,29 @@ class MyDrawer extends StatelessWidget {
                 const Divider(),
                 GestureDetector(
                   onTap: () => logout(),
-                  child: Text('Logout', style: subheading2),
+                  child: SizedBox(
+                    height: 35,
+                    child: Center(
+                      child: Text('Logout', style: subheading2),
+                    ),
+                  ),
                 ),
                 const Divider(),
                 GestureDetector(
                   onTap: () => cancel(),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                      // fontFamily: montserratMedium,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.red,
-                    ),
-                  ),
+                  child: const SizedBox(
+                      height: 35,
+                      child: Center(
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            // fontFamily: montserratMedium,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.red,
+                          ),
+                        ),
+                      )),
                 ),
               ],
             ),
@@ -219,4 +231,221 @@ class MyDrawer extends StatelessWidget {
   }
 
   void cancel() => Get.back();
+
+  Future<void> onToggleNotification(bool value) async {
+    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
+    if (value) {
+      try {
+        // Ask the user for permission to receive notifications
+        final NotificationSettings settings =
+            await firebaseMessaging.requestPermission();
+        if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+          // Subscribe the user to the topic "all" to receive all notifications
+          await firebaseMessaging.subscribeToTopic('all');
+          isNotificationON.value = true;
+        }
+      } catch (e) {
+        // Handle any errors that occur during permission request or subscription
+        log('Error subscribing to notifications: $e');
+      }
+    } else {
+      try {
+        // Unsubscribe the user from the topic "all" to stop receiving notifications
+        await firebaseMessaging.unsubscribeFromTopic('all');
+        isNotificationON.value = false;
+      } catch (e) {
+        // Handle any errors that occur during unsubscription
+        log('Error unsubscribing from notifications: $e');
+      }
+    }
+  }
+
+  Future<dynamic> onClickPrivacyPolicy(BuildContext ctx) {
+    return Get.dialog(
+      transitionCurve: Curves.easeInCubic,
+      barrierDismissible: true,
+      barrierColor: Colors.transparent,
+      transitionDuration: const Duration(milliseconds: 500),
+      useSafeArea: true,
+      Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Material(
+          borderRadius: BorderRadius.circular(25),
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    IconButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      icon:
+                          Icon(TourMaker.close_circle_1, color: englishViolet),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Text(
+                    '''
+TOUR MAKER is an application designed to book tours of TRIPPENS’s tour operation company. Adventure tours, Package group tours, family package group tours, couple package tours, Ride tours, hiking, trucking etc. are available. This is basically not a customer focus app but for those who book tours on commission basis. For each and every tour package, company has fixed amount of commission for the agents on company’s wills.
+
+For this application presently, we are not charging yearly charges or any registration fee. At this moment we have only 500Rs as service charges including tax. Tour payments are done only on GST tax basis. Bills and invoices will be done by TRIPPENS alone. And TRIPPENS will be responsible for all the tours operations.
+
+Through this app we are not offering adequate income or a greater income. You get a commission proposed by company for the tours that you have chosen from the above.
+
+The payments of the tours booked can be paid either through app or by bank through executives help or even from office within the time given by the executives. There will be an appointed time for the payment of booked tours and fail of payment with in that time given will result in cancellation of booking of the same. The responsibility of the balance amount of the booked tours lies with the agent alone.
+
+The company have all the guaranteed rights to ban your login if we notice misuse of app by too much of fake bookings or unnecessary bookings.''',
+                    style: subheading3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> onClickTermsOFuse(BuildContext ctx) {
+    return Get.dialog(
+      transitionCurve: Curves.easeInCubic,
+      barrierDismissible: true,
+      barrierColor: Colors.transparent,
+      transitionDuration: const Duration(milliseconds: 500),
+      useSafeArea: true,
+      SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Material(
+            borderRadius: BorderRadius.circular(25),
+            child: Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      IconButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        icon: Icon(TourMaker.close_circle_1,
+                            color: englishViolet),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '''
+      1. if you're not able to reach out the destination on time. That is not our responsibility
+
+      2. Hotel Check in time - 11.30 a.m. & checkout - 10.00 am.
+      
+      3. The booking stands liable to be cancelled if 100% payment is not received less than 20 days before
+      date of departure. If the trip is cancel due to this reason advance will not be refundable. If you are
+      not pay the amount that in mentioned in payment policy then tour will be cancel.
+      
+      4. There is no refund option in case you cancel the tour yourself.
+      
+      5. All activities which are not mentioned in the above itinerary such as visiting additional spots or
+      involving in paid activities, If arranging separate cab etc. is not included in this.
+      
+      6. In case of using additional transport will be chargeable.
+      
+      7. All transport on the tour will be grouped together. Anyone who deviates from it will be excluded
+      from this package.
+      
+      8. The company has the right for expelling persons who disagree with passengers or misrepresent
+      the company during the trip.
+      
+      9. The company does not allow passengers to give tips to the driver for going additional spots.
+      
+      10. In case of cancellation due to any reason such as Covid, strike, problems on the part of railways,
+      malfunctions, natural calamities etc., package amount will not be refunded.
+      
+      11. The Company will not be liable for any confirmation of train tickets, flight tickets, other
+      transportation or any other related items not included in the package.
+      
+      12. In Case Of Events And Circumstances Beyond Our Control, We Reserve The Right To Change All
+      Or Parts Of The Contents Of The Itinerary For Safety And Well Being Of Our Esteemed Passengers.
+      
+      13. Bathroom Facility | Indian or European
+      
+      14. In season rooms will not be the same as per itinerary but category will be the same (Budget
+      economy).
+      
+      15. Charge will be the same from the age of 5 years.
+      
+      16. We are not providing tourist guide, if you are taking their service in your own cost we will not be
+      responsible for the same.
+      
+      17. You Should reach to departing place on time, also you should keep the time management or you
+      will not be able to cover all the place.
+      
+      18. If the climate condition affect the sightseeing that mentioned in itinerary, then we won’t provide
+      you the additional spots apart from the itinerary.
+      
+      19. Transportation timing 8 am to 6 pm, if use vehicle after that then cost will be extra
+      
+      20. Will visit places as per itinerary only, if you visit other than this then cost will be extra
+      
+      21. If any customers misbehave with our staffs improperly then we will cancel his tour immediately
+      and after that he can't continue with this tour.
+      
+      22. If the trip is not fully booked or cancelled due to any special circumstances, we will postpone the
+      trip to another day. Otherwise, if the journey is to be done on the pre-arranged day, the customers
+      will have to bear the extra money themselves.
+      
+      23. If you have any problems with the tour, please notify us as soon as possible so that we can
+      resolve the problem. If you raise the issue after the tour, we will not be able to help you.
+      
+      24.Our company does not provide specific seats on the Volvo bus, if you need a seat particularly,
+      please let the executive know during the confirmation of your reservation.(requires additional
+      payment).''',
+                    style: subheading1,
+                    textAlign: TextAlign.start,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void onClickAbout(BuildContext ctx) {
+    showDialog(
+      context: ctx,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 260, horizontal: 25),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Image.asset('assets/Logo.png'),
+                Text(
+                  'App version 1.0.2',
+                  textAlign: TextAlign.center,
+                  style: subheading2,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

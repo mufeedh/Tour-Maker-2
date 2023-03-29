@@ -1,17 +1,19 @@
 class UserModel {
-  UserModel(
-      {this.address,
-      this.category,
-      this.district,
-      this.email,
-      this.enterpriseName,
-      this.gender,
-      this.name,
-      this.paymentId,
-      this.paymentStatus,
-      this.phoneNumber,
-      this.state,
-      this.tAndCStatus});
+  UserModel({
+    this.address,
+    this.category,
+    this.district,
+    this.email,
+    this.enterpriseName,
+    this.gender,
+    this.name,
+    this.paymentId,
+    this.paymentStatus,
+    this.phoneNumber,
+    this.state,
+    this.tAndCStatus,
+    this.profileImage,
+  });
   String? address;
   String? category;
   String? district;
@@ -24,7 +26,7 @@ class UserModel {
   String? phoneNumber;
   String? state;
   String? tAndCStatus;
-
+  String? profileImage;
   Map<String, dynamic> toJson() => <String, dynamic>{
         'address': address,
         'category': category,
@@ -53,5 +55,6 @@ class UserModel {
         phoneNumber: json['phone_number'] as String,
         state: json['state'] as String,
         tAndCStatus: json['t_and_c_status'] as String,
+        profileImage: json['profile_image'] as String,
       );
 }
