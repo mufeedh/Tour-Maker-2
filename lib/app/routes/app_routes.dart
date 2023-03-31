@@ -41,6 +41,8 @@ abstract class Routes {
   static const EXCLUSIVE_TOURS = _Paths.EXCLUSIVE_TOURS;
   static const TRAVEL_TYPES = _Paths.TRAVEL_TYPES;
   static const SINGLE_TRAVEL_TYPETOUR = _Paths.SINGLE_TRAVEL_TYPETOUR;
+  static const CHECKOUT_SCREEN = _Paths.CHECKOUT_SCREEN;
+  static const TRAVELLERS_SCREEN = _Paths.TRAVELLERS_SCREEN;
 }
 
 abstract class _Paths {
@@ -83,4 +85,6 @@ abstract class _Paths {
   static const EXCLUSIVE_TOURS = '/exclusive-tours';
   static const TRAVEL_TYPES = '/travel-types';
   static const SINGLE_TRAVEL_TYPETOUR = '/single-travel-typetour';
+  static const CHECKOUT_SCREEN = '/checkout-screen';
+  static const TRAVELLERS_SCREEN = '/travellers-screen';
 }

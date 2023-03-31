@@ -59,6 +59,7 @@ class BookingScreenController extends GetxController
   Future<void> getAllUpcomingBookings() async {
     final ApiResponse<List<BookingsModel>> res =
         await BookingRepository().getAllBookings('pending');
+    log('adeeb ${res.message}');
     if (res.data != null) {
       upcomingList.value = res.data!;
     }
@@ -90,8 +91,8 @@ class BookingScreenController extends GetxController
         .whenComplete(() => loadData());
   }
 
-  int getTotalTravellers(int adults, int childrens) {
-    final int sum = adults + childrens;
+  num getTotalTravellers(num adults, num childrens) {
+    final num sum = adults + childrens;
     return sum;
   }
 
@@ -103,8 +104,20 @@ class BookingScreenController extends GetxController
   }
 
   void onTapSingleCompletedBooking(BookingsModel completedList) {}
-  void onTapUpcomingBookingTravellers(BookingsModel upcomingList) {}
-  void onTapCancelledBookingTravellers(BookingsModel completedList) {}
-  void onTapCompleteddBookingTravellers(BookingsModel completedList) {}
+  void onTapUpcomingBookingTravellers(BookingsModel upcomingList) {
+    Get.toNamed(Routes.TRAVELLERS_SCREEN, arguments: upcomingList.id)!
+        .whenComplete(() => loadData());
+  }
+
+  void onTapCancelledBookingTravellers(BookingsModel completedList) {
+    Get.toNamed(Routes.TRAVELLERS_SCREEN, arguments: completedList.id)!
+        .whenComplete(() => loadData());
+  }
+
+  void onTapCompleteddBookingTravellers(BookingsModel completedList) {
+    Get.toNamed(Routes.TRAVELLERS_SCREEN, arguments: completedList.id)!
+        .whenComplete(() => loadData());
+  }
+
   void onTapSingleCancelledBooking(BookingsModel upcomingList) {}
 }

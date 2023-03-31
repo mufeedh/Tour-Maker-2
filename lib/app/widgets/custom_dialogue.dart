@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../core/theme/style.dart';
 import 'custom_elevated_button.dart';
@@ -41,8 +42,8 @@ class CustomDialog {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       DefaultTextStyle(
-                        style: subheading1.copyWith(),
-                        child: Text(contentText),
+                        style: subheading2.copyWith(fontSize: 10.sp),
+                        child: Text(contentText, textAlign: TextAlign.center),
                       ),
                     ],
                   ),

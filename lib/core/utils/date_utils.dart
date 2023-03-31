@@ -18,7 +18,7 @@ extension DateUtils on DateTime {
   }
 
   String toDocumentDateFormat() {
-    return DateFormat('dd-MM-yyyy HH:mm').format(this);
+    return DateFormat('dd-MM-yyyy').format(this);
   }
 
   String toDateTime() {

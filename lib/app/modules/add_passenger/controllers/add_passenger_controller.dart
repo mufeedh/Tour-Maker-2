@@ -1,7 +1,6 @@
 // ignore_for_file: unnecessary_overrides
 
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,9 +8,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../../../main.dart';
+import '../../../data/models/checkout_model.dart';
 import '../../../data/models/razorpay_model.dart';
+import '../../../data/models/travellers_model.dart';
 import '../../../data/repo/passenger_repo.dart';
+import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
+import '../../../widgets/custom_dialogue.dart';
 import '../views/add_passenger_view.dart';
 
 class AddPassengerController extends GetxController
@@ -19,17 +22,20 @@ class AddPassengerController extends GetxController
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   int? orderID;
   late Razorpay razorPay;
-  Rx<OrderPaymentModel> orderPaymentModel = OrderPaymentModel().obs;
   final ImagePicker picker = ImagePicker();
-  Rx<ImageProvider<Object>>? image;
   final TextEditingController controller = TextEditingController();
   final DateTime selectedDate = DateTime.now();
   RxBool isloading = false.obs;
+  Rx<OrderPaymentModel> orderPaymentModel = OrderPaymentModel().obs;
+  int? totalTravellers;
+  var image = ''.obs;
+  RxList<TravellersModel> travellers = <TravellersModel>[].obs;
   Rx<String> customerAddress = ''.obs;
   Rx<String> customerName = ''.obs;
   Rx<String> customerPhone = ''.obs;
   Rx<String> customerAdhaar = ''.obs;
-
+  Rx<String> customerDOB = ''.obs;
+  CheckOutModel? checkOutModel;
   @override
   void onInit() {
     super.onInit();
@@ -41,6 +47,9 @@ class AddPassengerController extends GetxController
     loadData();
   }
 
+  String? dobValidator(String? value) => DateTime.tryParse(value ?? '') != null
+      ? null
+      : 'Please enter a valid DOB';
   String? nameValidator(String? value) => GetUtils.isLengthLessOrEqual(value, 3)
       ? 'Please enter a valid name'
       : null;
@@ -50,13 +59,18 @@ class AddPassengerController extends GetxController
           ? 'Please enter a valid phone number'
           : null;
 
-  String? addressValidator(String? value) => GetUtils.isLengthEqualTo(value, 10)
-      ? null
-      : 'please enter a valid address';
+  String? addressValidator(String? value) =>
+      GetUtils.isLengthGreaterOrEqual(value, 10)
+          ? null
+          : 'please enter a valid address';
   void loadData() {
     if (Get.arguments != null) {
       change(null, status: RxStatus.loading());
-      orderID = Get.arguments as int;
+      final CheckOutModel cm = CheckOutModel();
+      orderID = Get.arguments[0] as int;
+      totalTravellers = Get.arguments[1] as int;
+      checkOutModel = Get.arguments[2] as CheckOutModel;
+      log('uuhyuad${checkOutModel!.amount}');
       change(null, status: RxStatus.success());
     }
   }
@@ -64,9 +78,24 @@ class AddPassengerController extends GetxController
   Future<void> onRegisterClicked() async {
     if (formKey.currentState!.validate()) {
       isloading.value = true;
-      // var res = await PassengerRepository().
+      final ApiResponse<bool> res = await PassengerRepository().addpassenger(
+          customerName.value,
+          customerPhone.value,
+          orderID.toString(),
+          customerDOB.value,
+          customerAddress.value,
+          image.value);
+      if (res.status == ApiResponseStatus.completed) {
+        Get.back();
+        image.value = '';
+        await getTravellers(orderID);
+      } else {
+        log('message');
+      }
+      isloading.value = false;
     }
-
+    isloading.value = false;
+    log(customerDOB.value);
     // Future<void> updateUser() async {
     //   orderPaymentModel.value = await createPayment();
     //   //open razorpay
@@ -137,26 +166,30 @@ class AddPassengerController extends GetxController
   }
 
   Future<void> getImage(ImageSource source) async {
-    // try {
     final XFile? pickedFile = await picker.pickImage(source: source);
 
     if (pickedFile != null) {
-      image?.value = FileImage(File(pickedFile.path));
-      // final File file = File(pickedFile.path);
-
+      image.value = pickedFile.path;
       log('pickedfile ${pickedFile.path.split('/').last}');
-      //   final ApiResponse<Map<String, dynamic>> res =
-      //       await User.addUserProfilePic(
-      //           pickedFile.path.split('/').last, pickedFile.path);
-      //   if (res.status == ApiResponseStatus.completed) {
-      //     log('completed');
-      //   }
-      // } else {
-      //   log('No image selected.');
-      // }
-      // } catch (e) {
-      //   log('Error: $e');
-      // }
     }
+  }
+
+  Future<void> getTravellers(int? orderID) async {
+    var res = await PassengerRepository().getAllPassengersByOrderId(orderID!);
+    if (res.data != null) {
+      travellers.value = res.data!;
+    } else {}
+  }
+
+  gotoCheckoutPage() {
+    CustomDialog().showCustomDialog('Are your Ready \nto checkout',
+        "Please double check \n the data's you entered\n before checkout",
+        cancelText: 'Go back', onCancel: () {
+      Get.back();
+    }, onConfirm: () {
+      Get.back();
+      Get.toNamed(Routes.CHECKOUT_SCREEN, arguments: checkOutModel)!
+          .whenComplete(() => loadData());
+    });
   }
 }

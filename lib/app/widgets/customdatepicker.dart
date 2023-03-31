@@ -1,6 +1,5 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../core/theme/style.dart';
 import '../../core/tour_maker_icons.dart';
@@ -42,8 +41,8 @@ class CustomDatePickerField extends StatelessWidget {
             calendarTitle: 'DATE OF BIRTH',
 
             dateMask: 'dd-MM-yyyy',
-            type: isTime ? DateTimePickerType.time : DateTimePickerType.date,
             // use24HourFormat: false,
+
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.all(30),
               filled: true,
@@ -80,8 +79,8 @@ class CustomDatePickerField extends StatelessWidget {
             ),
             initialValue: initialValue,
 
-            firstDate: isTime ? null : DateTime(1900),
-            lastDate: isTime ? null : DateTime(2100),
+            firstDate: DateTime(1900),
+            lastDate: DateTime(2100),
             onChanged: onChange,
             validator: validator,
           ),

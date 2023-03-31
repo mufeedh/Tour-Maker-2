@@ -1,10 +1,14 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../main.dart';
+import '../../../data/models/checkout_model.dart';
 import '../../../data/models/order_model.dart';
 import '../../../data/models/razorpay_model.dart';
 import '../../../data/models/single_tour_model.dart';
@@ -14,12 +18,14 @@ import '../../../data/repo/singletourrepo.dart';
 import '../../../data/repo/wishlist_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
+import '../../../widgets/custom_dialogue.dart';
 import '../views/single_tour_view.dart';
 
 class SingleTourController extends GetxController
     with StateMixin<SingleTourView>, GetSingleTickerProviderStateMixin {
   late final TabController tabcontroller =
       TabController(length: 2, vsync: this);
+  late int TOTALAMOUNT;
   late Razorpay razorPay;
   final RxInt selectedDateIndex = 0.obs;
   final RxList<int> favorites = <int>[].obs;
@@ -37,21 +43,17 @@ class SingleTourController extends GetxController
   Rx<bool> isFavourite = false.obs;
   Rx<String> selectedDate = ' '.obs;
   Rx<String> formattedDate = ''.obs;
+  CheckOutModel? checkOutModel;
   int? tourID;
   int? order;
-  late int TOTALAMOUNT;
   @override
   void onInit() {
     super.onInit();
-    log('Kumbalangi init');
     getData();
   }
 
   @override
   void onReady() {
-    log('Kumbalangi ready');
-    loadBatchTours(tourID!);
-    // getWishList();
     super.onReady();
   }
 
@@ -60,16 +62,12 @@ class SingleTourController extends GetxController
     final int id = await loadData();
     await loadSingleTourData(id); //individual tours
     await loadBatchTours(id); // batch tours
-    await getWishList(id);
+    await getWishList(id); // wishlist
     change(null, status: RxStatus.success());
   }
 
   Future<int> loadData() async {
-    log('Kumbalangi loadData');
-
     if (Get.arguments != null) {
-      log('Kumbalangi argument !=null');
-
       tourID = Get.arguments[0] as int;
       return tourID!;
     }
@@ -77,28 +75,17 @@ class SingleTourController extends GetxController
   }
 
   Future<void> loadSingleTourData(int tourID) async {
-    log('Kumbalangi loadsingletour');
-
     final ApiResponse<List<SingleTourModel>> res =
         await SingleTourRepository().getSingleTour(tourID);
-    log('Kumbalangi loadsingletour msg ${res.message}');
-    log('Kumbalangi loadsingletour status ${res.status}');
     if (res.data != null) {
-      log('Kumbalangi single tour res.data != null');
-
       singleTour.value = res.data!;
     }
   }
 
   Future<void> loadBatchTours(int tourID) async {
-    log('Kumbalangi loadbatch');
     final ApiResponse<List<SingleTourModel>> res =
         await SingleTourRepository().getSingleTourBATCH(tourID);
-    log('Kumbalangi batch msg ${res.message}');
-    log('Kumbalangi batch status ${res.status}');
     if (res.data != null) {
-      log('Kumbalangi batch tour !=null ');
-
       batchTours.value = res.data!;
     }
   }
@@ -112,8 +99,6 @@ class SingleTourController extends GetxController
   }
 
   void onDateSelected(int index) {
-    log('Kumbalangi onDateSelecte ');
-
     selectedDateIndex.value = index;
     final DateTime inputDate =
         DateTime.parse('${singleTour[0].packageData?[index].dateOfTravel}');
@@ -153,16 +138,26 @@ class SingleTourController extends GetxController
     log(children.value.toString());
   }
 
-  Future<void> onClickAddPassenger() async {
-    isLoading.value = true;
-    //create Order
-    order = await createUserOrder();
-    Get.toNamed(Routes.ADD_PASSENGER, arguments: order);
-    //CreatePayment
-    // orderPaymentModel.value = await createPayment();
-    // //open razorpay
-    // openRazorPay(orderPaymentModel.value.id.toString());
-    isLoading.value = false;
+  Future<void> onClickAddPassenger(PackageData package) async {
+    final DateTime sd = DateTime.parse(package.dateOfTravel.toString());
+    final DateTime today = DateTime.now();
+    if (sd.difference(today).inDays <= 7) {
+      CustomDialog().showCustomDialog('Warning ! !',
+          'The selected date is very near \nso you need to pay full amount and\n you have to contact and confirm the tour',
+          onConfirm: () {
+        confirmPayment(package.iD!, package);
+        Get.back();
+      }, onCancel: () {
+        Get.back();
+      }, confirmText: 'OK', cancelText: 'back');
+    } else {
+      confirmPayment(package.iD!, package);
+
+      // //CreatePayment
+      // orderPaymentModel.value = await createPayment();
+      // // //open razorpay
+      // openRazorPay(orderPaymentModel.value.id.toString());
+    }
   }
 
   void openRazorPay(String paymentID) {
@@ -185,16 +180,33 @@ class SingleTourController extends GetxController
     }
   }
 
-  Future<int> createUserOrder() async {
+  Future<int> createUserOrder(int packageID, PackageData package) async {
     final OrderModel om = OrderModel(
       noOfAdults: adult.value,
       noOfChildren: children.value,
-      packageID: singleTour[0].packageData?[selectedDateIndex.value].iD,
+      packageID: packageID,
     );
-    log('adeeb kaaka package id ${singleTour[0].packageData?[selectedDateIndex.value].iD}');
     final ApiResponse<dynamic> resp = await PassengerRepository().addOrder(om);
-    log('adeeb anvar ${resp.message}');
     if (resp.data != null) {
+      final CheckOutModel cm = CheckOutModel(
+        adultCount: adult.value,
+        amount: package.amount,
+        childrenCount: children.value,
+        commission: package.agentCommission,
+        dateOfTravel: package.dateOfTravel,
+        gst: package.gstPercent,
+        kidsAmount: package.kidsAmount,
+        kidsOfferAmount: package.kidsOfferAmount,
+        offerAmount: package.offerAmount,
+        orderID: order,
+        tourCode: singleTour[0].tourData?.tourCode,
+        tourItinerary: singleTour[0].tourData?.itinerary,
+        tourName: singleTour[0].tourData?.name,
+        transportationMode: package.transportationMode,
+        advanceAmount: package.advanceAmount,
+      );
+      checkOutModel = cm;
+
       order = resp.data as int;
       log('success $order');
       return order!;
@@ -305,5 +317,33 @@ class SingleTourController extends GetxController
     TOTALAMOUNT = totalAdultAmount + totalChildrensAmount;
 
     return TOTALAMOUNT;
+  }
+
+  Future<void> onCallClicked() async {
+    final Uri url = Uri.parse('tel:914872383104');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      log('Could not launch $url');
+    }
+  }
+
+  Future<void> onWhatsAppClicked() async {
+    final Uri whtNum = Uri.parse('https://wa.me/918606131909');
+    launchUrl(whtNum);
+  }
+
+  Future<void> confirmPayment(int packageID, PackageData packageData) async {
+    isLoading.value = true;
+    order = await createUserOrder(packageID, packageData);
+    final int passengers = totaltravellers();
+    Get.toNamed(Routes.ADD_PASSENGER,
+        arguments: [order, passengers, checkOutModel]);
+    isLoading.value = false;
+  }
+
+  int totaltravellers() {
+    final int sum = adult.value + children.value;
+    return sum;
   }
 }

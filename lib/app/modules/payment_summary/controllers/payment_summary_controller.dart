@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../../data/models/single_booking_model.dart';
 import '../../../data/repo/booking_repo.dart';
+import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/payment_summary_view.dart';
 
@@ -50,12 +51,17 @@ class PaymentSummaryController extends GetxController
   }
 
   int getTotalTravellersCount() {
-    final int sum = bookingList[0].noOfAdults! + bookingList[0].noOfChildren!;
+    final int sum = bookingList[0].noOfAdults! + bookingList[0].noOfKids!;
     return sum;
   }
 
-  int getRemainingAmount() {
-    final int sum = bookingList[0].payableAmount! - bookingList[0].amountPaid!;
+  num getRemainingAmount() {
+    final num sum = bookingList[0].payableAmount! - bookingList[0].amountPaid!;
     return sum;
+  }
+
+  onClickPassengers(int? id) {
+    Get.toNamed(Routes.TRAVELLERS_SCREEN, arguments: id)!
+        .whenComplete(() => loadData());
   }
 }

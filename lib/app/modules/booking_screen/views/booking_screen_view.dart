@@ -169,7 +169,7 @@ class BookingScreenView extends GetView<BookingScreenController> {
     );
   }
 
-  GestureDetector buildUpcomingBookingTile(int index, int totalTravellers) {
+  GestureDetector buildUpcomingBookingTile(int index, num totalTravellers) {
     return GestureDetector(
         onTap: () => controller
             .onTapSingleUpComingBooking(controller.upcomingList[index]),
@@ -262,7 +262,7 @@ class BookingScreenView extends GetView<BookingScreenController> {
         ));
   }
 
-  Widget buildCompletedBookingTile(int index, int totalTravellers) {
+  Widget buildCompletedBookingTile(int index, num totalTravellers) {
     return GestureDetector(
         onTap: () => controller
             .onTapSingleCompletedBooking(controller.completedList[index]),
@@ -358,7 +358,7 @@ class BookingScreenView extends GetView<BookingScreenController> {
         ));
   }
 
-  Widget buildCancelledBookingTile(int index, int totalTravellers) {
+  Widget buildCancelledBookingTile(int index, num totalTravellers) {
     return GestureDetector(
         onTap: () => controller
             .onTapSingleCancelledBooking(controller.cancelledList[index]),

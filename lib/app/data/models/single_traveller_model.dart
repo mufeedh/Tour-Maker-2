@@ -1,5 +1,5 @@
-class TravellerModel {
-  TravellerModel(
+class SingleTravellerModel {
+  SingleTravellerModel(
       {this.id,
       this.paymentNo,
       this.orderDate,
@@ -42,7 +42,8 @@ class TravellerModel {
         'total_amount': totalAmount,
         'payable_amount': payableAmount,
       };
-  static TravellerModel fromJson(Map<String, dynamic> json) => TravellerModel(
+  static SingleTravellerModel fromJson(Map<String, dynamic> json) =>
+      SingleTravellerModel(
         id: json['id'] as int,
         paymentNo: json['payment_no'] as int,
         orderDate: json['order_date'] as String,

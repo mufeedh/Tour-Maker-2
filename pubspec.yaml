@@ -83,6 +83,7 @@ flutter:
     - assets/about.svg
     - assets/noInternet.png
     - assets/typewriter-1.mp3
+    - assets/whatsapp.svg
   fonts:
     - family: TourMaker
       fonts:

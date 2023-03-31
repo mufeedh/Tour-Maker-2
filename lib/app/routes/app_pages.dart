@@ -6,6 +6,8 @@ import '../modules/add_passenger/bindings/add_passenger_binding.dart';
 import '../modules/add_passenger/views/add_passenger_view.dart';
 import '../modules/booking_screen/bindings/booking_screen_binding.dart';
 import '../modules/booking_screen/views/booking_screen_view.dart';
+import '../modules/checkout_screen/bindings/checkout_screen_binding.dart';
+import '../modules/checkout_screen/views/checkout_screen_view.dart';
 import '../modules/exclusive_tours/bindings/exclusive_tours_binding.dart';
 import '../modules/exclusive_tours/views/exclusive_tours_view.dart';
 import '../modules/favourites_screen/bindings/favourites_screen_binding.dart';
@@ -48,7 +50,6 @@ import '../modules/single_category/bindings/single_category_binding.dart';
 import '../modules/single_category/views/single_category_view.dart';
 import '../modules/single_tour/bindings/single_tour_binding.dart';
 import '../modules/single_tour/views/single_tour_view.dart';
-
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
 import '../modules/terms_and_conditions/bindings/terms_and_conditions_binding.dart';
@@ -59,6 +60,8 @@ import '../modules/tours_view/bindings/tours_view_binding.dart';
 import '../modules/tours_view/views/tours_view_view.dart';
 import '../modules/travel_types/bindings/travel_types_binding.dart';
 import '../modules/travel_types/views/travel_types_view.dart';
+import '../modules/travellers_screen/bindings/travellers_screen_binding.dart';
+import '../modules/travellers_screen/views/travellers_screen_view.dart';
 import '../modules/trending_tours/bindings/trending_tours_binding.dart';
 import '../modules/trending_tours/views/trending_tours_view.dart';
 import '../modules/user_registerscreen/bindings/user_registerscreen_binding.dart';
@@ -258,6 +261,16 @@ class AppPages {
       name: _Paths.TRAVEL_TYPES,
       page: () => const TravelTypesView(),
       binding: TravelTypesBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHECKOUT_SCREEN,
+      page: () => const CheckoutScreenView(),
+      binding: CheckoutScreenBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRAVELLERS_SCREEN,
+      page: () => const TravellersScreenView(),
+      binding: TravellersScreenBinding(),
     ),
   ];
 }

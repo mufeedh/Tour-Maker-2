@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -130,7 +131,7 @@ class SingleTourView extends GetView<SingleTourController> {
                         '${controller.singleTour[0].tourData?.description}',
                         style: paragraph1),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 10),
                   tabButtons(controller),
                   const SizedBox(height: 30),
                   Obx(() => controller.selectedIndex.value == 0
@@ -487,7 +488,7 @@ class SingleTourView extends GetView<SingleTourController> {
                             ),
                             const SizedBox(height: 5),
                             Text(
-                              'Payable advance ₹ ${controller.singleTour[0].packageData![controller.selectedDateIndex.value].advanceAmount}',
+                              'Pay now : ₹ ${controller.singleTour[0].packageData![controller.selectedDateIndex.value].advanceAmount}',
                               style: paragraph4,
                             ),
                           ],
@@ -504,8 +505,38 @@ class SingleTourView extends GetView<SingleTourController> {
                 height: 80,
                 width: 100.w,
                 text: '   Enter Passenger Details',
-                onPressed: () => controller.onClickAddPassenger(),
+                onPressed: () => controller.onClickAddPassenger(controller
+                    .singleTour[0]
+                    .packageData![controller.selectedDateIndex.value]),
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text('For Direct Booking',
+                    style: GoogleFonts.montserrat(color: Colors.grey.shade800)),
+                Container(
+                  width: 35,
+                  height: 35,
+                  decoration: BoxDecoration(
+                      color: backgroundColor, shape: BoxShape.circle),
+                  child: Center(
+                    child: IconButton(
+                      onPressed: controller.onCallClicked,
+                      icon: Icon(TourMaker.call,
+                          color: Colors.grey.shade800, size: 20),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: controller.onWhatsAppClicked,
+                  child: SvgPicture.asset(
+                    'assets/whatsapp.svg',
+                    height: 20,
+                    width: 20,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -597,6 +628,10 @@ class SingleTourView extends GetView<SingleTourController> {
                 countOfChildrens()
               ],
             ),
+            const SizedBox(height: 10),
+            Text(
+                'Transportation via ${controller.batchTours[0].packageData![controller.selectedBatchIndex.value].transportationMode}',
+                style: subheading1),
             const SizedBox(height: 10),
             Card(
               shape: RoundedRectangleBorder(
@@ -722,7 +757,7 @@ class SingleTourView extends GetView<SingleTourController> {
                               style: heading2,
                             ),
                             Text(
-                              'Payable advance ₹ ${controller.batchTours[0].packageData![controller.selectedBatchIndex.value].advanceAmount}',
+                              'Pay now : ₹ ${controller.batchTours[0].packageData![controller.selectedBatchIndex.value].advanceAmount}',
                               style: paragraph4,
                             ),
                           ],
@@ -733,13 +768,45 @@ class SingleTourView extends GetView<SingleTourController> {
                 ),
               ),
             ),
-            Obx(() => CustomButton().showIconButtonWithGradient(
-                  isLoading: controller.isLoading.value,
-                  height: 80,
-                  width: 100.w,
-                  text: '   Enter Passenger Details',
-                  onPressed: () => controller.onClickAddPassenger(),
-                ))
+            Obx(
+              () => CustomButton().showIconButtonWithGradient(
+                isLoading: controller.isLoading.value,
+                height: 80,
+                width: 100.w,
+                text: '   Enter Passenger Details',
+                onPressed: () => controller.onClickAddPassenger(controller
+                    .batchTours[0]
+                    .packageData![controller.selectedBatchIndex.value]),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text('For Direct Booking',
+                    style: GoogleFonts.montserrat(color: Colors.grey.shade800)),
+                Container(
+                  width: 35,
+                  height: 35,
+                  decoration: BoxDecoration(
+                      color: backgroundColor, shape: BoxShape.circle),
+                  child: Center(
+                    child: IconButton(
+                      onPressed: controller.onCallClicked,
+                      icon: Icon(TourMaker.call,
+                          color: Colors.grey.shade800, size: 20),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: controller.onWhatsAppClicked,
+                  child: SvgPicture.asset(
+                    'assets/whatsapp.svg',
+                    height: 20,
+                    width: 20,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       );

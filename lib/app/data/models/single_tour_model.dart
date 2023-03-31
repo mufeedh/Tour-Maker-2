@@ -109,7 +109,9 @@ class PackageData {
       this.lastAmount,
       this.advanceAmount,
       this.batchOrIndividual,
-      this.transportationMode});
+      this.transportationMode,
+      this.agentCommission,
+      this.gstPercent});
   int? iD;
   int? tourId;
   String? dateOfTravel;
@@ -124,6 +126,8 @@ class PackageData {
   int? advanceAmount;
   String? batchOrIndividual;
   String? transportationMode;
+  int? agentCommission;
+  int? gstPercent;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': iD,
@@ -137,9 +141,11 @@ class PackageData {
         'kids_offer_amount': kidsOfferAmount,
         'extra_offer': extraOffer,
         'last_amount': lastAmount,
+        'agent_commission': agentCommission,
         'advance_amount': advanceAmount,
         'batch_or_individual': batchOrIndividual,
         'transportation_mode': transportationMode,
+        'gst_percent': gstPercent,
       };
 
   static PackageData fromJson(Map<String, dynamic> json) => PackageData(
@@ -148,6 +154,7 @@ class PackageData {
         dateOfTravel: json['date_of_travel'] as String,
         totalSeats: json['total_seats'] as int,
         availableSeats: json['available_seats'] as int,
+        agentCommission: json['agent_commission'] as int,
         amount: json['amount'] as int,
         kidsAmount: json['kids_amount'] as int,
         offerAmount: json['offer_amount'] as int,
@@ -156,6 +163,7 @@ class PackageData {
         lastAmount: json['last_amount'] as int,
         advanceAmount: json['advance_amount'] as int,
         batchOrIndividual: json['batch_or_individual'] as String,
+        gstPercent: json['gst_percent'] as int,
         transportationMode: json['transportation_mode'] as String,
       );
 }
