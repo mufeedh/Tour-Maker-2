@@ -29,7 +29,7 @@ class CustomDeparture extends StatelessWidget {
             height: 90,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: controller.singleTour[0].packageData?.length,
+              itemCount: controller.singleTour.value.packageData?.length,
               itemBuilder: (BuildContext context, int index) => GestureDetector(
                 onTap: () {
                   controller.selectedDateIndex.value = index;
@@ -51,7 +51,7 @@ class CustomDeparture extends StatelessWidget {
                     child: Center(
                       child: Text(
                         controller.convertDates(controller
-                            .singleTour[0].packageData![index].dateOfTravel
+                            .singleTour.value.packageData![index].dateOfTravel
                             .toString()),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.montserrat(
@@ -111,14 +111,16 @@ class CustomDeparture extends StatelessWidget {
                           ),
                         ),
                         if (controller
-                                .singleTour[0]
+                                .singleTour
+                                .value
                                 .packageData![
                                     controller.selectedDateIndex.value]
                                 .offerAmount ==
                             null)
                           TextSpan(
                             text: controller
-                                .singleTour[0]
+                                .singleTour
+                                .value
                                 .packageData![
                                     controller.selectedDateIndex.value]
                                 .amount
@@ -128,14 +130,14 @@ class CustomDeparture extends StatelessWidget {
                           TextSpan(text: '', children: <TextSpan>[
                             TextSpan(
                               text:
-                                  '₹ ${controller.singleTour[0].packageData![controller.selectedDateIndex.value].amount}',
+                                  '₹ ${controller.singleTour.value.packageData![controller.selectedDateIndex.value].amount}',
                               style: const TextStyle(
                                 decoration: TextDecoration.lineThrough,
                               ),
                             ),
                             TextSpan(
                                 text:
-                                    '    ₹ ${controller.singleTour[0].packageData![controller.selectedDateIndex.value].offerAmount}',
+                                    '    ₹ ${controller.singleTour.value.packageData![controller.selectedDateIndex.value].offerAmount}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w700))
                           ]),
@@ -157,14 +159,16 @@ class CustomDeparture extends StatelessWidget {
                           ),
                         ),
                         if (controller
-                                .singleTour[0]
+                                .singleTour
+                                .value
                                 .packageData![
                                     controller.selectedDateIndex.value]
                                 .kidsOfferAmount ==
                             null)
                           TextSpan(
                             text: controller
-                                .singleTour[0]
+                                .singleTour
+                                .value
                                 .packageData![
                                     controller.selectedDateIndex.value]
                                 .amount
@@ -174,14 +178,14 @@ class CustomDeparture extends StatelessWidget {
                           TextSpan(text: '', children: <TextSpan>[
                             TextSpan(
                               text:
-                                  '₹ ${controller.singleTour[0].packageData![controller.selectedDateIndex.value].kidsAmount}',
+                                  '₹ ${controller.singleTour.value.packageData![controller.selectedDateIndex.value].kidsAmount}',
                               style: const TextStyle(
                                 decoration: TextDecoration.lineThrough,
                               ),
                             ),
                             TextSpan(
                                 text:
-                                    '    ₹ ${controller.singleTour[0].packageData![controller.selectedDateIndex.value].kidsOfferAmount}',
+                                    '    ₹ ${controller.singleTour.value.packageData![controller.selectedDateIndex.value].kidsOfferAmount}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w700))
                           ]),
@@ -195,7 +199,7 @@ class CustomDeparture extends StatelessWidget {
                         children: <Widget>[
                           Text('Total Amount', style: heading3),
                           Text(
-                              '(Excluding GST ${controller.singleTour[0].packageData![controller.selectedDateIndex.value].gstPercent}%)',
+                              '(Excluding GST ${controller.singleTour.value.packageData![controller.selectedDateIndex.value].gstPercent}%)',
                               style: paragraph2),
                         ],
                       ),
@@ -203,11 +207,11 @@ class CustomDeparture extends StatelessWidget {
                       Column(
                         children: <Widget>[
                           Text(
-                              '₹ ${controller.getTotalAmountOFtour(controller.adult.value, controller.children.value, controller.singleTour[0].packageData![controller.selectedDateIndex.value], controller.selectedDateIndex.value)}',
+                              '₹ ${controller.getTotalAmountOFtour(controller.adult.value, controller.children.value, controller.singleTour.value.packageData![controller.selectedDateIndex.value], controller.selectedDateIndex.value)}',
                               style: heading2),
                           const SizedBox(height: 5),
                           Text(
-                            'Pay now : ₹ ${controller.singleTour[0].packageData![controller.selectedDateIndex.value].advanceAmount}',
+                            'Pay now : ₹ ${controller.singleTour.value.packageData![controller.selectedDateIndex.value].advanceAmount}',
                             style: paragraph4,
                           ),
                         ],
@@ -225,7 +229,8 @@ class CustomDeparture extends StatelessWidget {
               width: 100.w,
               text: '   Enter Passenger Details',
               onPressed: () => controller.onClickAddPassenger(controller
-                  .singleTour[0]
+                  .singleTour
+                  .value
                   .packageData![controller.selectedDateIndex.value]),
             ),
           ),

@@ -9,7 +9,6 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../../main.dart';
-import '../../../data/models/checkout_model.dart';
 import '../../../data/models/razorpay_model.dart';
 import '../../../data/models/travellers_model.dart';
 import '../../../data/repo/passenger_repo.dart';

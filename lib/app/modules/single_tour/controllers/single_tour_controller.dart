@@ -26,8 +26,8 @@ class SingleTourController extends GetxController
   late Razorpay razorPay;
   final RxInt selectedDateIndex = 0.obs;
   final RxList<int> favorites = <int>[].obs;
-  RxList<SingleTourModel> singleTour = <SingleTourModel>[].obs;
-  RxList<SingleTourModel> batchTours = <SingleTourModel>[].obs;
+  Rx<SingleTourModel> singleTour = SingleTourModel().obs;
+  Rx<SingleTourModel> batchTours = SingleTourModel().obs;
   RxList<WishListModel> wishlists = <WishListModel>[].obs;
   List<SingleTourModel>? singleTourData;
   Rx<int> selectedIndex = 0.obs;
@@ -82,11 +82,12 @@ class SingleTourController extends GetxController
     return tourID!;
   }
 
-  Future<List<SingleTourModel>> loadSingleTourData(int tourID) async {
+  Future<SingleTourModel> loadSingleTourData(int tourID) async {
     try {
-      final ApiResponse<List<SingleTourModel>> res =
+      final ApiResponse<SingleTourModel> res =
           await SingleTourRepository().getSingleTour(tourID);
-      if (res.data != null && res.data!.isNotEmpty) {
+      log('kdgknjdf msg ${res.message}');
+      if (res.data != null) {
         return res.data!;
       } else {
         throw Exception('Failed to load single tour data: empty response');
@@ -97,8 +98,8 @@ class SingleTourController extends GetxController
     }
   }
 
-  Future<List<SingleTourModel>> loadIndividualTours(int tourID) async {
-    final ApiResponse<List<SingleTourModel>> res =
+  Future<SingleTourModel> loadIndividualTours(int tourID) async {
+    final ApiResponse<SingleTourModel> res =
         await SingleTourRepository().getSingleTourIndividual(tourID);
     if (res.data != null) {
       return res.data!;
@@ -132,7 +133,7 @@ class SingleTourController extends GetxController
   void onDateSelected(int index) {
     selectedDateIndex.value = index;
     final DateTime inputDate =
-        DateTime.parse('${singleTour[0].packageData?[index].dateOfTravel}');
+        DateTime.parse('${singleTour.value.packageData?[index].dateOfTravel}');
     final DateFormat outputFormat = DateFormat('MMM d');
     final String formattedDate = outputFormat.format(inputDate);
     selectedDate.value = formattedDate;
@@ -210,7 +211,7 @@ class SingleTourController extends GetxController
       if (isFavourite.value == true) {
         log('Removing tour from favorites...');
         final ApiResponse<Map<String, dynamic>> res =
-            await WishListRepo().deleteFav(singleTour[0].tourData?.iD);
+            await WishListRepo().deleteFav(singleTour.value.tourData?.iD);
         if (res.status == ApiResponseStatus.completed) {
           log('Tour removed from favorites.');
           isFavourite.value = false;
@@ -220,7 +221,7 @@ class SingleTourController extends GetxController
       } else {
         log('Adding tour to favorites...');
         final ApiResponse<Map<String, dynamic>> res =
-            await WishListRepo().createFav(singleTour[0].tourData?.iD);
+            await WishListRepo().createFav(singleTour.value.tourData?.iD);
         if (res.status == ApiResponseStatus.completed) {
           log('Tour added to favorites.');
           isFavourite.value = true;
@@ -282,14 +283,14 @@ class SingleTourController extends GetxController
       commission: packageData.agentCommission,
       dateOfTravel: packageData.dateOfTravel,
       gst: packageData.gstPercent,
-      tourID: singleTour[0].tourData?.iD.toString(),
+      tourID: singleTour.value.tourData?.iD.toString(),
       kidsAmount: packageData.kidsAmount,
       kidsOfferAmount: packageData.kidsOfferAmount,
       offerAmount: packageData.offerAmount,
       orderID: order,
-      tourCode: singleTour[0].tourData?.tourCode,
-      tourItinerary: singleTour[0].tourData?.itinerary,
-      tourName: singleTour[0].tourData?.name,
+      tourCode: singleTour.value.tourData?.tourCode,
+      tourItinerary: singleTour.value.tourData?.itinerary,
+      tourName: singleTour.value.tourData?.name,
       transportationMode: packageData.transportationMode,
       advanceAmount: packageData.advanceAmount,
     );

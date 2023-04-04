@@ -9,7 +9,7 @@ class SingleTourRepository {
   SingleTourModel tourData = SingleTourModel();
   List<SingleTourModel> packageData = <SingleTourModel>[];
   final Dio dio = Client().init();
-  Future<ApiResponse<List<SingleTourModel>>> getSingleTour(int id) async {
+  Future<ApiResponse<SingleTourModel>> getSingleTour(int id) async {
     try {
       final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
       final Response<Map<String, dynamic>> res = await dio.getUri(
@@ -18,28 +18,27 @@ class SingleTourRepository {
       log('bbdfbiadb repo batch msg${res.statusMessage}');
       log('bbdfbiadb repo batch data ${res.data}');
       log("bbdfbiadb repo batch data result${res.data!['result']}");
-      log("bbdfbiadb repo batch data result [0] ${res.data!['result'][0]}");
+      log("bbdfbiadb repo batch data result [0] ${res.data!['result']}");
       if (res.statusCode == 200) {
-        packageData = (res.data!['result'] as List<dynamic>).map((dynamic e) {
-          return SingleTourModel.fromJson(e as Map<String, dynamic>);
-        }).toList();
-        return ApiResponse<List<SingleTourModel>>.completed(packageData);
+        tourData = SingleTourModel.fromJson(
+            res.data!['result'] as Map<String, dynamic>);
+
+        return ApiResponse<SingleTourModel>.completed(tourData);
       } else {
         log('bbdfbiadb repo batch else msg${res.statusMessage}');
-        return ApiResponse<List<SingleTourModel>>.error(res.statusMessage);
+        return ApiResponse<SingleTourModel>.error(res.statusMessage);
       }
     } on DioError catch (de) {
       log('bbdfbiadb repo batch de err${de.error}');
       log('bbdfbiadb repo batch de err msg${de.message}');
-      return ApiResponse<List<SingleTourModel>>.error(de.error.toString());
+      return ApiResponse<SingleTourModel>.error(de.error.toString());
     } catch (e) {
       log('bbdfbiadb repo batch catch err msg$e');
-      return ApiResponse<List<SingleTourModel>>.error(e.toString());
+      return ApiResponse<SingleTourModel>.error(e.toString());
     }
   }
 
-  Future<ApiResponse<List<SingleTourModel>>> getSingleTourIndividual(
-      int id) async {
+  Future<ApiResponse<SingleTourModel>> getSingleTourIndividual(int id) async {
     try {
       final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
       final Response<Map<String, dynamic>> res = await dio.getUri(
@@ -50,24 +49,24 @@ class SingleTourRepository {
       log('bbdfbiadb batch msg ${res.statusMessage}');
       if (res.statusCode == 200) {
         log('bbdfbiadb batch rep msg${res.statusMessage}');
-        packageData = (res.data!['result'] as List<dynamic>).map((dynamic e) {
-          return SingleTourModel.fromJson(e as Map<String, dynamic>);
-        }).toList();
-        log('bbdfbiadb batch rep data length${packageData[0].packageData?.length}');
-        return ApiResponse<List<SingleTourModel>>.completed(packageData);
+        tourData = SingleTourModel.fromJson(
+            res.data!['result'] as Map<String, dynamic>);
+
+        // log('bbdfbiadb batch rep data length${packageDat.packageData?.length}');
+        return ApiResponse<SingleTourModel>.completed(tourData);
       } else {
         log('bbdfbiadb batch rep statusmessage${res.statusMessage}');
 
-        return ApiResponse<List<SingleTourModel>>.error(res.statusMessage);
+        return ApiResponse<SingleTourModel>.error(res.statusMessage);
       }
     } on DioError catch (de) {
       log('bbdfbiadb batch rep de err${de.error}');
 
-      return ApiResponse<List<SingleTourModel>>.error(de.error.toString());
+      return ApiResponse<SingleTourModel>.error(de.error.toString());
     } catch (e) {
       log('bbdfbiadb batch rep e cathc$e');
 
-      return ApiResponse<List<SingleTourModel>>.error(e.toString());
+      return ApiResponse<SingleTourModel>.error(e.toString());
     }
   }
 }

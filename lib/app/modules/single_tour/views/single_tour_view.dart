@@ -91,14 +91,14 @@ class SingleTourView extends GetView<SingleTourController> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 70),
                             child: Text(
-                              '${controller.singleTour[0].tourData?.tourCode}',
+                              '${controller.singleTour.value.tourData?.tourCode}',
                               style: heading2,
                             ),
                           ),
                           CustomToolTip(
                               onPressed: () =>
                                   controller.onViewItineraryClicked(controller
-                                      .singleTour[0].tourData!.itinerary!),
+                                      .singleTour.value.tourData!.itinerary!),
                               label: 'VIEW ITINERARY',
                               icon: TourMaker.group_2)
                         ]),
@@ -112,7 +112,7 @@ class SingleTourView extends GetView<SingleTourController> {
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                          '${controller.singleTour[0].tourData?.description}',
+                          '${controller.singleTour.value.tourData?.description}',
                           style: paragraph1),
                     ),
                     const SizedBox(height: 10),
@@ -131,7 +131,7 @@ class SingleTourView extends GetView<SingleTourController> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 60.0),
         child: Text(
-          '${controller.singleTour[0].tourData?.name!.split(' ').join('\n')}',
+          '${controller.singleTour.value.tourData?.name!.split(' ').join('\n')}',
           style: const TextStyle(
             fontFamily: 'Tahu',
             color: Colors.white,
@@ -149,7 +149,7 @@ class SingleTourView extends GetView<SingleTourController> {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: CachedNetworkImageProvider(
-            '${controller.singleTour[0].tourData!.image}',
+            '${controller.singleTour.value.tourData!.image}',
           ),
           fit: BoxFit.cover,
         ),
@@ -158,7 +158,7 @@ class SingleTourView extends GetView<SingleTourController> {
   }
 
   Widget buildCustomDeparture() {
-    if (controller.singleTour[0].packageData != null) {
+    if (controller.singleTour.value.packageData != null) {
       return CustomDeparture(
           controller: controller,
           countOfAdults: countOfAdults(),
@@ -179,7 +179,7 @@ class SingleTourView extends GetView<SingleTourController> {
   }
 
   Widget buildFixedDeparture() {
-    if (controller.batchTours[0].packageData != null) {
+    if (controller.batchTours.value.packageData != null) {
       return FixedDepartures(
           controller: controller,
           countOfAdults: countOfAdults(),

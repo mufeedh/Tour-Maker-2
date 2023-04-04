@@ -170,21 +170,6 @@ class UserRegisterscreenView extends GetView<UserRegisterscreenController> {
                               ),
                             );
                           }),
-                          // CustomTextFormField(
-                          //   textInputAction: TextInputAction.newline,
-                          //   keyboardType: TextInputType.streetAddress,
-                          //   contentPadding: const EdgeInsets.all(8),
-                          //   hintText: 'Address',
-                          //   maxLines: 10,
-                          //   validator: (String? value) =>
-                          //       controller.addressValidator(value),
-                          //   onChanged: (String? value)  =>
-                          //       controller.address.value = value.toString(),
-                          //   prefix: Icon(
-                          //     TourMaker.location_icon,
-                          //     color: fontColor,
-                          //   ),
-                          // ),
                           const SizedBox(height: 15),
                           Obx(() {
                             return TextFormField(
@@ -239,7 +224,6 @@ class UserRegisterscreenView extends GetView<UserRegisterscreenController> {
                             );
                           }),
                           const SizedBox(height: 15),
-
                           Obx(() {
                             return TextFormField(
                               controller: TextEditingController(
@@ -293,7 +277,6 @@ class UserRegisterscreenView extends GetView<UserRegisterscreenController> {
                             );
                           }),
                           const SizedBox(height: 15),
-
                           Obx(() {
                             return TextFormField(
                               controller: TextEditingController(
