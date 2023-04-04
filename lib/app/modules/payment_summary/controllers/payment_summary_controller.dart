@@ -60,7 +60,7 @@ class PaymentSummaryController extends GetxController
     return sum;
   }
 
-  onClickPassengers(int? id) {
+  void onClickPassengers(int? id) {
     Get.toNamed(Routes.TRAVELLERS_SCREEN, arguments: id)!
         .whenComplete(() => loadData());
   }

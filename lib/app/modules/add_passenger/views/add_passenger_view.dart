@@ -13,6 +13,7 @@ import '../../../../core/utils/date_utils.dart';
 import '../../../../core/utils/string_utils.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_elevated_button.dart';
+import '../../../widgets/custom_errorscreen.dart';
 import '../../../widgets/custom_loadinscreen.dart';
 import '../../../widgets/customdatepicker.dart';
 import '../controllers/add_passenger_controller.dart';
@@ -29,210 +30,182 @@ class AddPassengerView extends GetView<AddPassengerController> {
           appBar: const CustomAppBar(),
           resizeToAvoidBottomInset: true,
           body: controller.obx(
+            onEmpty: const CustomErrorScreen(
+                errorText: 'Please Add \nPassengers Details'),
             onLoading: const CustomLoadingScreen(),
-            (AddPassengerView? state) => Obx(
-              () => controller.travellers.isEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            const SizedBox(height: 29),
-                            Text(
-                              'Enter Passenger Details',
-                              style: heading2,
-                            ),
-                            const SizedBox(height: 7),
-                            Text(
-                              '${controller.travellers.length}/${controller.totalTravellers} passengers added',
-                              style: subheading3,
-                            ),
-                            SizedBox(height: 25.h),
-                            Center(
-                              child: Container(
-                                height: 200,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.transparent,
-                                  ),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.group_add,
-                                      color: Colors.grey.shade400,
-                                      size: 60,
-                                    ),
-                                    const Text(
-                                      'Add Passengers',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.grey,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const SizedBox(height: 43),
-                            Text(
-                              'Enter Passenger Details',
-                              style: heading2,
-                            ),
-                            const SizedBox(height: 7),
-                            Text(
-                              '${controller.travellers.length}/${controller.totalTravellers} passengers added',
-                              style: subheading3,
-                            ),
-                            ListView.builder(
+            (AddPassengerView? state) => Column(
+              children: <Widget>[
+                const SizedBox(height: 16),
+                Text('Travellers', style: heading2),
+                Text(
+                    '${controller.travellers.length}/${controller.totalTravellers} passengers added'),
+                const SizedBox(height: 8),
+                Obx(
+                  () {
+                    return controller.travellers.isNotEmpty
+                        ? Expanded(
+                            child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: controller.travellers.length,
                               itemBuilder: (BuildContext context, int index) =>
-                                  Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Row(
-                                        children: [
-                                          const Text('name : '),
-                                          Text(
-                                            controller
-                                                .travellers.value[index].name
-                                                .toString(),
-                                            style: GoogleFonts.montserrat(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                              color: fontColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Row(
-                                        children: [
-                                          const Text('order ID : '),
-                                          Text(
-                                            controller
-                                                .travellers.value[index].orderId
-                                                .toString(),
-                                            style: GoogleFonts.montserrat(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                              color: fontColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Row(
-                                        children: [
-                                          const Text('phone number : '),
-                                          Text(
-                                            controller.travellers.value[index]
-                                                .phoneNumber
-                                                .toString(),
-                                            style: GoogleFonts.montserrat(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                              color: fontColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Row(
-                                        children: [
-                                          const Text('DOB : '),
-                                          Text(
-                                            controller
-                                                .travellers[index].dateOfBirth
-                                                .toString()
-                                                .parseFromIsoDate()
-                                                .toDocumentDateFormat(),
-                                            style: GoogleFonts.montserrat(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                              color: fontColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Row(
-                                        children: [
-                                          const Text('address : '),
-                                          Text(
-                                            controller.travellers[index].address
-                                                .toString(),
-                                            style: GoogleFonts.montserrat(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                              color: fontColor,
-                                            ),
-                                            overflow: TextOverflow.clip,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  buildPassengerCard(index),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          )
+                        : const Expanded(
+                            child: CustomErrorScreen(
+                                errorText: 'Please Add \nPassengers & Details'),
+                          );
+                  },
+                ),
+              ],
             ),
           ),
           floatingActionButtonLocation:
               controller.totalTravellers == controller.travellers.length
                   ? FloatingActionButtonLocation.centerFloat
                   : FloatingActionButtonLocation.endFloat,
-          floatingActionButton:
-              controller.totalTravellers == controller.travellers.length
-                  ? FloatingActionButton.extended(
-                      onPressed: () => controller.gotoCheckoutPage(),
-                      backgroundColor: englishViolet,
-                      materialTapTargetSize: MaterialTapTargetSize.padded,
-                      label: const Text('Go to checkout'),
-                    )
-                  : FloatingActionButton(
-                      onPressed: () => showAddPassengerDialogue(context),
-                      backgroundColor: englishViolet,
-                      materialTapTargetSize: MaterialTapTargetSize.padded,
-                      child: const Icon(Icons.add),
-                    ),
+          floatingActionButton: controller.totalTravellers ==
+                  controller.travellers.length
+              ? AnimatedContainer(
+                  duration: const Duration(milliseconds: 500),
+                  child: FloatingActionButton.extended(
+                    onPressed: () => controller.gotoCheckoutPage(),
+                    backgroundColor: englishViolet,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    label: controller.isLoadingIc.value
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Ready to checkout'),
+                  ),
+                )
+              : FloatingActionButton(
+                  onPressed: () => showAddPassengerDialogue(context),
+                  backgroundColor: englishViolet,
+                  materialTapTargetSize: MaterialTapTargetSize.padded,
+                  child: const Icon(Icons.add),
+                ),
         );
       }),
+    );
+  }
+
+  Padding buildPassengerCard(int index) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('name : '),
+                  Text(
+                    controller.travellers[index].name.toString(),
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: fontColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('order ID : '),
+                  Text(
+                    controller.travellers[index].orderId.toString(),
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: fontColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('phone number : '),
+                  Text(
+                    controller.travellers[index].phoneNumber.toString(),
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: fontColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('DOB : '),
+                  Text(
+                    controller.travellers[index].dateOfBirth
+                        .toString()
+                        .parseFromIsoDate()
+                        .toDocumentDateFormat(),
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: fontColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('address : '),
+                  SizedBox(
+                    width: 200,
+                    child: Text(
+                      controller.travellers[index].address.toString(),
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: fontColor,
+                      ),
+                      overflow: TextOverflow.visible,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('ID proof : '),
+                  Text(
+                    ' added ✔️',
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: Colors.green,
+                    ),
+                    overflow: TextOverflow.clip,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -269,6 +242,7 @@ class AddPassengerView extends GetView<AddPassengerController> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.name,
+                    textInputAction: TextInputAction.done,
                     onChanged: (String? value) =>
                         controller.customerName.value = value.toString(),
                     validator: (String? value) =>
@@ -314,6 +288,7 @@ class AddPassengerView extends GetView<AddPassengerController> {
                   const SizedBox(height: 15),
                   TextFormField(
                     keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.done,
                     onChanged: (String? value) =>
                         controller.customerPhone.value = value.toString(),
                     validator: (String? value) =>
@@ -367,6 +342,7 @@ class AddPassengerView extends GetView<AddPassengerController> {
                   ),
                   const SizedBox(height: 15),
                   TextFormField(
+                    textInputAction: TextInputAction.done,
                     maxLines: 10,
                     minLines: 1,
                     validator: (String? value) =>
@@ -419,9 +395,18 @@ class AddPassengerView extends GetView<AddPassengerController> {
                       child: Obx(
                         () => controller.image.value != ''
                             ? Column(
-                                children: [
-                                  Text('Adhaar Card'),
-                                  Image.file(File(controller.image.value)),
+                                children: <Widget>[
+                                  Text('ID proof', style: subheading2),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    margin: const EdgeInsets.all(10),
+                                    child: Image.file(
+                                      fit: BoxFit.cover,
+                                      File(controller.image.value),
+                                    ),
+                                  ),
                                 ],
                               )
                             : Row(
@@ -429,7 +414,7 @@ class AddPassengerView extends GetView<AddPassengerController> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   const Text(
-                                    '      Aadhar Card',
+                                    '      ID PROOF',
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.camera_alt),

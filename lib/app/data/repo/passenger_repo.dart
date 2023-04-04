@@ -161,4 +161,49 @@ class PassengerRepository {
       return ApiResponse<List<TravellersModel>>.error(e.toString());
     }
   }
+
+  Future<ApiResponse<List<TravellersModel>>> getSinglePassenger(int id) async {
+    try {
+      final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
+
+      final Response<Map<String, dynamic>> response = await dio.getUri(
+        Uri.parse('user/traveller?id=$id'),
+        options: Options(headers: authHeader),
+      );
+      if (response.statusCode == 200) {
+        passengers =
+            (response.data!['result'] as List<dynamic>).map((dynamic e) {
+          return TravellersModel.fromJson(e as Map<String, dynamic>);
+        }).toList();
+        return ApiResponse<List<TravellersModel>>.completed(passengers);
+      } else {
+        return ApiResponse<List<TravellersModel>>.error(response.statusMessage);
+      }
+    } on DioError catch (de) {
+      return ApiResponse<List<TravellersModel>>.error(de.error.toString());
+    } catch (e) {
+      return ApiResponse<List<TravellersModel>>.error(e.toString());
+    }
+  }
+
+  Future<ApiResponse<dynamic>> getadhar(String name, int id) async {
+    try {
+      final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
+
+      final Response<Map<String, dynamic>> response = await dio.postUri(
+        Uri.parse('user/traveller/aadhar'),
+        data: <String, dynamic>{'name': name, 'order_id': id},
+        options: Options(headers: authHeader),
+      );
+      if (response.statusCode == 200) {
+        return ApiResponse<dynamic>.completed(response.data!['result']);
+      } else {
+        return ApiResponse<dynamic>.error(response.statusMessage);
+      }
+    } on DioError catch (de) {
+      return ApiResponse<dynamic>.error(de.error.toString());
+    } catch (e) {
+      return ApiResponse<dynamic>.error(e.toString());
+    }
+  }
 }

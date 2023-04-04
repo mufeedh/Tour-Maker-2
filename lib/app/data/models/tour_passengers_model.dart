@@ -1,11 +1,4 @@
 class TourPassengersModel {
-  int? id;
-  int? orderId;
-  String? userId;
-  String? name;
-  String? phoneNumber;
-  String? dateOfBirth;
-  String? address;
 
   TourPassengersModel(
       {this.id,
@@ -15,6 +8,13 @@ class TourPassengersModel {
       this.phoneNumber,
       this.dateOfBirth,
       this.address});
+  int? id;
+  int? orderId;
+  String? userId;
+  String? name;
+  String? phoneNumber;
+  String? dateOfBirth;
+  String? address;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,

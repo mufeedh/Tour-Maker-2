@@ -33,7 +33,7 @@ class CustomDatePickerField extends StatelessWidget {
       padding: padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+        children: <Widget>[
           const SizedBox(
             height: 5,
           ),

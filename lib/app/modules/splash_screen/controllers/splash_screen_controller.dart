@@ -95,7 +95,7 @@ class SplashScreenController extends GetxController with StateMixin<dynamic> {
     }
   }
 
-  Future<void> checkUserExistsOnDB(dynamic token, fcmToken) async {
+  Future<void> checkUserExistsOnDB(dynamic token, dynamic fcmToken) async {
     log('check user');
     final ApiResponse<Map<String, dynamic>> res =
         await UserRepository().checkUserExists();

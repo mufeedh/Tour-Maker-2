@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/travel_types_controller.dart';
 
 class TravelTypesView extends GetView<TravelTypesController> {
-  const TravelTypesView({Key? key}) : super(key: key);
+  const TravelTypesView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../../core/utils/date_utils.dart';
@@ -13,7 +12,7 @@ import '../../../widgets/custom_loadinscreen.dart';
 import '../controllers/travellers_screen_controller.dart';
 
 class TravellersScreenView extends GetView<TravellersScreenController> {
-  const TravellersScreenView({Key? key}) : super(key: key);
+  const TravellersScreenView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,122 +30,139 @@ class TravellersScreenView extends GetView<TravellersScreenController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const SizedBox(height: 43),
-                        Text(
-                          'Enter Passenger Details',
-                          style: heading2,
-                        ),
+                      children: <Widget>[
                         const SizedBox(height: 7),
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: controller.travellers.length,
                           itemBuilder: (BuildContext context, int index) =>
-                              Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    children: [
-                                      const Text('name : '),
-                                      Text(
-                                        controller.travellers.value[index].name
-                                            .toString(),
-                                        style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                          color: fontColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    children: [
-                                      const Text('order ID : '),
-                                      Text(
-                                        controller
-                                            .travellers.value[index].orderId
-                                            .toString(),
-                                        style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                          color: fontColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    children: [
-                                      const Text('phone number : '),
-                                      Text(
-                                        controller
-                                            .travellers.value[index].phoneNumber
-                                            .toString(),
-                                        style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                          color: fontColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    children: [
-                                      const Text('DOB : '),
-                                      Text(
-                                        controller.travellers[index].dateOfBirth
-                                            .toString()
-                                            .parseFromIsoDate()
-                                            .toDocumentDateFormat(),
-                                        style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                          color: fontColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    children: [
-                                      const Text('address : '),
-                                      Text(
-                                        controller.travellers[index].address
-                                            .toString(),
-                                        style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                          color: fontColor,
-                                        ),
-                                        overflow: TextOverflow.clip,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                              buildPassengerCard(index),
                         ),
                       ],
                     ),
                   ),
                 ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildPassengerCard(int index) {
+    return GestureDetector(
+      onTap: () =>
+          controller.onTapSinglePassenger(controller.travellers[index].id),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('name : '),
+                  Text(
+                    controller.travellers[index].name.toString(),
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: fontColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('order ID : '),
+                  Text(
+                    controller.travellers[index].orderId.toString(),
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: fontColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('phone number : '),
+                  Text(
+                    controller.travellers[index].phoneNumber.toString(),
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: fontColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('DOB : '),
+                  Text(
+                    controller.travellers[index].dateOfBirth
+                        .toString()
+                        .parseFromIsoDate()
+                        .toDocumentDateFormat(),
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: fontColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('address : '),
+                  SizedBox(
+                    width: 200,
+                    child: Text(
+                      controller.travellers[index].address.toString(),
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: fontColor,
+                      ),
+                      overflow: TextOverflow.visible,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  const Text('ID proof : '),
+                  Text(
+                    ' added ✔️',
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: Colors.green,
+                    ),
+                    overflow: TextOverflow.clip,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

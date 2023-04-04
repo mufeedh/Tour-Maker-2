@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
+import '../../../../core/theme/style.dart';
 import '../../../../main.dart';
 import '../../../data/models/checkout_model.dart';
 import '../../../data/models/razorpay_model.dart';
@@ -28,14 +29,14 @@ class AddPassengerController extends GetxController
   RxBool isloading = false.obs;
   Rx<OrderPaymentModel> orderPaymentModel = OrderPaymentModel().obs;
   int? totalTravellers;
-  var image = ''.obs;
+  RxString image = ''.obs;
   RxList<TravellersModel> travellers = <TravellersModel>[].obs;
   Rx<String> customerAddress = ''.obs;
+  Rx<bool> isLoadingIc = false.obs;
   Rx<String> customerName = ''.obs;
   Rx<String> customerPhone = ''.obs;
   Rx<String> customerAdhaar = ''.obs;
   Rx<String> customerDOB = ''.obs;
-  CheckOutModel? checkOutModel;
   @override
   void onInit() {
     super.onInit();
@@ -66,33 +67,35 @@ class AddPassengerController extends GetxController
   void loadData() {
     if (Get.arguments != null) {
       change(null, status: RxStatus.loading());
-      final CheckOutModel cm = CheckOutModel();
       orderID = Get.arguments[0] as int;
       totalTravellers = Get.arguments[1] as int;
-      checkOutModel = Get.arguments[2] as CheckOutModel;
-      log('uuhyuad${checkOutModel!.amount}');
       change(null, status: RxStatus.success());
     }
   }
 
   Future<void> onRegisterClicked() async {
     if (formKey.currentState!.validate()) {
-      isloading.value = true;
-      final ApiResponse<bool> res = await PassengerRepository().addpassenger(
-          customerName.value,
-          customerPhone.value,
-          orderID.toString(),
-          customerDOB.value,
-          customerAddress.value,
-          image.value);
-      if (res.status == ApiResponseStatus.completed) {
-        Get.back();
-        image.value = '';
-        await getTravellers(orderID);
+      if (image.value != '') {
+        isloading.value = true;
+        final ApiResponse<bool> res = await PassengerRepository().addpassenger(
+            customerName.value,
+            customerPhone.value,
+            orderID.toString(),
+            customerDOB.value,
+            customerAddress.value,
+            image.value);
+        if (res.status == ApiResponseStatus.completed) {
+          Get.back();
+          image.value = '';
+          await getTravellers(orderID);
+        } else {
+          log('message');
+        }
+        isloading.value = false;
       } else {
-        log('message');
+        Get.snackbar('Add your ID proof', 'Add any ID proof',
+            backgroundColor: englishViolet, colorText: Colors.white);
       }
-      isloading.value = false;
     }
     isloading.value = false;
     log(customerDOB.value);
@@ -175,21 +178,25 @@ class AddPassengerController extends GetxController
   }
 
   Future<void> getTravellers(int? orderID) async {
-    var res = await PassengerRepository().getAllPassengersByOrderId(orderID!);
+    final ApiResponse<List<TravellersModel>> res =
+        await PassengerRepository().getAllPassengersByOrderId(orderID!);
     if (res.data != null) {
       travellers.value = res.data!;
     } else {}
   }
 
-  gotoCheckoutPage() {
+  void gotoCheckoutPage() {
+    isLoadingIc.value = true;
     CustomDialog().showCustomDialog('Are your Ready \nto checkout',
         "Please double check \n the data's you entered\n before checkout",
         cancelText: 'Go back', onCancel: () {
       Get.back();
+      isLoadingIc.value = false;
     }, onConfirm: () {
       Get.back();
-      Get.toNamed(Routes.CHECKOUT_SCREEN, arguments: checkOutModel)!
-          .whenComplete(() => loadData());
+      Get.toNamed(Routes.CHECKOUT_SCREEN)!.whenComplete(() => loadData());
+      isLoadingIc.value = false;
     });
+    isLoadingIc.value = false;
   }
 }

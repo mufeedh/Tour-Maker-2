@@ -46,6 +46,7 @@ class CategoryRepository {
               (response.data!['result'] as List<dynamic>).map((dynamic e) {
             return PackageModel.fromJson(e as Map<String, dynamic>);
           }).toList();
+          log('kulsitham ${singleCategoryList.length}');
         }
         log('Adeeb rep ${response.data}');
         log('Adeeb rep ${singleCategoryList[0].name}');

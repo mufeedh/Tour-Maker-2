@@ -48,6 +48,8 @@ import '../modules/search_view/bindings/search_view_binding.dart';
 import '../modules/search_view/views/search_view_view.dart';
 import '../modules/single_category/bindings/single_category_binding.dart';
 import '../modules/single_category/views/single_category_view.dart';
+import '../modules/single_passenger/bindings/single_passenger_binding.dart';
+import '../modules/single_passenger/views/single_passenger_view.dart';
 import '../modules/single_tour/bindings/single_tour_binding.dart';
 import '../modules/single_tour/views/single_tour_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
@@ -271,6 +273,11 @@ class AppPages {
       name: _Paths.TRAVELLERS_SCREEN,
       page: () => const TravellersScreenView(),
       binding: TravellersScreenBinding(),
+    ),
+    GetPage(
+      name: _Paths.SINGLE_PASSENGER,
+      page: () => const SinglePassengerView(),
+      binding: SinglePassengerBinding(),
     ),
   ];
 }

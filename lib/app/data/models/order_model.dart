@@ -10,7 +10,7 @@ class OrderModel {
   int? packageID;
   String? orderID;
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'no_of_children': noOfChildren,
+        'no_of_kids': noOfChildren,
         'no_of_adults': noOfAdults,
         'package_id': packageID,
       };

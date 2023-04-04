@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import '../../../data/models/travellers_model.dart';
 import '../../../data/repo/passenger_repo.dart';
+import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/travellers_screen_view.dart';
 
@@ -15,20 +16,10 @@ class TravellersScreenController extends GetxController
     loadData();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  loadData() async {
+  Future<void> loadData() async {
     change(null, status: RxStatus.loading());
     if (Get.arguments != null) {
-      int orderID = Get.arguments as int;
+      final int orderID = Get.arguments as int;
       final ApiResponse<List<TravellersModel>> res =
           await PassengerRepository().getAllPassengersByOrderId(orderID);
       if (res.data != null) {
@@ -40,5 +31,9 @@ class TravellersScreenController extends GetxController
     } else {
       change(null, status: RxStatus.error());
     }
+  }
+
+  void onTapSinglePassenger(int? id) {
+    Get.toNamed(Routes.SINGLE_PASSENGER, arguments: id);
   }
 }

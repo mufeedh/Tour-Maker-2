@@ -1,23 +1,4 @@
 class BookingsModel {
-  num? amountPaid;
-  String? dateOfTravel;
-  num? gst;
-  num? gstAmount;
-  num? id;
-  bool? isCustom;
-  num? noOfAdults;
-  num? noOfKids;
-  bool? offerApplied;
-  num? orderConfirmed;
-  String? orderStatus;
-  num? packageId;
-  num? payableAmount;
-  num? reward;
-  num? totalAmount;
-  String? tourCode;
-  String? tourName;
-  String? userId;
-
   BookingsModel(
       {this.amountPaid,
       this.dateOfTravel,
@@ -37,6 +18,24 @@ class BookingsModel {
       this.tourCode,
       this.tourName,
       this.userId});
+  num? amountPaid;
+  String? dateOfTravel;
+  num? gst;
+  num? gstAmount;
+  num? id;
+  bool? isCustom;
+  num? noOfAdults;
+  num? noOfKids;
+  bool? offerApplied;
+  num? orderConfirmed;
+  String? orderStatus;
+  num? packageId;
+  num? payableAmount;
+  num? reward;
+  num? totalAmount;
+  String? tourCode;
+  String? tourName;
+  String? userId;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'amount_paid': amountPaid,

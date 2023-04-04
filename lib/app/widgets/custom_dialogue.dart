@@ -3,10 +3,9 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/theme/style.dart';
-import 'custom_elevated_button.dart';
 
 class CustomDialog {
-  Future showCustomDialog(
+  Future<dynamic> showCustomDialog(
     String title,
     String contentText, {
     String cancelText = 'Cancel',
@@ -27,10 +26,10 @@ class CustomDialog {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
-                children: [
+                children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: <Widget>[
                       DefaultTextStyle(
                         style: heading3.copyWith(),
                         child: Text(title),

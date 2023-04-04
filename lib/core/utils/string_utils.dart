@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,19 +13,19 @@ extension StringUtils on String {
 
   DateTime toDateTime() => DateFormat('yyyy-MM-dd HH:mm:ss').parse(this);
 
-  DateTime parseFromIsoDate() => DateFormat("yyyy-MM-ddTHH:mm").parse(this);
+  DateTime parseFromIsoDate() => DateFormat('yyyy-MM-ddTHH:mm').parse(this);
 
-  DateTime parseFromLocal() => DateFormat("dd-MM-yyyy").parse(this);
+  DateTime parseFromLocal() => DateFormat('dd-MM-yyyy').parse(this);
 
-  DateTime parseLocalTime() => DateFormat("hh:mm a").parse(this);
+  DateTime parseLocalTime() => DateFormat('hh:mm a').parse(this);
 
   String removeHtmlTags() {
-    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+    final RegExp exp = RegExp(r'<[^>]*>', multiLine: true);
     return replaceAll(exp, '');
   }
 
   Color toColor() {
-    print("colorTocolor:$this");
+    log('colorTocolor:$this');
     return Color(int.parse(substring(1), radix: 16) + 0xFF000000);
   }
 }

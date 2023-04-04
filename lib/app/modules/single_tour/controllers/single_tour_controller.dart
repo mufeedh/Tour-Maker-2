@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_overrides
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -7,12 +5,11 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../../main.dart';
 import '../../../data/models/checkout_model.dart';
 import '../../../data/models/order_model.dart';
-import '../../../data/models/razorpay_model.dart';
 import '../../../data/models/single_tour_model.dart';
 import '../../../data/models/wishlist_model.dart';
+import '../../../data/repo/checkout_repo.dart';
 import '../../../data/repo/passenger_repo.dart';
 import '../../../data/repo/singletourrepo.dart';
 import '../../../data/repo/wishlist_repo.dart';
@@ -25,15 +22,14 @@ class SingleTourController extends GetxController
     with StateMixin<SingleTourView>, GetSingleTickerProviderStateMixin {
   late final TabController tabcontroller =
       TabController(length: 2, vsync: this);
-  late int TOTALAMOUNT;
+  late int totalAmount;
   late Razorpay razorPay;
   final RxInt selectedDateIndex = 0.obs;
   final RxList<int> favorites = <int>[].obs;
   RxList<SingleTourModel> singleTour = <SingleTourModel>[].obs;
   RxList<SingleTourModel> batchTours = <SingleTourModel>[].obs;
-  RxList<SingleTourModel> individualTours = <SingleTourModel>[].obs;
   RxList<WishListModel> wishlists = <WishListModel>[].obs;
-  Rx<OrderPaymentModel> orderPaymentModel = OrderPaymentModel().obs;
+  List<SingleTourModel>? singleTourData;
   Rx<int> selectedIndex = 0.obs;
   Rx<int> selectDate = 0.obs;
   Rx<int> selectedBatchIndex = 0.obs;
@@ -43,27 +39,39 @@ class SingleTourController extends GetxController
   Rx<bool> isFavourite = false.obs;
   Rx<String> selectedDate = ' '.obs;
   Rx<String> formattedDate = ''.obs;
-  CheckOutModel? checkOutModel;
   int? tourID;
   int? order;
+
   @override
   void onInit() {
     super.onInit();
-    getData();
+    log('bbdfbiadb init');
+    fetchData();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  Future<void> getData() async {
-    change(null, status: RxStatus.loading());
-    final int id = await loadData();
-    await loadSingleTourData(id); //individual tours
-    await loadBatchTours(id); // batch tours
-    await getWishList(id); // wishlist
-    change(null, status: RxStatus.success());
+  Future<void> fetchData() async {
+    try {
+      change(null, status: RxStatus.loading());
+      final int id = await loadData();
+      batchTours.value = await loadSingleTourData(id);
+      singleTour.value = await loadIndividualTours(id);
+      final List<WishListModel>? wishlistData = await getWishList(id);
+      if (wishlistData != null) {
+        wishlists.value = wishlistData;
+        for (final WishListModel wm in wishlists) {
+          if (wm.id == id) {
+            isFavourite.value = true;
+            break;
+          } else {
+            isFavourite.value = false;
+          }
+        }
+      }
+      change(null, status: RxStatus.success());
+    } catch (er) {
+      change(null, status: RxStatus.error(er.toString()));
+      throw Exception('failed to load fetch data $er');
+    }
   }
 
   Future<int> loadData() async {
@@ -74,19 +82,42 @@ class SingleTourController extends GetxController
     return tourID!;
   }
 
-  Future<void> loadSingleTourData(int tourID) async {
-    final ApiResponse<List<SingleTourModel>> res =
-        await SingleTourRepository().getSingleTour(tourID);
-    if (res.data != null) {
-      singleTour.value = res.data!;
+  Future<List<SingleTourModel>> loadSingleTourData(int tourID) async {
+    try {
+      final ApiResponse<List<SingleTourModel>> res =
+          await SingleTourRepository().getSingleTour(tourID);
+      if (res.data != null && res.data!.isNotEmpty) {
+        return res.data!;
+      } else {
+        throw Exception('Failed to load single tour data: empty response');
+      }
+    } catch (e) {
+      throw Exception(
+          'Failed to fetch single tour data for tour ID $tourID: $e');
     }
   }
 
-  Future<void> loadBatchTours(int tourID) async {
+  Future<List<SingleTourModel>> loadIndividualTours(int tourID) async {
     final ApiResponse<List<SingleTourModel>> res =
-        await SingleTourRepository().getSingleTourBATCH(tourID);
+        await SingleTourRepository().getSingleTourIndividual(tourID);
     if (res.data != null) {
-      batchTours.value = res.data!;
+      return res.data!;
+    } else {
+      throw Exception('Failed to load batch tour data');
+    }
+  }
+
+  Future<List<WishListModel>?> getWishList(int id) async {
+    final ApiResponse<dynamic> res = await WishListRepo().getAllFav();
+    if (res.status == ApiResponseStatus.completed) {
+      if (res.data != null) {
+        final List<WishListModel> wishListData =
+            res.data! as List<WishListModel>;
+        return wishListData;
+      }
+      return null;
+    } else {
+      throw Exception('Failed to load wishlist data');
     }
   }
 
@@ -152,31 +183,6 @@ class SingleTourController extends GetxController
       }, confirmText: 'OK', cancelText: 'back');
     } else {
       confirmPayment(package.iD!, package);
-
-      // //CreatePayment
-      // orderPaymentModel.value = await createPayment();
-      // // //open razorpay
-      // openRazorPay(orderPaymentModel.value.id.toString());
-    }
-  }
-
-  void openRazorPay(String paymentID) {
-    final Map<String, Object?> options = <String, Object?>{
-      'key': 'rzp_test_yAFypxWUiCD7H7',
-      'name': 'TourMaker App',
-      'description': 'Pay for your Package Order',
-      'order_id': paymentID,
-      'external': <String, Object?>{
-        'wallets': <String>['paytm'],
-      },
-    };
-    log('adeeb anvar $options');
-
-    try {
-      razorPay.open(options);
-      log('adeeb anvar raz op');
-    } catch (e) {
-      log('Error opening Razorpay checkout: $e');
     }
   }
 
@@ -188,24 +194,7 @@ class SingleTourController extends GetxController
     );
     final ApiResponse<dynamic> resp = await PassengerRepository().addOrder(om);
     if (resp.data != null) {
-      final CheckOutModel cm = CheckOutModel(
-        adultCount: adult.value,
-        amount: package.amount,
-        childrenCount: children.value,
-        commission: package.agentCommission,
-        dateOfTravel: package.dateOfTravel,
-        gst: package.gstPercent,
-        kidsAmount: package.kidsAmount,
-        kidsOfferAmount: package.kidsOfferAmount,
-        offerAmount: package.offerAmount,
-        orderID: order,
-        tourCode: singleTour[0].tourData?.tourCode,
-        tourItinerary: singleTour[0].tourData?.itinerary,
-        tourName: singleTour[0].tourData?.name,
-        transportationMode: package.transportationMode,
-        advanceAmount: package.advanceAmount,
-      );
-      checkOutModel = cm;
+      log('kunukunnu single tour $order');
 
       order = resp.data as int;
       log('success $order');
@@ -214,56 +203,6 @@ class SingleTourController extends GetxController
       log('not fno');
     }
     return order!;
-  }
-
-  Future<OrderPaymentModel> createPayment() async {
-    final OrderPaymentModel omp = OrderPaymentModel(
-      orderId: order,
-      contact: currentUserPhoneNumber,
-      currency: 'INR',
-    );
-
-    try {
-      final ApiResponse<OrderPaymentModel> res =
-          await PassengerRepository().createPayment(omp);
-      if (res.data != null) {
-        orderPaymentModel.value = res.data!;
-      } else {
-        // log(' adeeb raz emp ');
-      }
-    } catch (e) {
-      log('raz catch $e');
-    }
-    return orderPaymentModel.value;
-  }
-
-  Future<void> getWishList(int id) async {
-    log('MUDAPPALLUR load wisgh');
-
-    final ApiResponse<dynamic> res = await WishListRepo().getAllFav();
-    log('MUDAPPALLUR wish sing tour msg ${res.message}');
-    log('MUDAPPALLUR wish sing tour data ${res.data}');
-    if (res.status == ApiResponseStatus.completed) {
-      log('MUDAPPALLUR wish  sing tour res.data!-nulls');
-
-      if (res.data != null) {
-        wishlists.value = res.data! as List<WishListModel>;
-        for (final WishListModel wm in wishlists) {
-          if (wm.id == id) {
-            log('MUDAPPALLUR sing wishtrue');
-            isFavourite.value = true;
-            break;
-          } else {
-            log('MUDAPPALLUR sing wishfalse');
-            isFavourite.value = false;
-          }
-        }
-      }
-    } else {
-      isFavourite.value = false;
-
-      log('Kumbalangi null wish');
-    }
   }
 
   Future<void> onClickAddToFavourites() async {
@@ -314,9 +253,9 @@ class SingleTourController extends GetxController
     final int totalAdultAmount = adultCount * adultAmount;
     final int totalChildrensAmount = childcount * childAmount;
     // ignore: non_constant_identifier_names
-    TOTALAMOUNT = totalAdultAmount + totalChildrensAmount;
+    totalAmount = totalAdultAmount + totalChildrensAmount;
 
-    return TOTALAMOUNT;
+    return totalAmount;
   }
 
   Future<void> onCallClicked() async {
@@ -336,9 +275,33 @@ class SingleTourController extends GetxController
   Future<void> confirmPayment(int packageID, PackageData packageData) async {
     isLoading.value = true;
     order = await createUserOrder(packageID, packageData);
+    final CheckOutModel cm = CheckOutModel(
+      adultCount: adult.value,
+      amount: packageData.amount,
+      childrenCount: children.value,
+      commission: packageData.agentCommission,
+      dateOfTravel: packageData.dateOfTravel,
+      gst: packageData.gstPercent,
+      tourID: singleTour[0].tourData?.iD.toString(),
+      kidsAmount: packageData.kidsAmount,
+      kidsOfferAmount: packageData.kidsOfferAmount,
+      offerAmount: packageData.offerAmount,
+      orderID: order,
+      tourCode: singleTour[0].tourData?.tourCode,
+      tourItinerary: singleTour[0].tourData?.itinerary,
+      tourName: singleTour[0].tourData?.name,
+      transportationMode: packageData.transportationMode,
+      advanceAmount: packageData.advanceAmount,
+    );
+    try {
+      await CheckOutRepositoy.saveData(cm);
+      log(' Data saved successfully');
+    } catch (e) {
+      log('Error saving data: $e');
+    }
     final int passengers = totaltravellers();
-    Get.toNamed(Routes.ADD_PASSENGER,
-        arguments: [order, passengers, checkOutModel]);
+    Get.toNamed(Routes.ADD_PASSENGER, arguments: <dynamic>[order, passengers]);
+    log('kunukunnu confirm single tour ${order}');
     isLoading.value = false;
   }
 

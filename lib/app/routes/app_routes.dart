@@ -37,12 +37,13 @@ abstract class Routes {
   static const String ADD_PASSENGER = _Paths.ADD_PASSENGER;
   static const String PDF_VIEW = _Paths.PDF_VIEW;
   static const String USER_REGISTERSCREEN = _Paths.USER_REGISTERSCREEN;
-  static const TRENDING_TOURS = _Paths.TRENDING_TOURS;
-  static const EXCLUSIVE_TOURS = _Paths.EXCLUSIVE_TOURS;
-  static const TRAVEL_TYPES = _Paths.TRAVEL_TYPES;
-  static const SINGLE_TRAVEL_TYPETOUR = _Paths.SINGLE_TRAVEL_TYPETOUR;
-  static const CHECKOUT_SCREEN = _Paths.CHECKOUT_SCREEN;
-  static const TRAVELLERS_SCREEN = _Paths.TRAVELLERS_SCREEN;
+  static const String TRENDING_TOURS = _Paths.TRENDING_TOURS;
+  static const String EXCLUSIVE_TOURS = _Paths.EXCLUSIVE_TOURS;
+  static const String TRAVEL_TYPES = _Paths.TRAVEL_TYPES;
+  static const String SINGLE_TRAVEL_TYPETOUR = _Paths.SINGLE_TRAVEL_TYPETOUR;
+  static const String CHECKOUT_SCREEN = _Paths.CHECKOUT_SCREEN;
+  static const String TRAVELLERS_SCREEN = _Paths.TRAVELLERS_SCREEN;
+  static const SINGLE_PASSENGER = _Paths.SINGLE_PASSENGER;
 }
 
 abstract class _Paths {
@@ -81,10 +82,11 @@ abstract class _Paths {
   static const String ADD_PASSENGER = '/add-passenger';
   static const String PDF_VIEW = '/pdf-view';
   static const String USER_REGISTERSCREEN = '/user-registerscreen';
-  static const TRENDING_TOURS = '/trending-tours';
-  static const EXCLUSIVE_TOURS = '/exclusive-tours';
-  static const TRAVEL_TYPES = '/travel-types';
-  static const SINGLE_TRAVEL_TYPETOUR = '/single-travel-typetour';
-  static const CHECKOUT_SCREEN = '/checkout-screen';
-  static const TRAVELLERS_SCREEN = '/travellers-screen';
+  static const String TRENDING_TOURS = '/trending-tours';
+  static const String EXCLUSIVE_TOURS = '/exclusive-tours';
+  static const String TRAVEL_TYPES = '/travel-types';
+  static const String SINGLE_TRAVEL_TYPETOUR = '/single-travel-typetour';
+  static const String CHECKOUT_SCREEN = '/checkout-screen';
+  static const String TRAVELLERS_SCREEN = '/travellers-screen';
+  static const SINGLE_PASSENGER = '/single-passenger';
 }

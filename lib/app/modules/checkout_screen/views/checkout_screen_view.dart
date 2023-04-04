@@ -10,106 +10,72 @@ import '../../../widgets/custom_appbar.dart';
 import '../controllers/checkout_screen_controller.dart';
 
 class CheckoutScreenView extends GetView<CheckoutScreenController> {
-  const CheckoutScreenView({Key? key}) : super(key: key);
+  const CheckoutScreenView({super.key});
   @override
   Widget build(BuildContext context) {
+    final CheckoutScreenController controller =
+        Get.put(CheckoutScreenController());
     return Scaffold(
         appBar: const CustomAppBar(
           title: Text('Checkout Screen'),
         ),
-        body: AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.bounceInOut,
-          margin: const EdgeInsets.all(10),
-          child: Center(
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(28)),
-              color: backgroundColor,
-              child: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(controller.checkOutModel!.tourName.toString(),
-                        style: heading2),
-                    Text(controller.checkOutModel!.tourCode.toString(),
-                        style: subheading2),
-                    const SizedBox(height: 10),
-                    ActionChip(
-                      backgroundColor: englishViolet,
-                      label: const Text('View Itinerary'),
-                      labelStyle: const TextStyle(color: Colors.white),
-                      onPressed: () {},
-                    ),
-                    const SizedBox(height: 40),
-                    buildItem(
-                        'Date of Travel :',
-                        controller.checkOutModel!.dateOfTravel
-                            .toString()
-                            .parseFromIsoDate()
-                            .toDocumentDateFormat()),
-                    buildItem('No. of Adults :',
-                        controller.checkOutModel!.adultCount.toString()),
-                    if (controller.checkOutModel!.childrenCount == 0)
-                      SizedBox()
-                    else
-                      buildItem('No. of Children :',
-                          controller.checkOutModel!.childrenCount.toString()),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Adult Amount', style: subheading1),
-                        RichText(
-                          text: TextSpan(
-                            text: '',
-                            style: const TextStyle(color: Colors.grey),
-                            children: <TextSpan>[
-                              const TextSpan(
-                                text: '',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              if (controller.checkOutModel?.offerAmount == null)
-                                TextSpan(
-                                    text: controller.checkOutModel!.amount
-                                        .toString(),
-                                    style: TextStyle(
-                                      color: fontColor,
-                                      fontWeight: FontWeight.w700,
-                                    ))
-                              else
-                                TextSpan(text: '', children: <TextSpan>[
-                                  TextSpan(
-                                    text:
-                                        '₹ ${controller.checkOutModel!.amount}',
-                                    style: TextStyle(
-                                      color: fontColor,
-                                      decoration: TextDecoration.lineThrough,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        '  ₹ ${controller.checkOutModel!.offerAmount}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: fontColor),
-                                  )
-                                ]),
-                            ],
+        body: controller.obx(
+          (CheckoutScreenView? state) => AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.bounceInOut,
+            margin: const EdgeInsets.all(10),
+            child: Center(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28)),
+                color: backgroundColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text(controller.checkOutModel.value!.tourName.toString(),
+                          style: heading2),
+                      Text(controller.checkOutModel.value!.tourCode.toString(),
+                          style: subheading2),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          ActionChip(
+                            backgroundColor: englishViolet,
+                            label: const Text('View Itinerary'),
+                            labelStyle: const TextStyle(color: Colors.white),
+                            onPressed: () => controller.onViewItinerary(
+                                controller.checkOutModel.value!.tourItinerary),
                           ),
-                        ),
-                      ],
-                    ),
-                    if (controller.checkOutModel!.childrenCount == 0)
-                      SizedBox()
-                    else
+                          ActionChip(
+                            backgroundColor: englishViolet,
+                            label: const Text('View Passengers'),
+                            labelStyle: const TextStyle(color: Colors.white),
+                            onPressed: () => controller.onViewPasengers(
+                                controller.checkOutModel.value!.orderID),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 40),
+                      buildItem(
+                          'Date of Travel :',
+                          controller.checkOutModel.value!.dateOfTravel
+                              .toString()
+                              .parseFromIsoDate()
+                              .toDocumentDateFormat()),
+                      buildItem('No. of Adults :',
+                          '${controller.checkOutModel.value!.adultCount} pax'),
+                      if (controller.checkOutModel.value!.childrenCount == 0)
+                        const SizedBox()
+                      else
+                        buildItem('No. of Children :',
+                            '${controller.checkOutModel.value!.childrenCount} pax'),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Children Amount', style: subheading1),
+                        children: <Widget>[
+                          Text('Adult Amount :', style: subheading1),
                           RichText(
                             text: TextSpan(
                               text: '',
@@ -122,11 +88,12 @@ class CheckoutScreenView extends GetView<CheckoutScreenController> {
                                     color: Colors.grey,
                                   ),
                                 ),
-                                if (controller.checkOutModel?.kidsOfferAmount ==
+                                if (controller
+                                        .checkOutModel.value?.offerAmount ==
                                     null)
                                   TextSpan(
-                                      text: controller.checkOutModel!.kidsAmount
-                                          .toString(),
+                                      text:
+                                          '₹ ${controller.checkOutModel.value!.amount}/pax',
                                       style: TextStyle(
                                         color: fontColor,
                                         fontWeight: FontWeight.w700,
@@ -135,7 +102,7 @@ class CheckoutScreenView extends GetView<CheckoutScreenController> {
                                   TextSpan(text: '', children: <TextSpan>[
                                     TextSpan(
                                       text:
-                                          '₹ ${controller.checkOutModel!.kidsAmount}',
+                                          '₹ ${controller.checkOutModel.value!.amount}',
                                       style: TextStyle(
                                         color: fontColor,
                                         decoration: TextDecoration.lineThrough,
@@ -143,7 +110,7 @@ class CheckoutScreenView extends GetView<CheckoutScreenController> {
                                     ),
                                     TextSpan(
                                       text:
-                                          '  ₹ ${controller.checkOutModel!.kidsOfferAmount}',
+                                          '  ₹ ${controller.checkOutModel.value!.offerAmount}/pax',
                                       style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                           color: fontColor),
@@ -154,45 +121,148 @@ class CheckoutScreenView extends GetView<CheckoutScreenController> {
                           ),
                         ],
                       ),
-                    buildItem(
-                        'Total Amount :', '₹ ${controller.getTotalAmount()}'),
-                    buildItem('CGST :',
-                        '₹ ${controller.getCGST()}(${controller.checkOutModel!.gst! / 2}%)'),
-                    buildItem('SGST :', '₹ ${controller.getSGST()}(2.5%)'),
-                    buildItem('Total Amount : ',
-                        '₹ ${controller.getTotalAmounttoBePaid().toStringAsFixed(2)}'),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                            '(Includes GST ${controller.checkOutModel!.gst!}%)',
-                            style: paragraph1)
-                      ],
-                    ),
-                    const Divider(
-                      color: Colors.grey,
-                      endIndent: 30,
-                      indent: 30,
-                    ),
-                    buildItem('Commission Amount:',
-                        '₹ ${controller.getCommissionAmount()}'),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Grand Total :',
-                          style: heading2.copyWith(fontStyle: FontStyle.italic),
+                      if (controller.checkOutModel.value!.childrenCount == 0)
+                        const SizedBox()
+                      else
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Children Amount :', style: subheading1),
+                            RichText(
+                              text: TextSpan(
+                                text: '',
+                                style: const TextStyle(color: Colors.grey),
+                                children: <TextSpan>[
+                                  const TextSpan(
+                                    text: '',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  if (controller.checkOutModel.value
+                                          ?.kidsOfferAmount ==
+                                      null)
+                                    TextSpan(
+                                        text:
+                                            '₹ ${controller.checkOutModel.value!.kidsAmount}/pax',
+                                        style: TextStyle(
+                                          color: fontColor,
+                                          fontWeight: FontWeight.w700,
+                                        ))
+                                  else
+                                    TextSpan(text: '', children: <TextSpan>[
+                                      TextSpan(
+                                        text:
+                                            '₹ ${controller.checkOutModel.value!.kidsAmount}',
+                                        style: TextStyle(
+                                          color: fontColor,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            '  ₹ ${controller.checkOutModel.value!.kidsOfferAmount}/pax',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color: fontColor),
+                                      )
+                                    ]),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '₹ ${controller.getGrandTotal().toStringAsFixed(2)}',
-                          style: heading2.copyWith(
+                      buildItem(
+                          'Total Amount :', '₹ ${controller.getTotalAmount()}'),
+                      buildItem('Discount :',
+                          '- ₹ ${controller.getCommissionAmount()}'),
+                      const Divider(
+                        color: Colors.grey,
+                        endIndent: 40,
+                        indent: 50,
+                      ),
+                      buildItem('Total Amount : ',
+                          '₹ ${controller.getTotalAmounttoBePaid().toStringAsFixed(2)}'),
+                      buildItem(
+                          'CGST (${controller.checkOutModel.value!.gst! / 2}%):',
+                          '₹ ${controller.getCGST()}'),
+                      buildItem(
+                          'SGST (${controller.checkOutModel.value!.gst! / 2}%):',
+                          '₹ ${controller.getSGST()}'),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Grand Total :',
+                            style:
+                                heading2.copyWith(fontStyle: FontStyle.italic),
+                          ),
+                          Text(
+                            '₹ ${controller.getGrandTotal().toStringAsFixed(2)}',
+                            style: heading2.copyWith(
                               fontStyle: FontStyle.italic,
-                              decoration: TextDecoration.underline),
-                        ),
-                      ],
-                    ),
-                  ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            '(Includes GST ${controller.checkOutModel.value!.gst}%)',
+                            style: subheading1.copyWith(
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 60),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            width: 30.w,
+                            margin: const EdgeInsets.all(10),
+                            height: 06.h,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: fontColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              onPressed: () =>
+                                  controller.onClickCancelPurchase(),
+                              child: const Text('Cancel'),
+                            ),
+                          ),
+                          Container(
+                            width: 40.w,
+                            height: 06.h,
+                            margin: const EdgeInsets.all(10),
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: englishViolet,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              onPressed: () =>
+                                  controller.onClickconfirmPurchase(controller
+                                      .checkOutModel.value!.orderID!
+                                      .toInt()),
+                              child: const Text('Purchase'),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -203,7 +273,7 @@ class CheckoutScreenView extends GetView<CheckoutScreenController> {
   Row buildItem(String label, String item) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
+      children: <Widget>[
         Text(label, style: subheading1),
         Text(item, style: subheading1)
       ],

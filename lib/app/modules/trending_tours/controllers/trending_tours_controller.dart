@@ -8,8 +8,10 @@ import '../../../data/repo/trending_tours_rep.dart';
 import '../../../data/repo/wishlist_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
+import '../views/trending_tours_view.dart';
 
-class TrendingToursController extends GetxController with StateMixin {
+class TrendingToursController extends GetxController
+    with StateMixin<TrendingToursView> {
   RxList<SingleTrendingToursModel> singleTour =
       <SingleTrendingToursModel>[].obs;
   RxList<WishListModel> wishList = <WishListModel>[].obs;
