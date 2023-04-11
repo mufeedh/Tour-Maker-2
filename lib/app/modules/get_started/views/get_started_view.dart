@@ -7,6 +7,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../widgets/custom_elevated_button.dart';
+import '../../../widgets/custom_textformfield.dart';
 import '../controllers/get_started_controller.dart';
 
 class GetStartedView extends GetView<GetStartedController> {
@@ -105,70 +106,35 @@ class GetStartedView extends GetView<GetStartedController> {
                     ),
                     Form(
                       key: controller.formKey,
-                      child: TextFormField(
+                      child: CustomTextFormField(
                         keyboardType: TextInputType.phone,
                         validator: (String? value) =>
                             controller.phoneNumberValidator(value!),
                         onChanged: (String? value) => controller.phone = value,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(30),
-                          filled: true,
-                          fillColor: const Color(0xFFF6F6F6),
-                          hintText: 'phone Number',
-                          prefixIcon: Obx(() {
-                            return GestureDetector(
-                              onTap: () =>
-                                  controller.onCountryCodeClicked(context),
-                              child: Container(
-                                width: 35,
-                                margin:
-                                    const EdgeInsets.only(right: 10, left: 12),
-                                height: 35,
-                                decoration: BoxDecoration(
-                                    // color: Colors.red,
-                                    // borderRadius: BorderRadius.circular(40),
-                                    ),
-                                clipBehavior: Clip.hardEdge,
-                                child: Center(
-                                  child: Text(
-                                    controller.selectedCountry.value.flagEmoji,
-                                    style: TextStyle(fontSize: 35),
+                        hintText: 'phone Number',
+                        prefixIcon: Obx(() {
+                          return GestureDetector(
+                            onTap: () =>
+                                controller.onCountryCodeClicked(context),
+                            child: Container(
+                              width: 35,
+                              margin:
+                                  const EdgeInsets.only(right: 10, left: 12),
+                              height: 35,
+                              decoration: BoxDecoration(
+                                  // color: Colors.red,
+                                  // borderRadius: BorderRadius.circular(40),
                                   ),
+                              clipBehavior: Clip.hardEdge,
+                              child: Center(
+                                child: Text(
+                                  controller.selectedCountry.value.flagEmoji,
+                                  style: TextStyle(fontSize: 35),
                                 ),
                               ),
-                            );
-                          }),
-                          border: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                        ),
+                            ),
+                          );
+                        }),
                       ),
                     ),
                     Obx(

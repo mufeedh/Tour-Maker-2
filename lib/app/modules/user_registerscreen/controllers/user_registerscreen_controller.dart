@@ -6,14 +6,15 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
-import '../../../data/repo/user_repo.dart';
-import '../../../routes/app_pages.dart';
+import '../../../data/models/network_models/user_model.dart';
+import '../../../data/repo/network_repo/user_repo.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/user_registerscreen_view.dart';
 
 class UserRegisterscreenController extends GetxController
     with StateMixin<UserRegisterscreenView> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  Rx<UserModel> user = UserModel().obs;
   Rx<Country> selectedCountry = Country(
     phoneCode: '91',
     countryCode: 'IN',
@@ -26,20 +27,18 @@ class UserRegisterscreenController extends GetxController
     displayNameNoCountryCode: 'IN',
     e164Key: '',
   ).obs;
-  Rx<Gender> selectedGender = Gender.male.obs;
-  Rx<CategoryType> selectedCategoryType = CategoryType.Freelance.obs;
+  Rx<Gender> selectedGender = Gender.Male.obs;
+  Rx<CategoryType> selectedCategoryType = CategoryType.Standard_User.obs;
   RxBool isloading = false.obs;
   Rx<bool> isFindingAddressOfUser = false.obs;
   Rx<String> userAddress = ''.obs;
   Rx<String> userCountry = ''.obs;
   Rx<String> userState = ''.obs;
   Rx<String> userCity = ''.obs;
-  Rx<String> incomingname = ''.obs;
-  Rx<String> email = ''.obs;
-  Rx<String> incomingPhone = ''.obs;
-  Rx<String> gender = ''.obs;
-  Rx<String> incomingStateValue = ''.obs;
-  Rx<String> enterpriseName = ''.obs;
+  Rx<String> userName = ''.obs;
+  Rx<String> userEmail = ''.obs;
+  Rx<String> userPhone = ''.obs;
+  Rx<String> usereEnterpriseName = ''.obs;
   @override
   void onInit() {
     super.onInit();
@@ -58,104 +57,78 @@ class UserRegisterscreenController extends GetxController
           ? 'Please enter a valid phone number'
           : null;
 
-  String? addressValidator(String? value) => GetUtils.isLengthEqualTo(value, 10)
-      ? null
-      : 'please enter a valid address';
+  String? addressValidator(String? value) =>
+      GetUtils.isLengthGreaterOrEqual(value, 10)
+          ? null
+          : 'please enter a valid address';
 
-  Future<void> onRegisterClicked() async {
-    if (formKey.currentState!.validate()) {
-      isloading.value = true;
-      // final UserModel um = UserModel(
-      //   category: selectedCategoryType.value
-      //       .toString()
-      //       .split('.')
-      //       .last
-      //       .split('_')
-      //       .join(' '),
-      //   district: userCity.value,
-      //   email: email.value,
-      //   gender: selectedGender.value
-      //       .toString()
-      //       .split('.')
-      //       .last
-      //       .split('_')
-      //       .join(' '),
-      //   name: incomingname.value,
-      //   state: userState.value,
-      //   phoneNumber: incomingPhone.value,
-      //   address: userAddress.value,
-      //   enterpriseName: enterpriseName.value,
-      //   tAndCStatus: 'true',
-      // );
-
-      final String categoryOFuser = selectedCategoryType.value
-          .toString()
-          .split('.')
-          .last
-          .split('_')
-          .join(' ');
-      final String districtOFuser = userCity.value;
-      final String emailOFuser = email.value;
-      final String genderOFuser =
-          selectedGender.value.toString().split('.').last.split('_').join(' ');
-      final String nameOFuser = incomingname.value;
-      final String stateOFuser = userState.value;
-      final String phoneNumberOfuser = incomingPhone.value;
-      final String addressOFuser = userAddress.value;
-      final String enterpriseNameOFuser = enterpriseName.value;
-      const String tAndCStatusOfUser = 'true';
-
-      await updateUser(
-          categoryOFuser,
-          districtOFuser,
-          emailOFuser,
-          genderOFuser,
-          nameOFuser,
-          stateOFuser,
-          phoneNumberOfuser,
-          addressOFuser,
-          enterpriseNameOFuser,
-          tAndCStatusOfUser);
-    }
+  Future<void> loadData() async {
+    change(null, status: RxStatus.loading());
+    user.value = await getCurrentUserDetails();
+    userEmail.value = user.value.email.toString();
+    usereEnterpriseName.value = user.value.enterpriseName.toString();
+    log('Gender value: ${user.value.gender}');
+    selectedGender.value = user.value.gender != null
+        ? Gender.values.firstWhere(
+            (Gender gender) =>
+                gender.toString().split('.').last.toLowerCase() ==
+                user.value.gender?.toLowerCase(),
+            orElse: () => Gender.Male)
+        : Gender.Male;
+    log('Category value: ${user.value.category}');
+    selectedCategoryType.value = user.value.category != null
+        ? CategoryType.values.firstWhere(
+            (CategoryType categoryType) =>
+                categoryType.toString().split('.').last.toLowerCase() ==
+                user.value.category?.toLowerCase(),
+            orElse: () => CategoryType.Standard_User)
+        : CategoryType.Standard_User;
+    userPhone.value = user.value.phoneNumber.toString();
+    userName.value = user.value.name.toString();
+    userAddress.value = user.value.address.toString();
+    userCity.value = user.value.district.toString();
+    userState.value = user.value.state.toString();
+    change(null, status: RxStatus.success());
   }
 
-  void loadData() {
-    if (Get.arguments != null) {
-      change(null, status: RxStatus.loading());
-      incomingname.value = Get.arguments[0] as String;
-      incomingStateValue.value = Get.arguments[1] as String;
-      incomingPhone.value = Get.arguments[2] as String;
-      change(null, status: RxStatus.success());
+  Future<UserModel> getCurrentUserDetails() async {
+    final ApiResponse<UserModel> response =
+        await UserRepository().getUserDetails();
+    if (response.data != null) {
+      return response.data!;
     }
+    return response.data!;
   }
 
-  Future<void> updateUser(
-      String categoryOFuser,
-      String districtOFuser,
-      String emailOFuser,
-      String genderOFuser,
-      String nameOFuser,
-      String stateOFuser,
-      String phoneNumberOfuser,
-      String addressOFuser,
-      String enterpriseNameOFuser,
-      String tAndCStatusOfUser) async {
-    final ApiResponse<Map<String, dynamic>> res = await UserRepository()
-        .updateUser(
-            categoryOFuser,
-            districtOFuser,
-            emailOFuser,
-            genderOFuser,
-            nameOFuser,
-            stateOFuser,
-            phoneNumberOfuser,
-            addressOFuser,
-            enterpriseNameOFuser,
-            tAndCStatusOfUser);
+  Future<void> updateUser({
+    String? categoryOFuser,
+    String? districtOFuser,
+    String? emailOFuser,
+    String? genderOFuser,
+    String? nameOFuser,
+    String? stateOFuser,
+    String? phoneNumberOfuser,
+    String? addressOFuser,
+    String? enterpriseNameOFuser,
+    String? countryOFuser,
+  }) async {
+    final ApiResponse<Map<String, dynamic>> res =
+        await UserRepository().updateUser(
+      categoryOFuser: categoryOFuser,
+      districtOFuser: districtOFuser,
+      emailOFuser: emailOFuser,
+      genderOFuser: genderOFuser,
+      nameOFuser: nameOFuser,
+      countryOFuser: countryOFuser,
+      stateOFuser: stateOFuser,
+      phoneNumberOfuser: phoneNumberOfuser,
+      addressOFuser: addressOFuser,
+      enterpriseNameOFuser: enterpriseNameOFuser,
+    );
     if (res.status == ApiResponseStatus.completed) {
       log('Adeeb updated');
       isloading.value = false;
-      Get.offAllNamed(Routes.SPLASH_SCREEN);
+      Get.back();
     } else {
       log('Adeeb not updated');
     }
@@ -211,18 +184,54 @@ class UserRegisterscreenController extends GetxController
     return Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
   }
+
+  Future<void> onRegisterClicked() async {
+    if (formKey.currentState!.validate()) {
+      isloading.value = true;
+      final String categoryOFuser = selectedCategoryType.value
+          .toString()
+          .split('.')
+          .last
+          .split('_')
+          .join(' ');
+      final String districtOFuser = userCity.value;
+      final String emailOFuser = userEmail.value;
+      final String genderOFuser =
+          selectedGender.value.toString().split('.').last.split('_').join(' ');
+      final String nameOFuser = userName.value;
+      final String stateOFuser = userState.value;
+      final String phoneNumberOfuser = userPhone.value;
+      final String addressOFuser = userAddress.value;
+      final String enterpriseNameOFuser = usereEnterpriseName.value;
+      final String countryOFuser = userCountry.value;
+
+      await updateUser(
+        categoryOFuser: categoryOFuser,
+        countryOFuser: countryOFuser,
+        districtOFuser: districtOFuser,
+        emailOFuser: emailOFuser,
+        genderOFuser: genderOFuser,
+        nameOFuser: nameOFuser,
+        stateOFuser: stateOFuser,
+        phoneNumberOfuser: phoneNumberOfuser,
+        addressOFuser: addressOFuser,
+        enterpriseNameOFuser: enterpriseNameOFuser,
+      );
+    }
+  }
 }
 
 enum Gender {
-  male,
-  female,
-  other;
+  Male,
+  Female,
+  Other,
 }
 
 enum CategoryType {
-  Freelance,
+  Freelancer,
   Shop,
   Travel_Agency,
   Contact_Carriage,
   E_Service_Centre,
+  Standard_User,
 }

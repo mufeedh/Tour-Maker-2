@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/package_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/package_model.dart';
 
 class FilterRepository {
   final Dio dio = Client().init();

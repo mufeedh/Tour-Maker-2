@@ -43,7 +43,7 @@ abstract class Routes {
   static const String SINGLE_TRAVEL_TYPETOUR = _Paths.SINGLE_TRAVEL_TYPETOUR;
   static const String CHECKOUT_SCREEN = _Paths.CHECKOUT_SCREEN;
   static const String TRAVELLERS_SCREEN = _Paths.TRAVELLERS_SCREEN;
-  static const SINGLE_PASSENGER = _Paths.SINGLE_PASSENGER;
+  static const String SINGLE_PASSENGER = _Paths.SINGLE_PASSENGER;
 }
 
 abstract class _Paths {
@@ -88,5 +88,5 @@ abstract class _Paths {
   static const String SINGLE_TRAVEL_TYPETOUR = '/single-travel-typetour';
   static const String CHECKOUT_SCREEN = '/checkout-screen';
   static const String TRAVELLERS_SCREEN = '/travellers-screen';
-  static const SINGLE_PASSENGER = '/single-passenger';
+  static const String SINGLE_PASSENGER = '/single-passenger';
 }

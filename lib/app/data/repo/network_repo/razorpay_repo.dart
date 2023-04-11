@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/razorpay_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/razorpay_model.dart';
 
 class RazorPayRepository {
   final Dio dio = Client().init();
@@ -34,7 +34,7 @@ class RazorPayRepository {
     }
   }
 
-  Future<ApiResponse<bool>> verifyPayment(
+  Future<ApiResponse<bool>> verifyOrderPayment(
       String? paymentID, String? signature, String? orderID) async {
     try {
       final Map<String, dynamic>? authHeader = await Client().getAuthHeader();

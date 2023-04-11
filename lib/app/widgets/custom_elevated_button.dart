@@ -153,7 +153,9 @@ class CustomButton {
       padding: padding ?? const EdgeInsets.all(25),
       child: GestureDetector(
         onTap: onPressed,
-        child: Container(
+        child: AnimatedContainer(
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 500),
           height: height ?? 50,
           width: width ?? 250,
           decoration: BoxDecoration(

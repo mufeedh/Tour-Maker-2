@@ -1,39 +1,37 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../../core/theme/style.dart';
-import '../../../data/models/recent_searchmodel.dart';
+import '../../../data/models/local_model/recent_search_mode.dart';
 import '../../../routes/app_pages.dart';
 import '../views/search_view_view.dart';
 
 class SearchViewController extends GetxController
     with StateMixin<SearchViewView> {
   final TextEditingController textController = TextEditingController();
-  final RxList<RecentSearch> recentSearches =
-      RxList<RecentSearch>(<RecentSearch>[]);
-  String? searchValue;
+  final RxList<RecentSearch> recentSearches = <RecentSearch>[].obs;
+
+  RxString searchValue = ''.obs;
   final GetStorage storage = GetStorage();
   @override
   void onInit() {
     super.onInit();
-
     loadRecentSearchesFromStorage();
   }
 
-  Future<void> onSubmitSearch(String value) async {
-    if (value.isNotEmpty) {
-      searchValue = value;
-      change(null, status: RxStatus.loading());
+  @override
+  void onClose() {
+    super.onClose();
+    textController.dispose();
+  }
 
-      final String jsonString = '{"keyword":"$searchValue"}';
-      final Map<String, dynamic> jsonMap =
-          jsonDecode(jsonString) as Map<String, dynamic>;
-      final RecentSearch search = RecentSearch.fromJson(jsonMap);
-      // Check if the search is already in the list
+  Future<void> onSubmitSearch(String value) async {
+    change(null, status: RxStatus.loading());
+    if (value != null || value.isNotEmpty) {
+      searchValue.value = value;
+      final RecentSearch search =
+          RecentSearch(keyword: searchValue.value.trim());
       final int existingIndex = recentSearches
           .indexWhere((RecentSearch s) => s.keyword == search.keyword);
       if (existingIndex >= 0) {
@@ -44,9 +42,15 @@ class SearchViewController extends GetxController
         // Add the new search to the top of the list
         recentSearches.insert(0, search);
       }
-      storage.write('recentSearches', recentSearches.toList(growable: true));
+      storage.write(
+          'recentSearches',
+          recentSearches
+              .map((RecentSearch search) => search.toJson())
+              .toList());
 
-      await Get.toNamed(Routes.SEARCH_DETAILS, arguments: searchValue);
+      await Get.toNamed(Routes.SEARCH_DETAILS,
+              arguments: searchValue.value.trim())!
+          .whenComplete(() => loadRecentSearchesFromStorage());
       change(null, status: RxStatus.success());
     } else {
       Get.snackbar('Please enter a destination', '',
@@ -56,22 +60,20 @@ class SearchViewController extends GetxController
 
   Future<void> loadRecentSearchesFromStorage() async {
     change(null, status: RxStatus.loading());
-    log('girhgyurfhvjnrbvuhjrdhrjmessage');
-    final List<dynamic> recentSearchesValue =
-        storage.read<List<dynamic>>('recentSearches') ?? <dynamic>[];
-    recentSearches.assignAll(recentSearchesValue
-        // ignore: always_specify_types
-        .map((search) => search is Map<dynamic, dynamic>
-            ? Map<String, dynamic>.from(search)
-            : null)
-        .where((Map<String, dynamic>? jsonMap) => jsonMap != null)
-        .map((Map<String, dynamic>? jsonMap) => RecentSearch.fromJson(jsonMap!))
-        .toList());
+    final List<dynamic>? recentSearchesJson =
+        storage.read('recentSearches') as List<dynamic>?;
+    if (recentSearchesJson != null) {
+      recentSearches.assignAll(recentSearchesJson
+          .map((dynamic json) =>
+              RecentSearch.fromJson(json as Map<String, dynamic>))
+          .toList());
+    }
     change(null, status: RxStatus.success());
   }
 
   void onClickBack() {
-    Get.toNamed(Routes.HOME);
+    Get.toNamed(Routes.HOME)!
+        .whenComplete(() => loadRecentSearchesFromStorage());
   }
 
   void onClickClearTextfIeld() => textController.clear();
@@ -80,6 +82,4 @@ class SearchViewController extends GetxController
     recentSearches.removeAt(index);
     storage.write('recentSearches', recentSearches.toList(growable: false));
   }
-
-  void onClickSuggestion(String keyword) {}
 }

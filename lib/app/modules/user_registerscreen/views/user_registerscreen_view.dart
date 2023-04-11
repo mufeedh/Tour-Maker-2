@@ -8,6 +8,7 @@ import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_elevated_button.dart';
+import '../../../widgets/custom_loadinscreen.dart';
 import '../../../widgets/custom_textformfield.dart';
 import '../controllers/user_registerscreen_controller.dart';
 
@@ -24,6 +25,7 @@ class UserRegisterscreenView extends GetView<UserRegisterscreenController> {
         appBar: const CustomAppBar(),
         resizeToAvoidBottomInset: true,
         body: controller.obx(
+          onLoading: const CustomLoadingScreen(),
           (UserRegisterscreenView? state) => Padding(
             padding: const EdgeInsets.all(24.0),
             child: SingleChildScrollView(
@@ -49,21 +51,19 @@ class UserRegisterscreenView extends GetView<UserRegisterscreenController> {
                         children: <Widget>[
                           CustomTextFormField(
                             keyboardType: TextInputType.name,
-                            contentPadding: const EdgeInsets.all(8),
-                            prefix:
+                            prefixIcon:
                                 Icon(TourMaker.profile_icon, color: fontColor),
                             hintText: 'Name',
                             validator: (String? value) =>
                                 controller.nameValidator(value),
                             onChanged: (String value) =>
-                                controller.incomingname.value = value,
-                            initialValue: controller.incomingname.value,
+                                controller.userName.value = value,
+                            initialValue: controller.userName.value,
                           ),
                           const SizedBox(height: 15),
                           CustomTextFormField(
                             keyboardType: TextInputType.emailAddress,
-                            contentPadding: const EdgeInsets.all(8),
-                            prefix: Icon(
+                            prefixIcon: Icon(
                               TourMaker.email_icon,
                               color: fontColor,
                             ),
@@ -71,108 +71,73 @@ class UserRegisterscreenView extends GetView<UserRegisterscreenController> {
                             validator: (String? value) =>
                                 controller.emailValidator(value),
                             onChanged: (String value) {
-                              controller.email.value = value;
+                              controller.userEmail.value = value;
                             },
+                            initialValue: controller.userEmail.value,
                           ),
                           const SizedBox(height: 15),
                           CustomTextFormField(
                               keyboardType: TextInputType.phone,
-                              contentPadding: const EdgeInsets.all(8),
                               hintText: 'Phone Number',
                               validator: (String? value) =>
                                   controller.phoneNumberValidator(value),
-                              onChanged: (String? value) => controller
-                                  .incomingPhone.value = value.toString(),
-                              initialValue: controller.incomingPhone.value,
-                              prefix: Icon(TourMaker.call, color: fontColor)),
-                          const SizedBox(height: 15),
-                          ActionChip(
-                            backgroundColor: englishViolet,
-                            onPressed: () => controller.getAddressofUser(),
-                            label: controller.isFindingAddressOfUser.value
-                                ? Row(
-                                    children: <Widget>[
-                                      Text(
-                                        'Click to automatically find you!',
-                                        style: GoogleFonts.montserrat(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      const SizedBox(
-                                        height: 10,
-                                        width: 10,
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white,
-                                          strokeWidth: 2.0,
-                                        ),
-                                      ),
-                                      const SizedBox()
-                                    ],
-                                  )
-                                : Text(
-                                    'Click to automatically find you!',
-                                    style: GoogleFonts.montserrat(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                          ),
+                              onChanged: (String? value) =>
+                                  controller.userPhone.value = value.toString(),
+                              initialValue: controller.userPhone.value,
+                              prefixIcon:
+                                  Icon(TourMaker.call, color: fontColor)),
                           const SizedBox(height: 15),
                           Obx(() {
-                            return TextFormField(
-                              controller: TextEditingController(
-                                  text: controller.userAddress.value),
-                              maxLines: 10,
-                              minLines: 1,
-                              // validator: (String? value) =>
-                              //     controller.addressValidator(value),
-                              onChanged: (String? value) => controller
-                                  .userAddress.value = value.toString(),
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.all(30),
-                                filled: true,
-                                fillColor: const Color(0xFFF6F6F6),
-                                hintText: 'Address',
-                                prefixIcon: Icon(
-                                  TourMaker.location_icon,
-                                  color: fontColor,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                disabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
+                            return ActionChip(
+                              backgroundColor: englishViolet,
+                              onPressed: () => controller.getAddressofUser(),
+                              label: controller.isFindingAddressOfUser.value
+                                  ? Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'Click to automatically find you!',
+                                          style: GoogleFonts.montserrat(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        const SizedBox(
+                                          height: 10,
+                                          width: 10,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2.0,
+                                          ),
+                                        ),
+                                        const SizedBox()
+                                      ],
+                                    )
+                                  : Text(
+                                      'Click to automatically find you!',
+                                      style: GoogleFonts.montserrat(
+                                        color: Colors.white,
+                                      ),
+                                    ),
                             );
                           }),
                           const SizedBox(height: 15),
                           Obx(() {
-                            return TextFormField(
+                            return CustomTextFormField(
+                              controller: TextEditingController(
+                                  text: controller.userAddress.value),
+                              maxLines: 10,
+                              minLines: 1,
+                              validator: (String? value) =>
+                                  controller.addressValidator(value),
+                              onChanged: (String? value) => controller
+                                  .userAddress.value = value.toString(),
+                              hintText: 'Address',
+                              // initialValue: controller.userAddress.value,
+                            );
+                          }),
+                          const SizedBox(height: 15),
+                          Obx(() {
+                            return CustomTextFormField(
                               controller: TextEditingController(
                                   text: controller.userCountry.value),
                               validator: (String? value) {
@@ -181,51 +146,13 @@ class UserRegisterscreenView extends GetView<UserRegisterscreenController> {
                               enabled: false,
                               onChanged: (String? value) => controller
                                   .userCountry.value = value.toString(),
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.all(30),
-                                filled: true,
-                                fillColor: const Color(0xFFF6F6F6),
-                                hintText: 'Country',
-                                prefixIcon: Icon(
-                                  TourMaker.location_icon,
-                                  color: fontColor,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                disabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
+                              hintText: 'Country',
+                              // initialValue: controller.userCountry.value,
                             );
                           }),
                           const SizedBox(height: 15),
                           Obx(() {
-                            return TextFormField(
+                            return CustomTextFormField(
                               controller: TextEditingController(
                                   text: controller.userState.value),
                               validator: (String? value) {
@@ -234,51 +161,13 @@ class UserRegisterscreenView extends GetView<UserRegisterscreenController> {
                               enabled: false,
                               onChanged: (String? value) =>
                                   controller.userState.value = value.toString(),
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.all(30),
-                                filled: true,
-                                fillColor: const Color(0xFFF6F6F6),
-                                hintText: 'State',
-                                prefixIcon: Icon(
-                                  TourMaker.location_icon,
-                                  color: fontColor,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                disabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
+                              hintText: 'State',
+                              // initialValue: controller.userState.value,
                             );
                           }),
                           const SizedBox(height: 15),
                           Obx(() {
-                            return TextFormField(
+                            return CustomTextFormField(
                               controller: TextEditingController(
                                   text: controller.userCity.value),
                               validator: (String? value) {
@@ -287,139 +176,80 @@ class UserRegisterscreenView extends GetView<UserRegisterscreenController> {
                               enabled: false,
                               onChanged: (String? value) =>
                                   controller.userCity.value = value.toString(),
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.all(30),
-                                filled: true,
-                                fillColor: const Color(0xFFF6F6F6),
-                                hintText: 'district',
-                                prefixIcon: Icon(
-                                  TourMaker.location_icon,
-                                  color: fontColor,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                disabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
+                              hintText: 'district',
+                              // initialValue: controller.userCity.value,
+                            );
+                          }),
+                          const SizedBox(height: 15),
+                          Obx(() {
+                            return Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF6F6F6),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: DropdownButton<Gender>(
+                                isExpanded: true,
+                                underline: const SizedBox(),
+                                value: controller.selectedGender.value,
+                                onChanged: (Gender? newValue) {
+                                  controller.selectedGender.value = newValue!;
+                                },
+                                hint: const Text('Select Gender'),
+                                items: Gender.values.map((Gender gender) {
+                                  return DropdownMenuItem<Gender>(
+                                    value: gender,
+                                    child:
+                                        Text(gender.toString().split('.').last),
+                                  );
+                                }).toList(),
                               ),
                             );
                           }),
                           const SizedBox(height: 15),
-                          Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF6F6F6),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: DropdownButton<Gender>(
-                              isExpanded: true,
-                              underline: const SizedBox(),
-                              value: controller.selectedGender.value,
-                              onChanged: (Gender? newValue) {
-                                controller.selectedGender.value = newValue!;
-                              },
-                              hint: const Text('Select Gender'),
-                              items: Gender.values.map((Gender gender) {
-                                return DropdownMenuItem<Gender>(
-                                  value: gender,
-                                  child:
-                                      Text(gender.toString().split('.').last),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF6F6F6),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: DropdownButton<CategoryType>(
-                              isExpanded: true,
-                              underline: const SizedBox(),
-                              value: controller.selectedCategoryType.value,
-                              onChanged: (CategoryType? newValue) {
-                                controller.selectedCategoryType.value =
-                                    newValue!;
-                              },
-                              hint: const Text('Select categoryType '),
-                              items: CategoryType.values
-                                  .map((CategoryType categoryType) {
-                                return DropdownMenuItem<CategoryType>(
-                                  value: categoryType,
-                                  child: Text(categoryType
-                                      .toString()
-                                      .split('.')
-                                      .last
-                                      .split('_')
-                                      .join(' ')),
-                                );
-                              }).toList(),
-                            ),
-                          ),
+                          Obx(() {
+                            return Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF6F6F6),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: DropdownButton<CategoryType>(
+                                isExpanded: true,
+                                underline: const SizedBox(),
+                                value: controller.selectedCategoryType.value,
+                                onChanged: (CategoryType? newValue) {
+                                  controller.selectedCategoryType.value =
+                                      newValue!;
+                                },
+                                hint: const Text('Select categoryType '),
+                                items: CategoryType.values
+                                    .map((CategoryType categoryType) {
+                                  return DropdownMenuItem<CategoryType>(
+                                    value: categoryType,
+                                    child: Text(categoryType
+                                        .toString()
+                                        .split('.')
+                                        .last
+                                        .split('_')
+                                        .join(' ')),
+                                  );
+                                }).toList(),
+                              ),
+                            );
+                          }),
                         ],
                       ),
                     ),
                   ),
-                  TextFormField(
+                  CustomTextFormField(
                     onChanged: (String value) =>
-                        controller.enterpriseName.value = value,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(30),
-                      filled: true,
-                      fillColor: const Color(0xFFF6F6F6),
-                      hintText: 'Enterprise Name(Optional)',
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
+                        controller.usereEnterpriseName.value = value,
+                    validator: (String? value) {
+                      return null;
+                    },
+                    initialValue: controller.usereEnterpriseName.value,
+                    hintText: 'Enterprise Name(Optional)',
                   ),
                   const SizedBox(height: 15),
                   Obx(() {

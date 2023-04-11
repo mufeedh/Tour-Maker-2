@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/theme/style.dart';
 
 import '../../core/tour_maker_icons.dart';
-import '../data/models/user_model.dart';
+import '../data/models/network_models/user_model.dart';
 import '../routes/app_pages.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -123,6 +123,11 @@ class MyDrawer extends StatelessWidget {
                 onTap: onClickFeedBack,
                 leading: SvgPicture.asset('assets/feedback.svg', height: 25),
                 title: const Text('Feedback'),
+              ),
+              ListTile(
+                onTap: onClickEditProfile,
+                leading: Icon(Icons.edit, color: englishViolet),
+                title: const Text('Edit My Profile'),
               ),
               ListTile(
                 onTap: () => onLogoutPressed(context),
@@ -447,5 +452,9 @@ The company have all the guaranteed rights to ban your login if we notice misuse
         );
       },
     );
+  }
+
+  void onClickEditProfile() {
+    Get.toNamed(Routes.USER_REGISTERSCREEN);
   }
 }

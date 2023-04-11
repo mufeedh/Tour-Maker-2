@@ -13,6 +13,7 @@ class UserModel {
     this.state,
     this.tAndCStatus,
     this.profileImage,
+    this.country,
   });
   String? address;
   String? category;
@@ -27,6 +28,7 @@ class UserModel {
   String? state;
   String? tAndCStatus;
   String? profileImage;
+  String? country;
   Map<String, dynamic> toJson() => <String, dynamic>{
         'address': address,
         'category': category,
@@ -40,6 +42,7 @@ class UserModel {
         'phone_number': phoneNumber,
         'state': state,
         't_and_c_status': tAndCStatus,
+        'country': country,
       };
 
   static UserModel fromJson(Map<String, dynamic> json) => UserModel(
@@ -56,5 +59,6 @@ class UserModel {
         state: json['state'] as String,
         tAndCStatus: json['t_and_c_status'] as String,
         profileImage: json['profile_image'] as String,
+        country: json['country'] as String,
       );
 }

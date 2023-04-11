@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/package_model.dart';
-import '../models/travveltypes_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/single_traveltypes_model.dart';
+import '../../models/network_models/travveltypes_model.dart';
 
 class TravelTypesRepository {
-  List<PackageModel> travelTypesToursList = <PackageModel>[];
+  List<SingleTravelTypesTourModel> travelTypesToursList =
+      <SingleTravelTypesTourModel>[];
   List<TravelTypesModel> travelTypesToursLis = <TravelTypesModel>[];
 
   final Dio dio = Client().init();
@@ -33,26 +34,29 @@ class TravelTypesRepository {
     }
   }
 
-  Future<ApiResponse<List<PackageModel>>> getSingleTravelTypesTours(
-      String name) async {
+  Future<ApiResponse<List<SingleTravelTypesTourModel>>>
+      getSingleTravelTypesTours(String name) async {
     try {
       final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
       final Response<Map<String, dynamic>> res = await dio.getUri(
-          Uri.parse('tours/traveltypes?destination=$name'),
+          Uri.parse('tours/packages?travel_type=$name'),
           options: Options(headers: authHeader));
       if (res.statusCode == 200) {
         travelTypesToursList =
             (res.data!['result'] as List<dynamic>).map((dynamic e) {
-          return PackageModel.fromJson(e as Map<String, dynamic>);
+          return SingleTravelTypesTourModel.fromJson(e as Map<String, dynamic>);
         }).toList();
-        return ApiResponse<List<PackageModel>>.completed(travelTypesToursList);
+        return ApiResponse<List<SingleTravelTypesTourModel>>.completed(
+            travelTypesToursList);
       } else {
-        return ApiResponse<List<PackageModel>>.error(res.statusMessage);
+        return ApiResponse<List<SingleTravelTypesTourModel>>.error(
+            res.statusMessage);
       }
     } on DioError catch (de) {
-      return ApiResponse<List<PackageModel>>.error(de.error.toString());
+      return ApiResponse<List<SingleTravelTypesTourModel>>.error(
+          de.error.toString());
     } catch (e) {
-      return ApiResponse<List<PackageModel>>.error(e.toString());
+      return ApiResponse<List<SingleTravelTypesTourModel>>.error(e.toString());
     }
   }
 }

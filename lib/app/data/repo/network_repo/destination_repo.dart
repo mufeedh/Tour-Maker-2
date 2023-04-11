@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/destinations_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/destinations_model.dart';
 
 class DestinationRepository {
   final Dio dio = Client().init();

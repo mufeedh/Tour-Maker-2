@@ -1,80 +1,80 @@
-class BookingsModel {
-  BookingsModel(
+class PaymentModel {
+  PaymentModel(
       {this.amountPaid,
+      this.customTourId,
       this.dateOfTravel,
-      this.gst,
-      this.gstAmount,
       this.id,
       this.isCustom,
       this.noOfAdults,
-      this.noOfKids,
+      this.noOfChildren,
       this.offerApplied,
       this.orderConfirmed,
+      this.orderDate,
+      this.orderId,
       this.orderStatus,
       this.packageId,
       this.payableAmount,
-      this.reward,
+      this.paymentStatus,
       this.totalAmount,
-      this.tourCode,
       this.tourName,
       this.userId});
   num? amountPaid;
+  int? customTourId;
   String? dateOfTravel;
-  num? gst;
-  num? gstAmount;
-  num? id;
+  int? id;
   bool? isCustom;
-  num? noOfAdults;
-  num? noOfKids;
+  int? noOfAdults;
+  int? noOfChildren;
   bool? offerApplied;
-  num? orderConfirmed;
+  bool? orderConfirmed;
+  String? orderDate;
+  int? orderId;
   String? orderStatus;
-  num? packageId;
+  int? packageId;
   num? payableAmount;
-  num? reward;
+  String? paymentStatus;
   num? totalAmount;
-  String? tourCode;
   String? tourName;
   String? userId;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'amount_paid': amountPaid,
+        'custom_tour_id': customTourId,
         'date_of_travel': dateOfTravel,
-        'gst': gst,
-        'gst_amount': gstAmount,
         'id': id,
         'is_custom': isCustom,
         'no_of_adults': noOfAdults,
-        'no_of_kids': noOfKids,
+        'no_of_children': noOfChildren,
         'offer_applied': offerApplied,
         'order_confirmed': orderConfirmed,
+        'order_date': orderDate,
+        'order_id': orderId,
         'order_status': orderStatus,
         'package_id': packageId,
         'payable_amount': payableAmount,
-        'reward': reward,
+        'payment_status': paymentStatus,
         'total_amount': totalAmount,
-        'tour_code': tourCode,
         'tour_name': tourName,
         'user_id': userId,
       };
 
-  static BookingsModel fromJson(Map<String, dynamic> json) => BookingsModel(
-        amountPaid: json['amount_paid'] as num,
+  static PaymentModel fromJson(Map<String, dynamic> json) => PaymentModel(
+        amountPaid: json['amount_paid'] as int,
+        customTourId: json['custom_tour_id'] as int,
         dateOfTravel: json['date_of_travel'] as String,
-        gst: json['gst'] as num,
-        gstAmount: json['gst_amount'] as num,
-        id: json['id'] as num,
+        id: json['id'] as int,
         isCustom: json['is_custom'] as bool,
-        noOfAdults: json['no_of_adults'] as num,
-        noOfKids: json['no_of_kids'] as num,
+        noOfAdults: json['no_of_adults'] as int,
+        noOfChildren: json['no_of_children'] as int,
         offerApplied: json['offer_applied'] as bool,
-        orderConfirmed: json['order_confirmed'] as num,
+        orderConfirmed: json['order_confirmed'] as bool,
+        orderDate: json['order_date'] as String,
+        orderId: json['order_id'] as int,
         orderStatus: json['order_status'] as String,
-        packageId: json['package_id'] as num,
-        payableAmount: json['payable_amount'] as num,
-        reward: json['reward'] as num,
+        packageId: json['package_id'] as int,
+        payableAmount: json['payable_amount'] as int,
+        paymentStatus: json['payment_status'] as String,
         totalAmount: json['total_amount'] as num,
-        tourCode: json['tour_code'] as String,
         tourName: json['tour_name'] as String,
         userId: json['user_id'] as String,
       );

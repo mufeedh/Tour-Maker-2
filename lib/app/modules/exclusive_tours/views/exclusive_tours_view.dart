@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../data/models/single_exclusive_tour_model.dart';
-import '../../../data/models/wishlist_model.dart';
+import '../../../data/models/network_models/single_exclusive_tour_model.dart';
+import '../../../data/models/network_models/wishlist_model.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_errorscreen.dart';
 import '../../../widgets/custom_loadinscreen.dart';
@@ -34,10 +34,10 @@ class ExclusiveToursView extends GetView<ExclusiveToursController> {
                       final SingleExclusiveTourModel package =
                           controller.singleTour[index];
                       for (final WishListModel wm in controller.wishList) {
-                        if (wm.id == controller.singleTour[index].iD) {
-                          controller.isFavorite(package.iD!).value = true;
+                        if (wm.id == controller.singleTour[index].id) {
+                          controller.isFavorite(package.id!).value = true;
                         } else {
-                          controller.isFavorite(package.iD!).value = false;
+                          controller.isFavorite(package.id!).value = false;
                         }
                       }
                       // final Rx<bool> isInWishlist = controller.wishlists
@@ -45,17 +45,17 @@ class ExclusiveToursView extends GetView<ExclusiveToursController> {
                       //     .obs;
                       return Obx(() {
                         return PackageTile(
-                          tourAmount: '',
+                          tourAmount: package.amount.toString(),
                           tourCode: package.tourCode.toString(),
                           tourDays: package.days.toString(),
                           tourImage: package.image.toString(),
                           tourName: package.name.toString(),
                           tournights: package.nights.toString(),
-                          isFavourite: controller.isFavorite(package.iD!).value,
+                          isFavourite: controller.isFavorite(package.id!).value,
                           onClickedFavourites: () =>
-                              controller.toggleFavorite(package.iD!),
+                              controller.toggleFavorite(package.id!),
                           onPressed: () => controller.onClickSingleTour(
-                              controller.singleTour[index].iD!),
+                              controller.singleTour[index].id!),
                         );
                       });
                     },

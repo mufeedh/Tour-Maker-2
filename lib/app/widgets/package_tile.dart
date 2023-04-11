@@ -31,101 +31,97 @@ class PackageTile extends StatelessWidget {
   final Function() onClickedFavourites;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: GestureDetector(
-        onTap: onPressed,
-        child: Card(
-          margin: const EdgeInsets.all(12),
-          elevation: 2,
-          // type: MaterialType.transparency,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  CachedNetworkImage(
-                    useOldImageOnUrlChange: true,
-                    errorWidget:
-                        (BuildContext context, String url, dynamic error) {
-                      log('cache nertwrk $error');
-                      return const Icon(Icons.error);
-                    },
-                    placeholder: (BuildContext context, String url) {
-                      return CircularProgressIndicator(
-                          color: englishlinearViolet);
-                    },
-                    imageUrl: tourImage,
-                    imageBuilder: (BuildContext context,
-                            ImageProvider<Object> imageProvider) =>
-                        Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      width: 143,
-                      height: 162,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: englishlinearViolet,
-                        image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: imageProvider,
-                        ),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Card(
+        margin: const EdgeInsets.all(12),
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                CachedNetworkImage(
+                  useOldImageOnUrlChange: true,
+                  errorWidget:
+                      (BuildContext context, String url, dynamic error) {
+                    log('cache nertwrk $error');
+                    return const Icon(Icons.error);
+                  },
+                  placeholder: (BuildContext context, String url) {
+                    return CircularProgressIndicator(
+                        color: englishlinearViolet);
+                  },
+                  imageUrl: tourImage,
+                  imageBuilder: (BuildContext context,
+                          ImageProvider<Object> imageProvider) =>
+                      Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    width: 145,
+                    height: 162,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: englishlinearViolet,
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: imageProvider,
                       ),
                     ),
-                  )
+                  ),
+                )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    tourName.split(' ').join('\n'),
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: fontColor,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(tourCode, style: paragraph1),
+                  const SizedBox(height: 12),
+                  Text(
+                    '$tourDays Days / $tournights Nights',
+                    style: subheading3,
+                  ),
+                  const SizedBox(height: 13),
+                  Text('₹ $tourAmount', style: heading3),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      tourName.split(' ').join('\n'),
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: fontColor,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 5),
-                    Text(tourCode, style: paragraph1),
-                    const SizedBox(height: 12),
-                    Text(
-                      '$tourDays Days / $tournights Nights',
-                      style: subheading3,
-                    ),
-                    const SizedBox(height: 13),
-                    Text('₹ $tourAmount', style: heading3),
-                  ],
-                ),
+            ),
+            Container(
+              height: 180,
+              margin: const EdgeInsets.only(right: 16, top: 15),
+              child: Column(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: onClickedFavourites,
+                    child: isFavourite
+                        ? Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                            size: 20.sp,
+                          )
+                        : Icon(
+                            Icons.favorite_border_outlined,
+                            color: englishlinearViolet,
+                            size: 20.sp,
+                          ),
+                  ),
+                ],
               ),
-              Container(
-                height: 180,
-                margin: const EdgeInsets.only(right: 16, top: 15),
-                child: Column(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: onClickedFavourites,
-                      child: isFavourite
-                          ? Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                              size: 20.sp,
-                            )
-                          : Icon(
-                              Icons.favorite_border_outlined,
-                              color: englishlinearViolet,
-                              size: 20.sp,
-                            ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );

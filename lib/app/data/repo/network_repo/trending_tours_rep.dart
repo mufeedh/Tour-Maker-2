@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/package_model.dart';
-import '../models/single_trenidng_tour_model.dart';
-import '../models/trending_tours.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/package_model.dart';
+import '../../models/network_models/single_trenidng_tour_model.dart';
+import '../../models/network_models/trending_tours.dart';
 
 class TrendingToursRepository {
   List<TrendingToursModel> trndingToursList = <TrendingToursModel>[];

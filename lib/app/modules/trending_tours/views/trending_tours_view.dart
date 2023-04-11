@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../data/models/single_trenidng_tour_model.dart';
-import '../../../data/models/wishlist_model.dart';
+import '../../../data/models/network_models/single_trenidng_tour_model.dart';
+import '../../../data/models/network_models/wishlist_model.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_errorscreen.dart';
 import '../../../widgets/custom_loadinscreen.dart';

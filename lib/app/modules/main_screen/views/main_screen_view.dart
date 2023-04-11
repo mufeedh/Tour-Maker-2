@@ -1,14 +1,14 @@
-// ignore_for_file: prefer_single_quotes
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
 import '../../../widgets/custom_loadinscreen.dart';
+import '../../../widgets/custom_shimmer.dart';
 import '../controllers/main_screen_controller.dart';
 
 class MainScreenView extends GetView<MainScreenController> {
@@ -81,7 +81,13 @@ class MainScreenView extends GetView<MainScreenController> {
   Widget buildTravelTypes(double screenHeight, double screenWidth) {
     return Obx(
       () => controller.travelTypesToursList.isEmpty
-          ? const CustomLoadingScreen()
+          ? CustomShimmer(
+              margin: const EdgeInsets.all(7),
+              padding: const EdgeInsets.all(10),
+              height: 100,
+              borderRadius: BorderRadius.circular(18),
+              width: screenWidth * 0.75,
+            )
           : ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -97,6 +103,14 @@ class MainScreenView extends GetView<MainScreenController> {
                     type: MaterialType.transparency,
                     elevation: 5,
                     child: CachedNetworkImage(
+                      placeholder: (BuildContext context, String url) =>
+                          CustomShimmer(
+                        margin: const EdgeInsets.all(7),
+                        padding: const EdgeInsets.all(10),
+                        height: 100,
+                        borderRadius: BorderRadius.circular(18),
+                        width: screenWidth * 0.75,
+                      ),
                       imageUrl: controller.travelTypesToursList[index].image
                           .toString(),
                       imageBuilder: (BuildContext context,
@@ -145,7 +159,10 @@ class MainScreenView extends GetView<MainScreenController> {
   Widget buildExclusive(double screenHeight, double screenWidth) {
     return Obx(
       () => controller.exclusiveToursList.isEmpty
-          ? const CustomLoadingScreen()
+          ? CustomShimmer(
+              height: screenHeight * 0.35,
+              borderRadius: BorderRadius.circular(30),
+            )
           : Container(
               height: screenHeight * 0.35,
               decoration: BoxDecoration(
@@ -167,8 +184,14 @@ class MainScreenView extends GetView<MainScreenController> {
                       type: MaterialType.transparency,
                       elevation: 5,
                       child: CachedNetworkImage(
+                        placeholder: (BuildContext context, String url) =>
+                            CustomShimmer(
+                          margin: const EdgeInsets.all(7),
+                          padding: const EdgeInsets.all(10),
+                          width: screenWidth * 0.75,
+                        ),
                         imageUrl: controller.exclusiveToursList[index].image ==
-                                ""
+                                ''
                             ? 'assets/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg'
                             : controller.categoryList[index].image.toString(),
                         imageBuilder: (BuildContext context,
@@ -176,7 +199,6 @@ class MainScreenView extends GetView<MainScreenController> {
                             Container(
                           margin: const EdgeInsets.all(7),
                           padding: const EdgeInsets.all(10),
-                          // height: 100,
                           width: screenWidth * 0.75,
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -219,7 +241,10 @@ class MainScreenView extends GetView<MainScreenController> {
   Widget buildTrending(double screenHeight) {
     return Obx(
       () => controller.trendingToursList.isEmpty
-          ? const CustomLoadingScreen()
+          ? CustomShimmer(
+              height: screenHeight * 0.30,
+              borderRadius: BorderRadius.circular(30),
+            )
           : Container(
               height: screenHeight * 0.30,
               decoration: BoxDecoration(
@@ -243,8 +268,15 @@ class MainScreenView extends GetView<MainScreenController> {
                       type: MaterialType.transparency,
                       elevation: 5,
                       child: CachedNetworkImage(
+                        placeholder: (BuildContext context, String url) =>
+                            CustomShimmer(
+                          width: 171,
+                          margin: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
+                          borderRadius: BorderRadius.circular(18),
+                        ),
                         imageUrl: controller.trendingToursList[index].image ==
-                                ""
+                                ''
                             ? 'https://images.unsplash.com/photo-1589802829985-817e51171b92?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Nnx8fGVufDB8fHx8&w=1000&q=80'
                             : controller.trendingToursList[index].image
                                 .toString(),
@@ -253,7 +285,6 @@ class MainScreenView extends GetView<MainScreenController> {
                             Container(
                           margin: const EdgeInsets.all(10),
                           padding: const EdgeInsets.all(10),
-                          // height: 100,
                           width: 171,
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -330,35 +361,39 @@ class MainScreenView extends GetView<MainScreenController> {
     );
   }
 
-  Material buildCategories(double screenHeight) {
-    return Material(
-      elevation: 3,
-      borderRadius: BorderRadius.circular(30),
-      child: Container(
-        height: screenHeight * 0.35,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 18.0, top: 18),
-                  child: Text('     category', style: paragraph2),
+  Obx buildCategories(double screenHeight) {
+    return Obx(() {
+      return controller.categoryList.isEmpty
+          ? CustomShimmer(
+              width: 1000,
+              borderRadius: BorderRadius.circular(20),
+              height: 200,
+            )
+          : Material(
+              elevation: 3,
+              borderRadius: BorderRadius.circular(30),
+              child: Container(
+                height: screenHeight * 0.35,
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(30),
                 ),
-              ],
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 7.0),
-                child: SizedBox(
-                  height: double.infinity,
-                  child: Obx(
-                    () => controller.categoryList.isEmpty
-                        ? const CustomLoadingScreen()
-                        : GridView.builder(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 18.0, top: 18),
+                          child: Text('     category', style: paragraph2),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 7.0),
+                        child: SizedBox(
+                          height: double.infinity,
+                          child: GridView.builder(
                             itemCount: controller.categoryList.length,
                             physics: controller.categoryList.length <= 8
                                 ? const NeverScrollableScrollPhysics()
@@ -390,7 +425,7 @@ class MainScreenView extends GetView<MainScreenController> {
                                           imageUrl: controller
                                                       .categoryList[index]
                                                       .image ==
-                                                  ""
+                                                  ''
                                               ? 'assets/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg'
                                               : controller
                                                   .categoryList[index].image
@@ -411,8 +446,11 @@ class MainScreenView extends GetView<MainScreenController> {
                                           ),
                                           placeholder: (BuildContext context,
                                                   String url) =>
-                                              CircularProgressIndicator(
-                                                  color: englishViolet),
+                                              const CustomShimmer(
+                                            width: 55,
+                                            height: 55,
+                                            shape: BoxShape.circle,
+                                          ),
                                           errorWidget: (BuildContext context,
                                                   String url, dynamic error) =>
                                               const Icon(Icons.error),
@@ -431,14 +469,14 @@ class MainScreenView extends GetView<MainScreenController> {
                               );
                             },
                           ),
-                  ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            );
+    });
   }
 
   Stack buildHeadSection(double screenHeight, BuildContext context) {

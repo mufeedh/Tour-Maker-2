@@ -1,15 +1,18 @@
 // ignore_for_file: unnecessary_overrides
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../data/models/payment_model.dart';
-import '../../../data/repo/payment_repo.dart';
+import '../../../data/models/network_models/payment_model.dart';
+import '../../../data/repo/network_repo/payment_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
+import '../views/payment_screen_view.dart';
 
 class PaymentScreenController extends GetxController
-    with StateMixin<dynamic>, GetSingleTickerProviderStateMixin {
+    with StateMixin<PaymentScreenView>, GetSingleTickerProviderStateMixin {
   late final TabController tabcontroller =
       TabController(length: 3, vsync: this);
   RxList<PaymentModel> processingPayments = <PaymentModel>[].obs;
@@ -63,6 +66,7 @@ class PaymentScreenController extends GetxController
   Future<void> loadProcessingPayments() async {
     final ApiResponse<List<PaymentModel>> res =
         await PaymentRepository().getAllPayments('processing');
+    log('adeeb processing  ${res.message}');
     if (res.data != null) {
       processingPayments.value = res.data!;
     }
@@ -71,6 +75,8 @@ class PaymentScreenController extends GetxController
   Future<void> loadPendingPayments() async {
     final ApiResponse<List<PaymentModel>> res =
         await PaymentRepository().getAllPayments('pending');
+    log('adeeb pending  ${res.message}');
+
     if (res.data != null) {
       pendingPayments.value = res.data!;
     } else {}
@@ -79,6 +85,8 @@ class PaymentScreenController extends GetxController
   Future<void> loadPaidPayments() async {
     final ApiResponse<List<PaymentModel>> res =
         await PaymentRepository().getAllPayments('paid');
+    log('adeeb paid  ${res.message}');
+
     if (res.data != null) {
       paidPayments.value = res.data!;
     } else {}

@@ -86,28 +86,31 @@ class SingleTourView extends GetView<SingleTourController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 70),
-                            child: Text(
-                              '${controller.singleTour.value.tourData?.tourCode}',
-                              style: heading2,
-                            ),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 70),
+                          child: Text(
+                            '${controller.singleTour.value.tourData?.tourCode}',
+                            style: heading2,
                           ),
-                          CustomToolTip(
-                              onPressed: () =>
-                                  controller.onViewItineraryClicked(controller
-                                      .singleTour.value.tourData!.itinerary!),
-                              label: 'VIEW ITINERARY',
-                              icon: TourMaker.group_2)
-                        ]),
+                        ),
+                        CustomToolTip(
+                            onPressed: () => controller.onViewItineraryClicked(
+                                controller
+                                    .singleTour.value.tourData!.itinerary!),
+                            label: 'VIEW ITINERARY',
+                            icon: TourMaker.group_2)
+                      ],
+                    ),
                     const SizedBox(height: 20),
-                    Row(children: <Widget>[
-                      Text('Tour Description',
-                          style: heading3.copyWith(
-                              decoration: TextDecoration.underline))
-                    ]),
+                    Row(
+                      children: <Widget>[
+                        Text('Tour Description',
+                            style: heading3.copyWith(
+                                decoration: TextDecoration.underline))
+                      ],
+                    ),
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(15.0),

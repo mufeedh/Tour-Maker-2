@@ -5,8 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http_parser/http_parser.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/user_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/user_model.dart';
 
 class UserRepository {
   List<String> getStates() => states;
@@ -163,22 +163,24 @@ class UserRepository {
   }
 
   Future<ApiResponse<Map<String, dynamic>>> updateUser(
-      String categoryOFuser,
-      String districtOFuser,
-      String emailOFuser,
-      String genderOFuser,
-      String nameOFuser,
-      String stateOFuser,
-      String phoneNumberOfuser,
-      String addressOFuser,
-      String enterpriseNameOFuser,
-      String tAndCStatusOfUser) async {
+      {String? categoryOFuser,
+      String? districtOFuser,
+      String? emailOFuser,
+      String? genderOFuser,
+      String? nameOFuser,
+      String? stateOFuser,
+      String? phoneNumberOfuser,
+      String? addressOFuser,
+      String? enterpriseNameOFuser,
+      String? tAndCStatusOfUser,
+      String? countryOFuser}) async {
     try {
       final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
       log('auth hre $authHeader');
       final FormData formData = FormData.fromMap(<String, dynamic>{
         'address': addressOFuser,
         'category': categoryOFuser,
+        'country': countryOFuser,
         'district': districtOFuser,
         'email': emailOFuser,
         'enterprise_name': enterpriseNameOFuser,

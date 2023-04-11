@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/order_model.dart';
-import '../models/razorpay_model.dart';
-import '../models/single_traveller_model.dart';
-import '../models/travellers_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/order_model.dart';
+import '../../models/network_models/razorpay_model.dart';
+import '../../models/network_models/single_traveller_model.dart';
+import '../../models/network_models/travellers_model.dart';
 
 class PassengerRepository {
   SingleTravellerModel passengerList = SingleTravellerModel();

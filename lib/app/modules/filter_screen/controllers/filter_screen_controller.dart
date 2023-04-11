@@ -1,17 +1,17 @@
-// ignore_for_file: unnecessary_overrides
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/theme/style.dart';
-import '../../../data/models/category_model.dart';
-import '../../../data/models/destinations_model.dart';
-import '../../../data/models/package_model.dart';
-import '../../../data/repo/category_repo.dart';
-import '../../../data/repo/destination_repo.dart';
-import '../../../data/repo/filter_repo.dart';
+
+import '../../../data/models/network_models/budget_models.dart';
+import '../../../data/models/network_models/category_model.dart';
+import '../../../data/models/network_models/destinations_model.dart';
+import '../../../data/models/network_models/package_model.dart';
+import '../../../data/repo/network_repo/category_repo.dart';
+import '../../../data/repo/network_repo/destination_repo.dart';
+import '../../../data/repo/network_repo/filter_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../../../widgets/custom_appbar.dart';
@@ -38,16 +38,6 @@ class FilterScreenController extends GetxController
   void onInit() {
     super.onInit();
     loadData();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   Future<void> loadData() async {
@@ -106,6 +96,7 @@ class FilterScreenController extends GetxController
       if (res.status == ApiResponseStatus.completed) {
         Get.toNamed(Routes.TOURS_VIEW, arguments: res.data)!
             .whenComplete(() => loadData());
+        selectedDestinations.clear();
         change(null, status: RxStatus.success());
       } else {
         Get.to(
@@ -196,6 +187,7 @@ class FilterScreenController extends GetxController
     if (res.status == ApiResponseStatus.completed) {
       Get.toNamed(Routes.TOURS_VIEW, arguments: res.data)!
           .whenComplete(() => loadData());
+      selectedCategories.clear();
       change(null, status: RxStatus.success());
     } else {
       Get.to(

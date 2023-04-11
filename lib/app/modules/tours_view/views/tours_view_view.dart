@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../data/models/package_model.dart';
+import '../../../data/models/network_models/package_model.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_errorscreen.dart';
 import '../../../widgets/custom_loadinscreen.dart';
@@ -25,19 +25,21 @@ class ToursViewView extends GetView<ToursViewController> {
                 itemCount: controller.dataList.length,
                 itemBuilder: (BuildContext context, int index) {
                   final PackageModel package = controller.dataList[index];
-                  return PackageTile(
-                    isFavourite: controller.isFavorite.value,
-                    onClickedFavourites: () => controller
-                        .onClickFavourites(controller.dataList[index]),
-                    onPressed: () => controller
-                        .onClickSingleTour(controller.dataList[index].id!),
-                    tourAmount: package.amount.toString(),
-                    tourCode: package.tourCode.toString(),
-                    tourDays: package.days.toString(),
-                    tourImage: package.image.toString(),
-                    tourName: package.name.toString(),
-                    tournights: package.nights.toString(),
-                  );
+                  return Obx(() {
+                    return PackageTile(
+                      isFavourite: controller.isFavorite(package.id!).value,
+                      onClickedFavourites: () =>
+                          controller.toggleFavorite(package.id!),
+                      onPressed: () => controller
+                          .onClickSingleTour(controller.dataList[index].id!),
+                      tourAmount: package.amount.toString(),
+                      tourCode: package.tourCode.toString(),
+                      tourDays: package.days.toString(),
+                      tourImage: package.image.toString(),
+                      tourName: package.name.toString(),
+                      tournights: package.nights.toString(),
+                    );
+                  });
                 },
               ),
       ),

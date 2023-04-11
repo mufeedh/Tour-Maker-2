@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/payment_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/payment_model.dart';
 
 class PaymentRepository {
   List<PaymentModel> bookingList = <PaymentModel>[];
@@ -14,9 +14,12 @@ class PaymentRepository {
           Uri.parse('user/payment?payment_status=$paymentStatus'),
           options: Options(headers: authHeader));
       if (res.statusCode == 200) {
-        bookingList = (res.data!['result'] as List<dynamic>).map((dynamic e) {
-          return PaymentModel.fromJson(e as Map<String, dynamic>);
-        }).toList();
+        if (res.data!['result'] != null) {
+          bookingList = (res.data!['result'] as List<dynamic>).map((dynamic e) {
+            return PaymentModel.fromJson(e as Map<String, dynamic>);
+          }).toList();
+          return ApiResponse<List<PaymentModel>>.completed(bookingList);
+        }
         return ApiResponse<List<PaymentModel>>.completed(bookingList);
       } else {
         return ApiResponse<List<PaymentModel>>.error(res.statusMessage);

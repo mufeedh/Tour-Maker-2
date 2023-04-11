@@ -3,10 +3,11 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import '../../../data/models/package_model.dart';
-import '../../../data/models/wishlist_model.dart';
-import '../../../data/repo/package_repository.dart';
-import '../../../data/repo/wishlist_repo.dart';
+
+import '../../../data/models/network_models/package_model.dart';
+import '../../../data/models/network_models/wishlist_model.dart';
+import '../../../data/repo/network_repo/package_repository.dart';
+import '../../../data/repo/network_repo/wishlist_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../views/favourites_screen_view.dart';
 

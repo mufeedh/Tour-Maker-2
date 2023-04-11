@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/theme/style.dart';
-import '../../../data/models/package_model.dart';
-import '../../../data/models/wishlist_model.dart';
+
+import '../../../data/models/network_models/package_model.dart';
+import '../../../data/models/network_models/wishlist_model.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_errorscreen.dart';
-import '../../../widgets/custom_loadinscreen.dart';
+import '../../../widgets/custom_shimmer.dart';
 import '../../../widgets/package_tile.dart';
 import '../controllers/favourites_screen_controller.dart';
 
@@ -24,7 +25,17 @@ class FavouritesScreenView extends GetView<FavouritesScreenController> {
           errorText: 'No Packages \n Wishlisted',
           onRefresh: () => controller.loadData(),
         ),
-        onLoading: const CustomLoadingScreen(),
+        onLoading: ListView.builder(
+            itemCount: 10,
+            itemBuilder: (BuildContext context, int index) {
+              return CustomShimmer(
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
+                width: 145,
+                height: 162,
+                borderRadius: BorderRadius.circular(12),
+              );
+            }),
         (FavouritesScreenView? state) => RefreshIndicator(
           triggerMode: RefreshIndicatorTriggerMode.anywhere,
           color: englishViolet,

@@ -13,9 +13,10 @@ class SinglePassengerView extends GetView<SinglePassengerController> {
   const SinglePassengerView({super.key});
   @override
   Widget build(BuildContext context) {
-    SinglePassengerController controller = Get.put(SinglePassengerController());
+    final SinglePassengerController controller =
+        Get.put(SinglePassengerController());
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(),
       body: controller.obx(
         (SinglePassengerView? state) => Padding(
           padding: const EdgeInsets.all(24),

@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/wishlist_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/wishlist_model.dart';
 
 class WishListRepo {
   final Dio dio = Client().init();

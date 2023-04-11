@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
+import '../../../../core/utils/date_utils.dart';
+import '../../../../core/utils/string_utils.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_errorscreen.dart';
 import '../../../widgets/custom_loadinscreen.dart';
@@ -99,8 +101,10 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
                         .toString(),
                     tourAmount: controller.processingPayments[index].amountPaid
                         .toString(),
-                    tourCode: controller.processingPayments[index].customTourId
-                        .toString(),
+                    tourCode: controller.processingPayments[index].orderDate
+                        .toString()
+                        .parseFromIsoDate()
+                        .toDateTime(),
                   ),
                 ),
               )
@@ -126,8 +130,10 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
                         controller.pendingPayments[index].tourName.toString(),
                     tourAmount:
                         controller.pendingPayments[index].amountPaid.toString(),
-                    tourCode: controller.pendingPayments[index].customTourId
-                        .toString(),
+                    tourCode: controller.pendingPayments[index].orderDate
+                        .toString()
+                        .parseFromIsoDate()
+                        .toDateTime(),
                   ),
                 ),
               )
@@ -152,8 +158,10 @@ class PaymentScreenView extends GetView<PaymentScreenController> {
                         controller.paidPayments[index].tourName.toString(),
                     tourAmount:
                         controller.paidPayments[index].amountPaid.toString(),
-                    tourCode:
-                        controller.paidPayments[index].customTourId.toString(),
+                    tourCode: controller.paidPayments[index].orderDate
+                        .toString()
+                        .parseFromIsoDate()
+                        .toDateTime(),
                   ),
                 ),
               )

@@ -22,17 +22,17 @@ class CheckOutModel {
   String? tourCode;
   String? tourItinerary;
   String? dateOfTravel;
-  int? amount;
-  int? kidsAmount;
-  int? offerAmount;
-  int? kidsOfferAmount;
+  num? amount;
+  num? kidsAmount;
+  num? offerAmount;
+  num? kidsOfferAmount;
   int? adultCount;
   int? childrenCount;
   int? gst;
-  int? commission;
+  num? commission;
   int? orderID;
   String? transportationMode;
-  int? advanceAmount;
+  num? advanceAmount;
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'tourName': tourName,

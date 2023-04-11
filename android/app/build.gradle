@@ -53,11 +53,18 @@ android {
         versionName flutterVersionName
         multiDexEnabled true
     }
-
+    signingConfigs {
+        release {
+            keyAlias 'key'
+            keyPassword 'God eez 1'
+            storeFile file('../app/key.jks')
+            storePassword 'God eez 1'
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             // TODO: Add your own signing config for the release build.

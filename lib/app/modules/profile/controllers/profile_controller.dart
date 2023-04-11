@@ -9,10 +9,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../../../core/theme/style.dart';
 import '../../../../main.dart';
-import '../../../data/models/razorpay_model.dart';
-import '../../../data/models/user_model.dart';
-import '../../../data/repo/razorpay_repo.dart';
-import '../../../data/repo/user_repo.dart';
+
+import '../../../data/models/network_models/razorpay_model.dart';
+import '../../../data/models/network_models/user_model.dart';
+import '../../../data/repo/network_repo/razorpay_repo.dart';
+import '../../../data/repo/network_repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/profile_view.dart';
@@ -57,15 +58,6 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
       userData.value = res.data!;
       username = userData.value.name;
       currentUserName = userData.value.name;
-      if (userData.value.address != '') {
-        isShowButton.value = false;
-        final String input = userData.value.address.toString();
-        final List<String> parts =
-            input.split(',').map((String part) => part.trim()).toList();
-        address.value = parts.join(',\n');
-      } else {
-        isShowButton.value = true;
-      }
       if (userData.value.profileImage != null) {
         showUserPic.value = true;
       } else {
@@ -82,8 +74,8 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
     final String? orderId = razorPayModel.value.packageId;
     final String? paymentId = response.paymentId;
 
-    final ApiResponse<bool> res =
-        await RazorPayRepository().verifyPayment(paymentId, signature, orderId);
+    final ApiResponse<bool> res = await RazorPayRepository()
+        .verifyOrderPayment(paymentId, signature, orderId);
     try {
       if (res.status == ApiResponseStatus.completed && res.data!) {
         showRegisterBttomSheet(
@@ -188,9 +180,11 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
           );
         } else {
           // handle error
+          log('errrr');
         }
       } else {
         // user did not pick an image
+        Get.snackbar('No image Selected', 'Please add you pic');
       }
     } catch (e) {
       // handle error
@@ -198,13 +192,16 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
   }
 
   void showRegisterBttomSheet(String name, String state, String phoneNumber) {
-    Get.offAllNamed(Routes.USER_REGISTERSCREEN,
-        arguments: <String>[name, state, phoneNumber]);
+    Get.toNamed(Routes.USER_REGISTERSCREEN)!.whenComplete(() => getData());
   }
 
   Uint8List getImageFromBytes() {
     final String base64Image = userData.value.profileImage!;
     final Uint8List bytes = base64.decode(base64Image.split(',').last);
     return bytes;
+  }
+
+  void onClickAdddetail() {
+    Get.toNamed(Routes.USER_REGISTERSCREEN)!.whenComplete(() => getData());
   }
 }

@@ -30,8 +30,7 @@ import '../modules/notifications/bindings/notifications_binding.dart';
 import '../modules/notifications/views/notifications_view.dart';
 import '../modules/otp_screen/bindings/otp_screen_binding.dart';
 import '../modules/otp_screen/views/otp_screen_view.dart';
-import '../modules/passenger_details/bindings/passenger_details_binding.dart';
-import '../modules/passenger_details/views/passenger_details_view.dart';
+
 import '../modules/payment_screen/bindings/payment_screen_binding.dart';
 import '../modules/payment_screen/views/payment_screen_view.dart';
 import '../modules/payment_summary/bindings/payment_summary_binding.dart';
@@ -194,13 +193,6 @@ class AppPages {
       name: _Paths.SINGLE_TOUR,
       page: () => const SingleTourView(),
       binding: SingleTourBinding(),
-    ),
-    GetPage(
-      transition: Transition.rightToLeftWithFade,
-      curve: Curves.easeInOut,
-      name: _Paths.PASSENGER_DETAILS,
-      page: () => const PassengerDetailsView(),
-      binding: PassengerDetailsBinding(),
     ),
     GetPage(
       transition: Transition.fadeIn,

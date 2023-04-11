@@ -8,7 +8,6 @@ import 'package:sizer/sizer.dart';
 import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
 import '../../../widgets/custom_appbar.dart';
-import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_errorscreen.dart';
 import '../../../widgets/custom_loadinscreen.dart';
 import '../../../widgets/my_drawer.dart';
@@ -20,20 +19,310 @@ class ProfileView extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     final ProfileController controller = Get.put(ProfileController());
     return Scaffold(
-      drawer: Obx(() {
-        return MyDrawer(controller: controller.userData.value);
-      }),
-      appBar: const CustomAppBar(
-        title: Text('Profile'),
-      ),
-      body: controller.obx(
+        drawer: Obx(() {
+          return MyDrawer(controller: controller.userData.value);
+        }),
+        appBar: const CustomAppBar(
+          title: Text('Profile'),
+        ),
+        body: controller.obx(
           onError: (String? e) =>
               CustomErrorScreen(errorText: '$e', onRefresh: controller.getData),
           onLoading: const CustomLoadingScreen(),
-          (ProfileView? state) => Obx(() => controller.isShowButton.value
-              ? nonRegisteredUser(controller, context)
-              : registeredUser(controller, context))),
-    );
+          (ProfileView? state) => RefreshIndicator(
+            onRefresh: controller.getData,
+            color: englishViolet,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(children: <Widget>[
+                Stack(
+                  children: <Widget>[
+                    Obx(() {
+                      return SizedBox(
+                        height: 180,
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage: controller.showUserPic.value
+                              ? MemoryImage(controller.getImageFromBytes())
+                                  as ImageProvider<Object>?
+                              : AssetImage(controller.image.value),
+                        ),
+                      );
+                    }),
+                    Positioned(
+                      top: 130,
+                      left: 43,
+                      child: GestureDetector(
+                        onTap: () => onClckProfileIcon(context),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: englishViolet,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'assets/camera.svg',
+                              fit: BoxFit.cover,
+                              height: 20,
+                              width: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Obx(() {
+                  return buildTile(
+                      icon: TourMaker.profile_icon,
+                      data: controller.userData.value.name.toString(),
+                      label: 'Full Name');
+                }),
+                Obx(() {
+                  return buildTile(
+                    icon: TourMaker.call,
+                    data: controller.userData.value.phoneNumber.toString(),
+                    label: 'Phone Number',
+                  );
+                }),
+                Obx(() {
+                  return buildTile(
+                      icon: TourMaker.location_icon,
+                      label: 'State',
+                      data: controller.userData.value.state.toString());
+                }),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: ExpansionTileCard(
+                    borderRadius: BorderRadius.circular(18),
+                    baseColor: const Color.fromARGB(255, 232, 231, 233),
+                    expandedColor: const Color.fromARGB(255, 232, 231, 233),
+                    animateTrailing: true,
+                    contentPadding: const EdgeInsets.all(4),
+                    turnsCurve: Curves.bounceInOut,
+                    colorCurve: Curves.decelerate,
+                    duration: const Duration(milliseconds: 400),
+                    elevationCurve: Curves.decelerate,
+                    expandedTextColor: englishViolet,
+                    key: controller.cardB,
+                    title: const Text('        More about you'),
+                    subtitle: const Text('             Tap to view'),
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Address :', style: subheading1),
+                            SizedBox(
+                              width: 200,
+                              child: controller.userData.value.address == ''
+                                  ? Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () =>
+                                              controller.onClickAdddetail(),
+                                          child: Text(
+                                            'Add your address',
+                                            style: paragraph2.copyWith(
+                                              color: englishViolet,
+                                              overflow: TextOverflow.visible,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Text(
+                                      controller.userData.value.address
+                                          .toString(),
+                                      style: paragraph2.copyWith(
+                                        overflow: TextOverflow.visible,
+                                      ),
+                                    ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('city :', style: subheading1),
+                            if (controller.userData.value.district == '')
+                              GestureDetector(
+                                onTap: () => controller.onClickAdddetail(),
+                                child: Text(
+                                  'Add your City',
+                                  style: paragraph2.copyWith(
+                                    color: englishViolet,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ),
+                              )
+                            else
+                              Text(
+                                controller.userData.value.district.toString(),
+                                style: paragraph2.copyWith(
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('country :', style: subheading1),
+                            if (controller.userData.value.country != null)
+                              GestureDetector(
+                                onTap: () => controller.onClickAdddetail(),
+                                child: Text(
+                                  'Add your Country',
+                                  style: paragraph2.copyWith(
+                                    color: englishViolet,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ),
+                              )
+                            else
+                              Text(
+                                controller.userData.value.country.toString(),
+                                style: paragraph2.copyWith(
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Category :', style: subheading1),
+                            if (controller.userData.value.category == '')
+                              GestureDetector(
+                                onTap: () => controller.onClickAdddetail(),
+                                child: Text(
+                                  'Add your Category',
+                                  style: paragraph2.copyWith(
+                                    color: englishViolet,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ),
+                              )
+                            else
+                              Text(
+                                controller.userData.value.category.toString(),
+                                style: paragraph2.copyWith(
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Enterprise Name :', style: subheading1),
+                            if (controller.userData.value.enterpriseName == '')
+                              SizedBox(
+                                width: 100,
+                                child: GestureDetector(
+                                  onTap: () => controller.onClickAdddetail(),
+                                  child: Text(
+                                    'Add your Enterprise Name',
+                                    style: paragraph2.copyWith(
+                                      color: englishViolet,
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            else
+                              SizedBox(
+                                width: 150,
+                                child: Text(
+                                  controller.userData.value.enterpriseName
+                                      .toString(),
+                                  style: paragraph2.copyWith(
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Email :', style: subheading1),
+                            if (controller.userData.value.email == '')
+                              GestureDetector(
+                                onTap: () => controller.onClickAdddetail(),
+                                child: Text(
+                                  'Add your Email',
+                                  style: paragraph2.copyWith(
+                                    color: englishViolet,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ),
+                              )
+                            else
+                              Text(
+                                controller.userData.value.email.toString(),
+                                style: paragraph2.copyWith(
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Gender :', style: subheading1),
+                            if (controller.userData.value.gender == '')
+                              GestureDetector(
+                                onTap: () => controller.onClickAdddetail(),
+                                child: Text(
+                                  'Add your Gender',
+                                  style: paragraph2.copyWith(
+                                    color: englishViolet,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ),
+                              )
+                            else
+                              Text(
+                                controller.userData.value.gender.toString(),
+                                style: paragraph2.copyWith(
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        ));
   }
 
   Widget registeredUser(ProfileController controller, BuildContext context) {
@@ -41,7 +330,7 @@ class ProfileView extends GetView<ProfileController> {
       onRefresh: controller.getData,
       color: englishViolet,
       child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Column(children: <Widget>[
           Stack(
             children: <Widget>[
@@ -125,8 +414,26 @@ class ProfileView extends GetView<ProfileController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text('Address :', style: subheading1),
-                      Text(controller.userData.value.address.toString(),
-                          style: paragraph2),
+                      SizedBox(
+                        width: 200,
+                        child: controller.userData.value.address == ''
+                            ? GestureDetector(
+                                onTap: () => controller.onClickAdddetail(),
+                                child: Text(
+                                  'Add your address',
+                                  style: paragraph2.copyWith(
+                                    color: englishViolet,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                controller.userData.value.address.toString(),
+                                style: paragraph2.copyWith(
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                      ),
                     ],
                   ),
                 ),
@@ -136,8 +443,51 @@ class ProfileView extends GetView<ProfileController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text('city :', style: subheading1),
-                      Text(controller.userData.value.district.toString(),
-                          style: paragraph2),
+                      if (controller.userData.value.district == '')
+                        GestureDetector(
+                          onTap: () => controller.onClickAdddetail(),
+                          child: Text(
+                            'Add your City',
+                            style: paragraph2.copyWith(
+                              color: englishViolet,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                        )
+                      else
+                        Text(
+                          controller.userData.value.district.toString(),
+                          style: paragraph2.copyWith(
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('country :', style: subheading1),
+                      if (controller.userData.value.country == null)
+                        GestureDetector(
+                          onTap: () => controller.onClickAdddetail(),
+                          child: Text(
+                            'Add your Country',
+                            style: paragraph2.copyWith(
+                              color: englishViolet,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                        )
+                      else
+                        Text(
+                          controller.userData.value.country.toString(),
+                          style: paragraph2.copyWith(
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -147,8 +497,24 @@ class ProfileView extends GetView<ProfileController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text('Category :', style: subheading1),
-                      Text(controller.userData.value.category.toString(),
-                          style: paragraph2),
+                      if (controller.userData.value.category == '')
+                        GestureDetector(
+                          onTap: () => controller.onClickAdddetail(),
+                          child: Text(
+                            'Add your Category',
+                            style: paragraph2.copyWith(
+                              color: englishViolet,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                        )
+                      else
+                        Text(
+                          controller.userData.value.category.toString(),
+                          style: paragraph2.copyWith(
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -158,8 +524,24 @@ class ProfileView extends GetView<ProfileController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text('Enterprise Name :', style: subheading1),
-                      Text(controller.userData.value.enterpriseName.toString(),
-                          style: paragraph2),
+                      if (controller.userData.value.enterpriseName == '')
+                        GestureDetector(
+                          onTap: () => controller.onClickAdddetail(),
+                          child: Text(
+                            'Add your EnterpriseName',
+                            style: paragraph2.copyWith(
+                              color: englishViolet,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                        )
+                      else
+                        Text(
+                          controller.userData.value.enterpriseName.toString(),
+                          style: paragraph2.copyWith(
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -169,8 +551,24 @@ class ProfileView extends GetView<ProfileController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text('Email :', style: subheading1),
-                      Text(controller.userData.value.email.toString(),
-                          style: paragraph2),
+                      if (controller.userData.value.email == '')
+                        GestureDetector(
+                          onTap: () => controller.onClickAdddetail(),
+                          child: Text(
+                            'Add your Email',
+                            style: paragraph2.copyWith(
+                              color: englishViolet,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                        )
+                      else
+                        Text(
+                          controller.userData.value.email.toString(),
+                          style: paragraph2.copyWith(
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -180,8 +578,24 @@ class ProfileView extends GetView<ProfileController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text('Gender :', style: subheading1),
-                      Text(controller.userData.value.gender.toString(),
-                          style: paragraph2),
+                      if (controller.userData.value.gender == '')
+                        GestureDetector(
+                          onTap: () => controller.onClickAdddetail(),
+                          child: Text(
+                            'Add your Gender',
+                            style: paragraph2.copyWith(
+                              color: englishViolet,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                        )
+                      else
+                        Text(
+                          controller.userData.value.gender.toString(),
+                          style: paragraph2.copyWith(
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -198,7 +612,7 @@ class ProfileView extends GetView<ProfileController> {
       onRefresh: controller.getData,
       color: englishViolet,
       child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
           children: <Widget>[
             Stack(
@@ -260,18 +674,18 @@ class ProfileView extends GetView<ProfileController> {
                   data: controller.userData.value.state.toString());
             }),
             const SizedBox(height: 20),
-            Obx(() {
-              return Padding(
-                padding: const EdgeInsets.all(10),
-                child: CustomButton().showIconButtonWithGradient(
-                  height: 75,
-                  width: 100.h,
-                  isLoading: controller.isloading.value,
-                  text: '  Pay Service Charge Now',
-                  onPressed: () => controller.onClickPayment(),
-                ),
-              );
-            })
+            // Obx(() {
+            //   return Padding(
+            //     padding: const EdgeInsets.all(10),
+            //     child: CustomButton().showIconButtonWithGradient(
+            //       height: 75,
+            //       width: 100.h,
+            //       isLoading: controller.isloading.value,
+            //       text: '  Pay Service Charge Now',
+            //       onPressed: () => controller.onClickPayment(),
+            //     ),
+            //   );
+            // })
           ],
         ),
       ),

@@ -53,7 +53,8 @@ class TermsAndConditionsView extends GetView<TermsAndConditionsController> {
               Obx(
                 () => controller.isButtonVisisble.value
                     ? CustomButton().showButtonWithGradient(
-                        width: 280,
+                        isLoading: controller.isLoading.value,
+                        width: controller.isLoading.value ? 50 : 280,
                         height: 70,
                         text: "Let's Get Started",
                         onPressed: () => controller.onGetStartedClicked(),

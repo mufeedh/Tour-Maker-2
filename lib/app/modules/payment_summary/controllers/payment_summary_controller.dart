@@ -4,8 +4,8 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 
-import '../../../data/models/single_booking_model.dart';
-import '../../../data/repo/booking_repo.dart';
+import '../../../data/models/network_models/single_booking_model.dart';
+import '../../../data/repo/network_repo/booking_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/payment_summary_view.dart';

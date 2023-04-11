@@ -7,8 +7,9 @@ import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../../../main.dart';
-import '../../../data/models/razorpay_model.dart';
-import '../../../data/repo/razorpay_repo.dart';
+
+import '../../../data/models/network_models/razorpay_model.dart';
+import '../../../data/repo/network_repo/razorpay_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 
@@ -113,8 +114,8 @@ class LuckyDrawController extends GetxController {
     final String? orderId = razorPayModel.value.packageId;
     final String? paymentId = response.paymentId;
 
-    final ApiResponse<bool> res =
-        await RazorPayRepository().verifyPayment(paymentId, signature, orderId);
+    final ApiResponse<bool> res = await RazorPayRepository()
+        .verifyOrderPayment(paymentId, signature, orderId);
     try {
       if (res.status == ApiResponseStatus.completed && res.data!) {
         // log('Payment verification succeeded.');

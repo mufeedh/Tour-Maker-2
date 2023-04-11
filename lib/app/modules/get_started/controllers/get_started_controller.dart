@@ -118,3 +118,32 @@ class GetStartedController extends GetxController with StateMixin<dynamic> {
           ? null
           : 'Please enter a valid phone number';
 }
+
+
+
+/* final String phoneNumber = '+${selectedCountry.value.phoneCode}$phone';
+        final FirebaseAuth auth = FirebaseAuth.instance;
+        await auth
+            .verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          timeout: const Duration(seconds: 60),
+          verificationCompleted: (PhoneAuthCredential authCredential) async {},
+          verificationFailed: (FirebaseAuthException authException) {
+          },
+          codeSent: (String verificationId, [int? forceResendingToken]) {
+        
+            verificationid = verificationId;
+            log(phoneNumber);
+            Get.toNamed(
+              Routes.OTP_SCREEN,
+              arguments: <dynamic>[
+                verificationId,
+                phoneNumber,
+                forceResendingToken
+              ],
+            );
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+           
+          },
+        )*/

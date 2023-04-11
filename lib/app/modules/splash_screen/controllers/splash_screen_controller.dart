@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_overrides,
-
 import 'dart:async';
 import 'dart:developer';
 
@@ -10,12 +8,13 @@ import 'package:get_storage/get_storage.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../../../../main.dart';
-import '../../../data/repo/user_repo.dart';
+
+import '../../../data/repo/network_repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 
-// ignore: non_constant_identifier_names
-dynamic FCMtoken;
+dynamic fcmtoken;
+String? currentUserCategory;
 
 class SplashScreenController extends GetxController with StateMixin<dynamic> {
   final GetStorage getStorage = GetStorage();
@@ -39,11 +38,6 @@ class SplashScreenController extends GetxController with StateMixin<dynamic> {
     // print('dsf');
     log('re');
     await checkUserLoggedInORnOT();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   Future<void> isInternetConnectFunction() async {
@@ -81,7 +75,7 @@ class SplashScreenController extends GetxController with StateMixin<dynamic> {
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       //authorized
       final String? fcmToken = await messaging.getToken();
-      FCMtoken = fcmToken;
+      fcmtoken = fcmToken;
       log('fcm $fcmToken');
       final ApiResponse<Map<String, dynamic>> res =
           await UserRepository().putFCMToken(fcmToken);
@@ -100,10 +94,11 @@ class SplashScreenController extends GetxController with StateMixin<dynamic> {
     final ApiResponse<Map<String, dynamic>> res =
         await UserRepository().checkUserExists();
     if (res.data!.isNotEmpty) {
-      Get.offAllNamed(Routes.HOME);
+      await Get.offAllNamed(Routes.HOME);
+
       // Get.offAllNamed(Routes.TOKEN_SCREEN, arguments: [token, fcmToken]);
     } else {
-      Get.offAllNamed(Routes.LOGIN);
+      await Get.offAllNamed(Routes.LOGIN);
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-import '../../../data/models/travellers_model.dart';
-import '../../../data/repo/passenger_repo.dart';
+import '../../../data/models/network_models/travellers_model.dart';
+import '../../../data/repo/network_repo/passenger_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/travellers_screen_view.dart';

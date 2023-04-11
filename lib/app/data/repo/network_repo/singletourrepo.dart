@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/single_tour_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/single_tour_model.dart';
 
 class SingleTourRepository {
   SingleTourModel tourData = SingleTourModel();
@@ -15,25 +15,18 @@ class SingleTourRepository {
       final Response<Map<String, dynamic>> res = await dio.getUri(
           Uri.parse('tours/packages/$id?option=batch'),
           options: Options(headers: authHeader));
-      log('bbdfbiadb repo batch msg${res.statusMessage}');
-      log('bbdfbiadb repo batch data ${res.data}');
-      log("bbdfbiadb repo batch data result${res.data!['result']}");
-      log("bbdfbiadb repo batch data result [0] ${res.data!['result']}");
+
       if (res.statusCode == 200) {
         tourData = SingleTourModel.fromJson(
             res.data!['result'] as Map<String, dynamic>);
 
         return ApiResponse<SingleTourModel>.completed(tourData);
       } else {
-        log('bbdfbiadb repo batch else msg${res.statusMessage}');
         return ApiResponse<SingleTourModel>.error(res.statusMessage);
       }
     } on DioError catch (de) {
-      log('bbdfbiadb repo batch de err${de.error}');
-      log('bbdfbiadb repo batch de err msg${de.message}');
       return ApiResponse<SingleTourModel>.error(de.error.toString());
     } catch (e) {
-      log('bbdfbiadb repo batch catch err msg$e');
       return ApiResponse<SingleTourModel>.error(e.toString());
     }
   }

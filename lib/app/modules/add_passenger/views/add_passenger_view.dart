@@ -3,19 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
-import '../../../../core/utils/date_utils.dart';
-import '../../../../core/utils/string_utils.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_errorscreen.dart';
 import '../../../widgets/custom_loadinscreen.dart';
+import '../../../widgets/custom_textformfield.dart';
 import '../../../widgets/customdatepicker.dart';
+import '../../../widgets/passenger_card.dart';
 import '../controllers/add_passenger_controller.dart';
 
 class AddPassengerView extends GetView<AddPassengerController> {
@@ -49,7 +48,8 @@ class AddPassengerView extends GetView<AddPassengerController> {
                               shrinkWrap: true,
                               itemCount: controller.travellers.length,
                               itemBuilder: (BuildContext context, int index) =>
-                                  buildPassengerCard(index),
+                                  PassengerCard(
+                                      travellers: controller.travellers[index]),
                             ),
                           )
                         : const Expanded(
@@ -69,6 +69,7 @@ class AddPassengerView extends GetView<AddPassengerController> {
                   controller.travellers.length
               ? AnimatedContainer(
                   duration: const Duration(milliseconds: 500),
+                  curve: Curves.bounceInOut,
                   child: FloatingActionButton.extended(
                     onPressed: () => controller.gotoCheckoutPage(),
                     backgroundColor: englishViolet,
@@ -86,126 +87,6 @@ class AddPassengerView extends GetView<AddPassengerController> {
                 ),
         );
       }),
-    );
-  }
-
-  Padding buildPassengerCard(int index) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: <Widget>[
-                  const Text('name : '),
-                  Text(
-                    controller.travellers[index].name.toString(),
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: fontColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: <Widget>[
-                  const Text('order ID : '),
-                  Text(
-                    controller.travellers[index].orderId.toString(),
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: fontColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: <Widget>[
-                  const Text('phone number : '),
-                  Text(
-                    controller.travellers[index].phoneNumber.toString(),
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: fontColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: <Widget>[
-                  const Text('DOB : '),
-                  Text(
-                    controller.travellers[index].dateOfBirth
-                        .toString()
-                        .parseFromIsoDate()
-                        .toDocumentDateFormat(),
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: fontColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: <Widget>[
-                  const Text('address : '),
-                  SizedBox(
-                    width: 200,
-                    child: Text(
-                      controller.travellers[index].address.toString(),
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: fontColor,
-                      ),
-                      overflow: TextOverflow.visible,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: <Widget>[
-                  const Text('ID proof : '),
-                  Text(
-                    ' added ✔️',
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: Colors.green,
-                    ),
-                    overflow: TextOverflow.clip,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -240,96 +121,24 @@ class AddPassengerView extends GetView<AddPassengerController> {
                       )
                     ],
                   ),
-                  TextFormField(
+                  CustomTextFormField(
                     keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.done,
                     onChanged: (String? value) =>
                         controller.customerName.value = value.toString(),
                     validator: (String? value) =>
                         controller.nameValidator(value),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(30),
-                      filled: true,
-                      fillColor: const Color(0xFFF6F6F6),
-                      hintText: 'Name',
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Icon(
-                          TourMaker.profile_icon,
-                          color: fontColor,
-                        ),
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
+                    hintText: 'Name',
                   ),
                   const SizedBox(height: 15),
-                  TextFormField(
+                  CustomTextFormField(
                     keyboardType: TextInputType.phone,
                     textInputAction: TextInputAction.done,
                     onChanged: (String? value) =>
                         controller.customerPhone.value = value.toString(),
                     validator: (String? value) =>
                         controller.phoneNumberValidator(value),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(30),
-                      filled: true,
-                      fillColor: const Color(0xFFF6F6F6),
-                      hintText: 'Phone Number',
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Icon(
-                          TourMaker.call,
-                          color: fontColor,
-                        ),
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
+                    hintText: 'Phone Number',
                   ),
                   const SizedBox(height: 15),
                   CustomDatePickerField(
@@ -341,7 +150,7 @@ class AddPassengerView extends GetView<AddPassengerController> {
                         controller.customerDOB.value = value,
                   ),
                   const SizedBox(height: 15),
-                  TextFormField(
+                  CustomTextFormField(
                     textInputAction: TextInputAction.done,
                     maxLines: 10,
                     minLines: 1,
@@ -349,92 +158,60 @@ class AddPassengerView extends GetView<AddPassengerController> {
                         controller.addressValidator(value),
                     onChanged: (String? value) =>
                         controller.customerAddress.value = value.toString(),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(30),
-                      filled: true,
-                      fillColor: const Color(0xFFF6F6F6),
-                      hintText: 'Address',
-                      prefixIcon: Icon(
-                        TourMaker.location_icon,
-                        color: fontColor,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
+                    hintText: 'Address',
                   ),
                   const SizedBox(height: 15),
                   Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF6F6F6),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Obx(
-                        () => controller.image.value != ''
-                            ? Column(
-                                children: <Widget>[
-                                  Text('ID proof', style: subheading2),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    margin: const EdgeInsets.all(10),
-                                    child: Image.file(
-                                      fit: BoxFit.cover,
-                                      File(controller.image.value),
-                                    ),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF6F6F6),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Obx(
+                      () => controller.image.value != ''
+                          ? Column(
+                              children: <Widget>[
+                                Text('ID proof', style: subheading2),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  margin: const EdgeInsets.all(10),
+                                  child: Image.file(
+                                    fit: BoxFit.cover,
+                                    File(controller.image.value),
                                   ),
-                                ],
-                              )
-                            : Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  const Text(
-                                    '      ID PROOF',
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.camera_alt),
-                                    onPressed: () {
-                                      onClickCamera(context);
-                                    },
-                                  ),
-                                ],
-                              ),
-                      )),
+                                ),
+                              ],
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                const Text(
+                                  '      ID PROOF',
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.camera_alt),
+                                  onPressed: () {
+                                    onClickCamera(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                    ),
+                  ),
                   const SizedBox(height: 5),
-                  Obx(() {
-                    return CustomButton().showIconButtonWithGradient(
-                      height: 75,
-                      width: 100.h,
-                      isLoading: controller.isloading.value,
-                      text: '      Submit',
-                      onPressed: () => controller.onRegisterClicked(),
-                    );
-                  }),
+                  Obx(
+                    () {
+                      return CustomButton().showIconButtonWithGradient(
+                        height: 75,
+                        width: 100.h,
+                        isLoading: controller.isloading.value,
+                        text: '      Submit',
+                        onPressed: () => controller.onRegisterClicked(),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

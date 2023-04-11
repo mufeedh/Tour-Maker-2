@@ -1,21 +1,24 @@
 import 'dart:developer';
+import 'package:logger/logger.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../data/models/checkout_model.dart';
-import '../../../data/models/order_model.dart';
-import '../../../data/models/single_tour_model.dart';
-import '../../../data/models/wishlist_model.dart';
-import '../../../data/repo/checkout_repo.dart';
-import '../../../data/repo/passenger_repo.dart';
-import '../../../data/repo/singletourrepo.dart';
-import '../../../data/repo/wishlist_repo.dart';
+
+import '../../../data/models/network_models/checkout_model.dart';
+import '../../../data/models/network_models/order_model.dart';
+import '../../../data/models/network_models/single_tour_model.dart';
+import '../../../data/models/network_models/wishlist_model.dart';
+import '../../../data/repo/local_repo/checkout_repo.dart';
+import '../../../data/repo/network_repo/passenger_repo.dart';
+import '../../../data/repo/network_repo/singletourrepo.dart';
+import '../../../data/repo/network_repo/wishlist_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../../../widgets/custom_dialogue.dart';
+import '../../splash_screen/controllers/splash_screen_controller.dart';
 import '../views/single_tour_view.dart';
 
 class SingleTourController extends GetxController
@@ -29,7 +32,7 @@ class SingleTourController extends GetxController
   Rx<SingleTourModel> singleTour = SingleTourModel().obs;
   Rx<SingleTourModel> batchTours = SingleTourModel().obs;
   RxList<WishListModel> wishlists = <WishListModel>[].obs;
-  List<SingleTourModel>? singleTourData;
+  Logger logger = Logger();
   Rx<int> selectedIndex = 0.obs;
   Rx<int> selectDate = 0.obs;
   Rx<int> selectedBatchIndex = 0.obs;
@@ -50,28 +53,36 @@ class SingleTourController extends GetxController
   }
 
   Future<void> fetchData() async {
-    try {
-      change(null, status: RxStatus.loading());
-      final int id = await loadData();
-      batchTours.value = await loadSingleTourData(id);
-      singleTour.value = await loadIndividualTours(id);
-      final List<WishListModel>? wishlistData = await getWishList(id);
-      if (wishlistData != null) {
-        wishlists.value = wishlistData;
-        for (final WishListModel wm in wishlists) {
-          if (wm.id == id) {
-            isFavourite.value = true;
-            break;
-          } else {
-            isFavourite.value = false;
-          }
+    // try {
+    change(null, status: RxStatus.loading());
+    final int id = await loadData();
+
+    singleTour.value = await loadIndividualTours(id);
+    batchTours.value = await loadSingleTourData(id);
+    final List<WishListModel>? wishlistData = await getWishList(id);
+    if (wishlistData != null) {
+      wishlists.value = wishlistData;
+      currentUserCategory != null
+          ? log('koooooooooiiiiiiii$currentUserCategory')
+          : log('kkudhgbbstvygdhs$currentUserCategory');
+      for (final WishListModel wm in wishlists) {
+        if (wm.id == id) {
+          isFavourite.value = true;
+          break;
+        } else {
+          isFavourite.value = false;
         }
       }
-      change(null, status: RxStatus.success());
-    } catch (er) {
-      change(null, status: RxStatus.error(er.toString()));
-      throw Exception('failed to load fetch data $er');
     }
+    change(null, status: RxStatus.success());
+    // } catch (er) {
+    //   logger.e('adee e message');
+    //   logger.i('adee i message');
+    //   logger.wtf('adee wrf message');
+    //   change(null, status: RxStatus.error(er.toString()));
+    //   logger.d('adee d $er message');
+    //   throw Exception('failed to load fetch data $er');
+    // }
   }
 
   Future<int> loadData() async {
@@ -101,6 +112,8 @@ class SingleTourController extends GetxController
   Future<SingleTourModel> loadIndividualTours(int tourID) async {
     final ApiResponse<SingleTourModel> res =
         await SingleTourRepository().getSingleTourIndividual(tourID);
+    log('kdgknjdf msg ${res.message}');
+
     if (res.data != null) {
       return res.data!;
     } else {

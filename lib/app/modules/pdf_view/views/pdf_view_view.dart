@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../controllers/pdf_view_controller.dart';
 
@@ -11,15 +11,19 @@ class PdfViewView extends GetView<PdfViewController> {
   Widget build(BuildContext context) {
     final PdfViewController controller = Get.put(PdfViewController());
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: CustomAppBar(actions: [
+        IconButton(
+          icon: const Icon(Icons.share),
+          onPressed: () {
+            controller.sharePDF();
+          },
+        ),
+      ]),
       body: controller.obx(
         onLoading: const Center(child: CircularProgressIndicator()),
-        (PdfViewView? state) => Stack(
-          children: <Widget>[
-            PDFView(
-              filePath: controller.remotePDFpath.value,
-            ),
-          ],
+        (PdfViewView? state) => SfPdfViewer.network(
+          controller.localPDFpath.value,
+          key: controller.pdfViewerKey,
         ),
       ),
     );

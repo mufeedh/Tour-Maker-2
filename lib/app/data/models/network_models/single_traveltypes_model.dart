@@ -1,5 +1,5 @@
-class PackageModel {
-  PackageModel({
+class SingleTravelTypesTourModel {
+  SingleTravelTypesTourModel({
     this.amount,
     this.category,
     this.days,
@@ -17,7 +17,7 @@ class PackageModel {
     this.travelType,
     this.trending,
   });
-  int? amount;
+  num? amount;
   String? category;
   int? days;
   String? description;
@@ -52,9 +52,9 @@ class PackageModel {
         'travel_type': travelType,
         'trending': trending,
       };
-
-  static PackageModel fromJson(Map<String, dynamic> json) => PackageModel(
-        amount: json['amount'] as int,
+  static SingleTravelTypesTourModel fromJson(Map<String, dynamic> json) =>
+      SingleTravelTypesTourModel(
+        amount: json['amount'] as num,
         category: json['category'] as String,
         days: json['days'] as int,
         description: json['description'] as String,

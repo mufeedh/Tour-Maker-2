@@ -1,8 +1,13 @@
 // ignore_for_file: unnecessary_overrides
 
+import 'dart:developer';
+
 import 'package:get/get.dart';
 
+import '../../../data/models/network_models/user_model.dart';
+import '../../../data/repo/network_repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
+import '../../../services/network_services/dio_client.dart';
 
 class TermsAndConditionsController extends GetxController {
   String termsAndCond = '''
@@ -21,6 +26,7 @@ Lucky draw will be conducted only after 10k app installations
 
 If you can book minimum 2 tours within 20 days of your app installation, you will get 425 Rs from your service charge of 500 Rs after deducting the rax amount''';
   RxBool ischecked = false.obs;
+  RxBool isLoading = false.obs;
   RxBool isButtonVisisble = false.obs;
   final RxInt count = 0.obs;
   @override
@@ -51,7 +57,20 @@ If you can book minimum 2 tours within 20 days of your app installation, you wil
         : isButtonVisisble.value = false;
   }
 
-  void onGetStartedClicked() {
-    Get.toNamed(Routes.LUCKY_DRAW);
+  Future<void> onGetStartedClicked() async {
+    isLoading.value = true;
+    final UserModel user = UserModel(
+      tAndCStatus: 'true',
+    );
+    final ApiResponse<Map<String, dynamic>> res =
+        await UserRepository().signUpTheUser(user);
+    if (res.status == ApiResponseStatus.completed) {
+      log('completed');
+      Get.offAllNamed(Routes.LUCKY_DRAW);
+      isLoading.value = false;
+    } else {
+      log('sdfgsg');
+      isLoading.value = false;
+    }
   }
 }

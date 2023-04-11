@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-import '../../../data/models/checkout_model.dart';
-import '../../../data/models/razorpay_model.dart';
-import '../../../data/repo/checkout_repo.dart';
-import '../../../data/repo/passenger_repo.dart';
-import '../../../data/repo/razorpay_repo.dart';
+import '../../../data/models/network_models/checkout_model.dart';
+import '../../../data/models/network_models/razorpay_model.dart';
+import '../../../data/repo/local_repo/checkout_repo.dart';
+import '../../../data/repo/network_repo/passenger_repo.dart';
+import '../../../data/repo/network_repo/razorpay_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../../../widgets/custom_dialogue.dart';
@@ -33,7 +33,7 @@ class CheckoutScreenController extends GetxController
     change(null, status: RxStatus.loading());
     try {
       checkOutModel.value = await CheckOutRepositoy.getData();
-      var orderID = checkOutModel.value!.orderID;
+      final int? orderID = checkOutModel.value!.orderID;
       log('bfhvb $orderID');
       change(null, status: RxStatus.success());
     } catch (e) {
@@ -41,16 +41,16 @@ class CheckoutScreenController extends GetxController
     }
   }
 
-  int getTotalAmount() {
+  num getTotalAmount() {
     final int adultCount = checkOutModel.value!.adultCount!;
     final int chidrenCount = checkOutModel.value!.childrenCount!;
-    final int adultAmount = checkOutModel.value!.offerAmount != null
+    final num adultAmount = checkOutModel.value!.offerAmount != null
         ? checkOutModel.value!.offerAmount! * adultCount
         : checkOutModel.value!.amount! * adultCount;
-    final int kidsAmount = checkOutModel.value!.kidsOfferAmount != null
+    final num kidsAmount = checkOutModel.value!.kidsOfferAmount != null
         ? checkOutModel.value!.kidsOfferAmount! * chidrenCount
         : checkOutModel.value!.kidsAmount! * chidrenCount;
-    final int totalAmount = adultAmount + kidsAmount;
+    final num totalAmount = adultAmount + kidsAmount;
     return totalAmount;
   }
 
@@ -75,17 +75,17 @@ class CheckoutScreenController extends GetxController
   }
 
   num getTotalAmounttoBePaid() {
-    final int commissionAmount = getCommissionAmount();
+    final num commissionAmount = getCommissionAmount();
 
-    final int totalAmount = getTotalAmount();
-    final int sum = totalAmount - commissionAmount;
+    final num totalAmount = getTotalAmount();
+    final num sum = totalAmount - commissionAmount;
     return sum;
   }
 
-  int getCommissionAmount() {
-    final int commission = checkOutModel.value!.commission!;
+  num getCommissionAmount() {
+    final num commission = checkOutModel.value!.commission!;
     final int totalPassenegrs = getTotalPassengers();
-    final int sum = commission * totalPassenegrs;
+    final num sum = commission * totalPassenegrs;
     return sum;
   }
 
@@ -112,8 +112,13 @@ class CheckoutScreenController extends GetxController
       'Do you want to really cancel the purchase?',
       cancelText: 'go back',
       confirmText: 'Yes',
-      onCancel: () {},
-      onConfirm: () {},
+      onCancel: () {
+        Get.back();
+      },
+      onConfirm: () {
+        Get.toNamed(Routes.SINGLE_TOUR,
+            arguments: [checkOutModel.value!.tourID]);
+      },
     );
   }
 
@@ -124,7 +129,7 @@ class CheckoutScreenController extends GetxController
       cancelText: 'Pay Advance Amount',
       confirmText: 'Pay Full Amount',
       onCancel: () {
-        payAdvanceAmount();
+        payAdvanceAmount(id);
       },
       onConfirm: () {
         payFullAmount(id);
@@ -137,7 +142,7 @@ class CheckoutScreenController extends GetxController
         .whenComplete(() => loadData());
   }
 
-  void payAdvanceAmount() {}
+  void payAdvanceAmount(int id) {}
 
   Future<void> payFullAmount(int id) async {
     //CreatePayment
@@ -198,11 +203,13 @@ class CheckoutScreenController extends GetxController
     log('bbddibdi id $orderId');
     log('bbddibdi payid $paymentId');
 
-    final ApiResponse<bool> res =
-        await RazorPayRepository().verifyPayment(paymentId, signature, orderId);
+    final ApiResponse<bool> res = await RazorPayRepository()
+        .verifyOrderPayment(paymentId, signature, orderId);
     try {
       if (res.status == ApiResponseStatus.completed && res.data!) {
         log('kunukunu completed payment fro the tour');
+        Get.toNamed(Routes.SINGLE_TOUR,
+            arguments: [checkOutModel.value!.tourID]);
       } else {
         log('kunukunu Payment verification failed: ${res.message}');
       }

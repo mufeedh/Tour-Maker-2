@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/category_model.dart';
-import '../models/package_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/category_model.dart';
+import '../../models/network_models/package_model.dart';
 
 class CategoryRepository {
   List<CategoryModel> categoryList = <CategoryModel>[];

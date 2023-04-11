@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 
-import '../../../data/models/single_exclusive_tour_model.dart';
-import '../../../data/models/wishlist_model.dart';
-import '../../../data/repo/exclusive_repo.dart';
-import '../../../data/repo/wishlist_repo.dart';
+import '../../../data/models/network_models/single_exclusive_tour_model.dart';
+import '../../../data/models/network_models/wishlist_model.dart';
+import '../../../data/repo/network_repo/exclusive_repo.dart';
+import '../../../data/repo/network_repo/wishlist_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/exclusive_tours_view.dart';
@@ -72,9 +72,9 @@ class ExclusiveToursController extends GetxController
         //     .firstWhere((PackageModel package) => package.id == productId);
         // wishlists.add(package as WishListModel);
         final SingleExclusiveTourModel package = singleTour.firstWhere(
-            (SingleExclusiveTourModel package) => package.iD == productId);
+            (SingleExclusiveTourModel package) => package.id == productId);
         final WishListModel wishlistItem = WishListModel(
-          id: package.iD,
+          id: package.id,
           name: package.name,
           // add any other properties that are required for the wishlist item
         );

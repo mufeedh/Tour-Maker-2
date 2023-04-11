@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../data/models/package_model.dart';
-import '../../../data/models/wishlist_model.dart';
+import '../../../data/models/network_models/package_model.dart';
+import '../../../data/models/network_models/wishlist_model.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_errorscreen.dart';
 import '../../../widgets/custom_loadinscreen.dart';

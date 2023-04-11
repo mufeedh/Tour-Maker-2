@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
-import '../../../data/models/package_model.dart';
+import '../../../data/models/network_models/package_model.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_errorscreen.dart';
 import '../../../widgets/custom_loadinscreen.dart';
@@ -40,19 +40,21 @@ class SearchDetailsView extends GetView<SearchDetailsController> {
             itemCount: controller.destinations.length,
             itemBuilder: (BuildContext context, int index) => Obx(() {
               final PackageModel package = controller.destinations[index];
-              return PackageTile(
-                tourAmount: package.amount.toString(),
-                tourCode: package.tourCode.toString(),
-                tourDays: package.days.toString(),
-                tourImage: package.image.toString(),
-                tourName: package.name.toString(),
-                tournights: package.nights.toString(),
-                isFavourite: controller.isClickedFavorites.value,
-                onClickedFavourites: () => controller
-                    .onClickFavourites(controller.destinations[index]),
-                onPressed: () => controller
-                    .onSingleTourPressed(controller.destinations[index].id!),
-              );
+              return Obx(() {
+                return PackageTile(
+                  tourAmount: package.amount.toString(),
+                  tourCode: package.tourCode.toString(),
+                  tourDays: package.days.toString(),
+                  tourImage: package.image.toString(),
+                  tourName: package.name.toString(),
+                  tournights: package.nights.toString(),
+                  isFavourite: controller.isFavorite(package.id!).value,
+                  onClickedFavourites: () =>
+                      controller.toggleFavorite(package.id!),
+                  onPressed: () => controller
+                      .onSingleTourPressed(controller.destinations[index].id!),
+                );
+              });
             }),
           )),
         ));

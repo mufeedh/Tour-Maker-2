@@ -8,7 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_controller.dart';
 
-import '../../../data/repo/user_repo.dart';
+import '../../../data/repo/network_repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../../../widgets/custom_dialogue.dart';
@@ -77,7 +77,7 @@ class OtpScreenController extends GetxController
         final String token = idTokenResult.token!;
         await storage.write('token', token);
         // Check if the user exists or not
-        await checkUserExistsORnot(token, FCMtoken);
+        await checkUserExistsORnot(token, fcmtoken);
       }
     } catch (e) {
       // Handle incorrect OTP here

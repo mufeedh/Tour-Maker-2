@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../../data/models/booking_model.dart';
-import '../../../data/repo/booking_repo.dart';
+import '../../../data/models/network_models/booking_model.dart';
+import '../../../data/repo/network_repo/booking_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/booking_screen_view.dart';
@@ -85,12 +85,6 @@ class BookingScreenController extends GetxController
     }
   }
 
-  void onTapIcon(BookingsModel upcomingList) {}
-  void onTapSingleUpComingBooking(BookingsModel upcomingList) {
-    Get.toNamed(Routes.PAYMENT_SUMMARY, arguments: upcomingList.id)!
-        .whenComplete(() => loadData());
-  }
-
   num getTotalTravellers(num adults, num childrens) {
     final num sum = adults + childrens;
     return sum;
@@ -103,14 +97,18 @@ class BookingScreenController extends GetxController
     return formattedDate;
   }
 
-  void onTapSingleCompletedBooking(BookingsModel completedList) {}
+  void onTapSingleUpComingBooking(BookingsModel upcomingList) {
+    Get.toNamed(Routes.PAYMENT_SUMMARY, arguments: upcomingList.id)!
+        .whenComplete(() => loadData());
+  }
+
   void onTapUpcomingBookingTravellers(BookingsModel upcomingList) {
     Get.toNamed(Routes.TRAVELLERS_SCREEN, arguments: upcomingList.id)!
         .whenComplete(() => loadData());
   }
 
-  void onTapCancelledBookingTravellers(BookingsModel completedList) {
-    Get.toNamed(Routes.TRAVELLERS_SCREEN, arguments: completedList.id)!
+  void onTapSingleCompletedBooking(BookingsModel completedList) {
+    Get.toNamed(Routes.PAYMENT_SUMMARY, arguments: completedList.id)!
         .whenComplete(() => loadData());
   }
 
@@ -119,5 +117,13 @@ class BookingScreenController extends GetxController
         .whenComplete(() => loadData());
   }
 
-  void onTapSingleCancelledBooking(BookingsModel upcomingList) {}
+  void onTapSingleCancelledBooking(BookingsModel cancelledList) {
+    Get.toNamed(Routes.PAYMENT_SUMMARY, arguments: cancelledList.id)!
+        .whenComplete(() => loadData());
+  }
+
+  void onTapCancelledBookingTravellers(BookingsModel cancelledList) {
+    Get.toNamed(Routes.TRAVELLERS_SCREEN, arguments: cancelledList.id)!
+        .whenComplete(() => loadData());
+  }
 }

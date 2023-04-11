@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/theme/style.dart';
+
+import '../../../data/models/network_models/budget_models.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_loadinscreen.dart';
 import '../controllers/filter_screen_controller.dart';
@@ -365,6 +367,7 @@ class FilterScreenView extends GetView<FilterScreenController> {
                 child: SizedBox(
                   height: 40,
                   child: TextField(
+                    keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     cursorColor: englishViolet,
                     decoration: InputDecoration(
@@ -392,20 +395,3 @@ class FilterScreenView extends GetView<FilterScreenController> {
     );
   }
 }
-
-class Budget {
-  Budget({
-    required this.title,
-    required this.value,
-  });
-  String title;
-  String value;
-}
-
-List<Budget> budgetList = <Budget>[
-  Budget(title: 'Under Rs. 100000', value: '100000'),
-  Budget(title: 'Under Rs. 50000', value: '50000'),
-  Budget(title: 'Under Rs. 10000', value: '10000'),
-  Budget(title: 'Under Rs. 5000', value: '5000'),
-  Budget(title: 'Under Rs. 3000', value: '3000'),
-];

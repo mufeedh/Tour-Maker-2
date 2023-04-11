@@ -4,8 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
-import '../../../data/models/travellers_model.dart';
-import '../../../data/repo/passenger_repo.dart';
+import '../../../data/models/network_models/travellers_model.dart';
+import '../../../data/repo/network_repo/passenger_repo.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../views/single_passenger_view.dart';
 

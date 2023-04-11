@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/exclusivetour_model.dart';
-import '../models/single_exclusive_tour_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/exclusivetour_model.dart';
+import '../../models/network_models/single_exclusive_tour_model.dart';
 
 class ExclusiveTourRepository {
   List<ExclusiveToursModel> exclusiveToursList = <ExclusiveToursModel>[];
@@ -39,7 +41,7 @@ class ExclusiveTourRepository {
     try {
       final Map<String, dynamic>? authHeader = await Client().getAuthHeader();
       final Response<Map<String, dynamic>> res = await dio.getUri(
-          Uri.parse('tours?exclusive=$destination'),
+          Uri.parse('tours/packages?exclusive=$destination'),
           options: Options(headers: authHeader));
       if (res.statusCode == 200) {
         singleexclusiveToursList =
@@ -49,6 +51,7 @@ class ExclusiveTourRepository {
         return ApiResponse<List<SingleExclusiveTourModel>>.completed(
             singleexclusiveToursList);
       } else {
+        log('affairscjjh ${res.statusMessage}');
         return ApiResponse<List<SingleExclusiveTourModel>>.error(
             res.statusMessage);
       }

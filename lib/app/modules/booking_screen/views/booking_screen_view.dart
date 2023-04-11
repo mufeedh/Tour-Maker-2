@@ -7,7 +7,7 @@ import 'package:sizer/sizer.dart';
 import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
 import '../../../widgets/custom_errorscreen.dart';
-import '../../../widgets/custom_loadinscreen.dart';
+import '../../../widgets/custom_shimmer.dart';
 import '../controllers/booking_screen_controller.dart';
 
 class BookingScreenView extends GetView<BookingScreenController> {
@@ -27,7 +27,14 @@ class BookingScreenView extends GetView<BookingScreenController> {
           ),
         ),
         body: controller.obx(
-          onLoading: const CustomLoadingScreen(),
+          onLoading: ListView.builder(
+            itemCount: 10,
+            itemBuilder: (BuildContext context, int index) => CustomShimmer(
+              height: 88,
+              margin: const EdgeInsets.all(10),
+              borderRadius: BorderRadius.circular(18),
+            ),
+          ),
           (dynamic state) => Column(
             children: <Widget>[
               Padding(
@@ -417,7 +424,7 @@ class BookingScreenView extends GetView<BookingScreenController> {
                 ),
                 GestureDetector(
                   onTap: () => controller.onTapCancelledBookingTravellers(
-                      controller.upcomingList[index]),
+                      controller.cancelledList[index]),
                   child: Column(
                     children: <Widget>[
                       Container(

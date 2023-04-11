@@ -85,25 +85,3 @@ final TextStyle paragraph4 = GoogleFonts.montserrat(
   fontSize: 10,
   color: fontColor,
 );
-
-List<String> imageData = <String>[
-  'https://picsum.photos/seed/image001/500/500',
-  'https://picsum.photos/seed/image002/500/800',
-  'https://picsum.photos/seed/image003/500/300',
-  'https://picsum.photos/seed/image004/500/900',
-  'https://picsum.photos/seed/image005/500/600',
-  'https://picsum.photos/seed/image006/500/500',
-  'https://picsum.photos/seed/image007/500/400',
-  'https://picsum.photos/seed/image008/500/700',
-  'https://picsum.photos/seed/image009/500/600',
-  'https://picsum.photos/seed/image010/500/900',
-  'https://picsum.photos/seed/image011/500/900',
-  'https://picsum.photos/seed/image012/500/700',
-  'https://picsum.photos/seed/image013/500/700',
-  'https://picsum.photos/seed/image014/500/800',
-  'https://picsum.photos/seed/image015/500/500',
-  'https://picsum.photos/seed/image016/500/700',
-  'https://picsum.photos/seed/image017/500/600',
-  'https://picsum.photos/seed/image018/500/900',
-  'https://picsum.photos/seed/image019/500/800',
-];

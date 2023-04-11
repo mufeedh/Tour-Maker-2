@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/style.dart';
 import '../../core/tour_maker_icons.dart';
-import '../data/models/booking_model.dart';
+import '../data/models/network_models/booking_model.dart';
 
 class BookingTile extends StatelessWidget {
   const BookingTile({

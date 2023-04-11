@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
-import '../../services/network_services/dio_client.dart';
-import '../models/booking_model.dart';
-import '../models/single_booking_model.dart';
+import '../../../services/network_services/dio_client.dart';
+import '../../models/network_models/booking_model.dart';
+import '../../models/network_models/single_booking_model.dart';
 
 class BookingRepository {
   List<BookingsModel> bookingList = <BookingsModel>[];
