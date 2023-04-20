@@ -17,7 +17,6 @@ class UserRepository {
   Future<ApiResponse<Map<String, dynamic>>> checkUserExists() async {
     final dynamic token = await storage.read('token');
     log('tok in rep $token ');
-    log('repo');
     try {
       final Response<Map<String, dynamic>> response = await dio.getUri(
         Uri.parse('user/profile'),
@@ -27,6 +26,7 @@ class UserRepository {
           },
         ),
       );
+      log('checkUserExists ${response.statusMessage}');
       // final Response<Map<String, dynamic>> res =
       //     response.data!['result'] as Response<Map<String, dynamic>>;
       if (response.statusCode == 200) {
@@ -75,6 +75,8 @@ class UserRepository {
         Uri.parse('user/profile'),
         options: Options(headers: authHeader),
       );
+      log('getUserDetails ${response.statusMessage}');
+
       // final Response<Map<String, dynamic>> res =
       //     response.data!['result'] as Response<Map<String, dynamic>>;
       if (response.statusCode == 200) {
@@ -105,6 +107,8 @@ class UserRepository {
           Uri.parse('user/signup'),
           options: Options(headers: autheHeader),
           data: user.toJson());
+      log('signUpTheUser ${res.statusMessage}');
+
       if (res.statusCode == 200) {
         log('200');
 

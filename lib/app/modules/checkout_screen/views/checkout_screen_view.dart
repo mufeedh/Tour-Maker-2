@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../core/theme/style.dart';
+import '../../../../core/utils/constants.dart';
 import '../../../../core/utils/date_utils.dart';
 import '../../../../core/utils/string_utils.dart';
 import '../../../widgets/custom_appbar.dart';
@@ -174,8 +175,11 @@ class CheckoutScreenView extends GetView<CheckoutScreenController> {
                       ),
                     buildItem(
                         'Total Amount :', '₹ ${controller.getTotalAmount()}'),
-                    buildItem('Discount :',
-                        '- ₹ ${controller.getCommissionAmount()}'),
+                    if (currentUserCategory == 'Standard User')
+                      const SizedBox()
+                    else
+                      buildItem('Discount :',
+                          '- ₹ ${controller.getCommissionAmount()}'),
                     const Divider(
                       color: Colors.grey,
                       endIndent: 40,

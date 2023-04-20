@@ -6,8 +6,8 @@ import 'package:sizer/sizer.dart';
 
 import '../../core/theme/style.dart';
 import '../../core/tour_maker_icons.dart';
+import '../../core/utils/constants.dart';
 import '../modules/single_tour/controllers/single_tour_controller.dart';
-import '../modules/splash_screen/controllers/splash_screen_controller.dart';
 import 'custom_elevated_button.dart';
 
 class CustomDeparture extends StatelessWidget {
@@ -242,31 +242,41 @@ class CustomDeparture extends StatelessWidget {
               children: <Widget>[
                 Text('For Direct Booking',
                     style: GoogleFonts.montserrat(color: Colors.grey.shade800)),
-                if (currentUserCategory == 'standard user' ||
-                    currentUserCategory == '')
-                  Container()
-                else
-                  Container(
-                    width: 35,
-                    height: 35,
-                    decoration: BoxDecoration(
-                        color: backgroundColor, shape: BoxShape.circle),
-                    child: Center(
-                      child: IconButton(
-                        onPressed: controller.onCallClicked,
-                        icon: Icon(TourMaker.call,
-                            color: Colors.grey.shade800, size: 20),
+                if (currentUserCategory != 'Standard User')
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        width: 35,
+                        height: 35,
+                        decoration: BoxDecoration(
+                            color: backgroundColor, shape: BoxShape.circle),
+                        child: Center(
+                          child: IconButton(
+                            onPressed: controller.onCallClicked,
+                            icon: Icon(TourMaker.call,
+                                color: Colors.grey.shade800, size: 20),
+                          ),
+                        ),
                       ),
+                      GestureDetector(
+                        onTap: controller.onWhatsAppClicked,
+                        child: SvgPicture.asset(
+                          'assets/whatsapp.svg',
+                          height: 20,
+                          width: 20,
+                        ),
+                      )
+                    ],
+                  )
+                else
+                  GestureDetector(
+                    onTap: controller.onWhatsAppClicked,
+                    child: SvgPicture.asset(
+                      'assets/whatsapp.svg',
+                      height: 20,
+                      width: 20,
                     ),
-                  ),
-                GestureDetector(
-                  onTap: controller.onWhatsAppClicked,
-                  child: SvgPicture.asset(
-                    'assets/whatsapp.svg',
-                    height: 20,
-                    width: 20,
-                  ),
-                ),
+                  )
               ],
             ),
           ],

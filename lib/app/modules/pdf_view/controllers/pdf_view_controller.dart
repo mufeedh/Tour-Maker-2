@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter/services.dart';
+import 'dart:typed_data';
 
-import 'package:esys_flutter_share_plus/esys_flutter_share_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../views/pdf_view_view.dart';
@@ -15,74 +15,59 @@ import '../views/pdf_view_view.dart';
 class PdfViewController extends GetxController with StateMixin<PdfViewView> {
   final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
 
-  Rx<String> localPDFpath = ''.obs;
-  RxString remotePDFpath = ''.obs;
+  RxString url = ''.obs;
+  final RxInt currentPage = 0.obs;
+  final RxInt totalPages = 0.obs;
 
   @override
   void onInit() {
-    getpdf();
     super.onInit();
-  }
-
-  @override
-  void onClose() {
-    // delete the local PDF file when the controller is closed
-    if (localPDFpath.value.isNotEmpty) {
-      File(localPDFpath.value).delete();
-    }
-    super.onClose();
+    getpdf();
   }
 
   Future<void> getpdf() async {
     change(null, status: RxStatus.loading());
     if (Get.arguments != null) {
-      remotePDFpath.value = Get.arguments[0] as String;
-      log('remotePDFpath : ${remotePDFpath.value}');
-      await downloadPDF().then((File f) {
-        localPDFpath.value = f.path;
-        log('f path : ${f.path}');
-      });
-      change(null, status: RxStatus.success());
+      url.value = Get.arguments[0] as String;
+      log('remotePDFpath : ${url.value}');
+    }
+    change(null, status: RxStatus.success());
+  }
+
+  void onPageChanged(int page, int total) {
+    currentPage.value = page;
+    totalPages.value = total;
+  }
+
+  Future<void> downloadPdf() async {
+    log('download Pdf');
+    try {
+      final http.Response response = await http.get(Uri.parse(url.value));
+      final Uint8List bytes = response.bodyBytes;
+
+      final Directory directory = await getApplicationDocumentsDirectory();
+      final File file = File('${directory.path}/pdf.pdf');
+      await file.writeAsBytes(bytes);
+
+      Get.snackbar('PDF Downloaded', 'The PDF has been downloaded.');
+    } catch (e) {
+      log('download $e');
     }
   }
 
-  Future<File> downloadPDF() async {
-    final Completer<File> completer = Completer<File>();
+  Future<void> sharePdf() async {
+    log('share pdf');
     try {
-      final String url = remotePDFpath.value;
-      log('url : $url');
-      final String filename = url.substring(url.lastIndexOf('/') + 1);
-      log('filename : $filename');
-      final HttpClientRequest request =
-          await HttpClient().getUrl(Uri.parse(url));
-      log('request : $request');
-      final HttpClientResponse response = await request.close();
-      final Uint8List bytes =
-          await consolidateHttpClientResponseBytes(response);
-      log('response : $response');
-      final Directory dir = await getApplicationDocumentsDirectory();
-      log('Download PDF file $dir');
-      log('${dir.path}/$filename');
-      final File file = File('${dir.path}/$filename');
-      await file.writeAsBytes(bytes, flush: true);
-      completer.complete(file);
-    } catch (e) {
-      throw Exception('Error downloading PDF file!');
-    }
-    return completer.future;
-  }
+      final http.Response response = await http.get(Uri.parse(url.value));
+      final Uint8List bytes = response.bodyBytes;
 
-  Future<void> sharePDF() async {
-    if (localPDFpath.value.isEmpty) {
-      throw Exception('PDF file not found!');
-    }
-    try {
-      final ByteData bytes = await rootBundle.load(localPDFpath.value);
-      log('localpdf ${localPDFpath.value}');
-      await Share.file('', '', File(localPDFpath.value).readAsBytesSync(),
-          'application/pdf');
+      final Directory directory = await getTemporaryDirectory();
+      final File file = File('${directory.path}/pdf.pdf');
+      await file.writeAsBytes(bytes);
+
+      await Share.shareFiles(<String>[file.path], text: 'Check out this PDF!');
     } catch (e) {
-      throw Exception('Error sharing PDF file!');
+      log('share $e');
     }
   }
 }

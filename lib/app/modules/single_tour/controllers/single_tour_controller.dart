@@ -1,12 +1,12 @@
 import 'dart:developer';
-import 'package:logger/logger.dart';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/utils/constants.dart';
 import '../../../data/models/network_models/checkout_model.dart';
 import '../../../data/models/network_models/order_model.dart';
 import '../../../data/models/network_models/single_tour_model.dart';
@@ -18,13 +18,12 @@ import '../../../data/repo/network_repo/wishlist_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
 import '../../../widgets/custom_dialogue.dart';
-import '../../splash_screen/controllers/splash_screen_controller.dart';
 import '../views/single_tour_view.dart';
 
 class SingleTourController extends GetxController
-    with StateMixin<SingleTourView>, GetSingleTickerProviderStateMixin {
-  late final TabController tabcontroller =
-      TabController(length: 2, vsync: this);
+    with StateMixin<SingleTourView> {
+  // late final TabController tabcontroller =
+  //     TabController(length: 2, vsync: this);
   late int totalAmount;
   late Razorpay razorPay;
   final RxInt selectedDateIndex = 0.obs;
@@ -46,43 +45,39 @@ class SingleTourController extends GetxController
   int? order;
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
-    log('bbdfbiadb init');
-    fetchData();
+    await fetchData();
   }
 
   Future<void> fetchData() async {
-    // try {
     change(null, status: RxStatus.loading());
-    final int id = await loadData();
+    try {
+      final int id = await loadData();
+      singleTour.value = await loadIndividualTours(id);
+      batchTours.value = await loadSingleTourData(id);
+      final List<WishListModel>? wishlistData = await getWishList(id);
+      if (wishlistData != null) {
+        wishlists.value = wishlistData;
 
-    singleTour.value = await loadIndividualTours(id);
-    batchTours.value = await loadSingleTourData(id);
-    final List<WishListModel>? wishlistData = await getWishList(id);
-    if (wishlistData != null) {
-      wishlists.value = wishlistData;
-      currentUserCategory != null
-          ? log('koooooooooiiiiiiii$currentUserCategory')
-          : log('kkudhgbbstvygdhs$currentUserCategory');
-      for (final WishListModel wm in wishlists) {
-        if (wm.id == id) {
-          isFavourite.value = true;
-          break;
-        } else {
-          isFavourite.value = false;
+        for (final WishListModel wm in wishlists) {
+          if (wm.id == id) {
+            isFavourite.value = true;
+            break;
+          } else {
+            isFavourite.value = false;
+          }
         }
       }
+      change(null, status: RxStatus.success());
+    } catch (er) {
+      // logger.e('adee e message');
+      // logger.i('adee i message');
+      // logger.wtf('adee wrf message');
+      change(null, status: RxStatus.error(er.toString()));
+      // logger.d('adee d $er message');
+      throw Exception('failed to load fetch data $er');
     }
-    change(null, status: RxStatus.success());
-    // } catch (er) {
-    //   logger.e('adee e message');
-    //   logger.i('adee i message');
-    //   logger.wtf('adee wrf message');
-    //   change(null, status: RxStatus.error(er.toString()));
-    //   logger.d('adee d $er message');
-    //   throw Exception('failed to load fetch data $er');
-    // }
   }
 
   Future<int> loadData() async {
@@ -135,13 +130,13 @@ class SingleTourController extends GetxController
     }
   }
 
-  void onTapFixedDeparture() {
-    tabcontroller.animateTo(1);
-  }
+  // void onTapFixedDeparture() {
+  //   tabcontroller.animateTo(1);
+  // }
 
-  void onTapCustomDeparture() {
-    tabcontroller.animateTo(1);
-  }
+  // void onTapCustomDeparture() {
+  //   tabcontroller.animateTo(1);
+  // }
 
   void onDateSelected(int index) {
     selectedDateIndex.value = index;
@@ -153,6 +148,15 @@ class SingleTourController extends GetxController
   }
 
   Future<void> onViewItineraryClicked(String itinerary) async {
+    // change(null, status: RxStatus.loading());
+    // try {
+    //   log('hihhihih $itinerary.pdf');
+    //   launchUrl(Uri.parse(itinerary));
+    // } catch (e) {
+    //   log('hihhihih $e');
+    //   change(null, status: RxStatus.error(e.toString()));
+    // }
+    // change(null, status: RxStatus.success());
     Get.toNamed(Routes.PDF_VIEW, arguments: <String>[itinerary]);
   }
 
@@ -184,19 +188,23 @@ class SingleTourController extends GetxController
   }
 
   Future<void> onClickAddPassenger(PackageData package) async {
-    final DateTime sd = DateTime.parse(package.dateOfTravel.toString());
-    final DateTime today = DateTime.now();
-    if (sd.difference(today).inDays <= 7) {
-      CustomDialog().showCustomDialog('Warning ! !',
-          'The selected date is very near \nso you need to pay full amount and\n you have to contact and confirm the tour',
-          onConfirm: () {
+    if (currentUserAddress == null) {
+      final DateTime sd = DateTime.parse(package.dateOfTravel.toString());
+      final DateTime today = DateTime.now();
+      if (sd.difference(today).inDays <= 7) {
+        CustomDialog().showCustomDialog('Warning ! !',
+            'The selected date is very near \nso you need to pay full amount and\n you have to contact and confirm the tour',
+            onConfirm: () {
+          confirmPayment(package.iD!, package);
+          Get.back();
+        }, onCancel: () {
+          Get.back();
+        }, confirmText: 'OK', cancelText: 'back');
+      } else {
         confirmPayment(package.iD!, package);
-        Get.back();
-      }, onCancel: () {
-        Get.back();
-      }, confirmText: 'OK', cancelText: 'back');
+      }
     } else {
-      confirmPayment(package.iD!, package);
+      Get.toNamed(Routes.USER_REGISTERSCREEN)!.whenComplete(() => loadData());
     }
   }
 
@@ -315,7 +323,7 @@ class SingleTourController extends GetxController
     }
     final int passengers = totaltravellers();
     Get.toNamed(Routes.ADD_PASSENGER, arguments: <dynamic>[order, passengers]);
-    log('kunukunnu confirm single tour ${order}');
+    log('kunukunnu confirm single tour $order');
     isLoading.value = false;
   }
 

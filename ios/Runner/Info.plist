@@ -14,6 +14,8 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>tour_maker</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>This app requires to save your images user gallery</string>
 	<key>NSLocationAlwaysUsageDescription</key>
     <string>Needed to access location</string>
     <key>NSLocationWhenInUseUsageDescription</key>

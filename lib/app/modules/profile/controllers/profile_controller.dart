@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../../../core/theme/style.dart';
-import '../../../../main.dart';
 
 import '../../../data/models/network_models/razorpay_model.dart';
 import '../../../data/models/network_models/user_model.dart';
@@ -53,11 +52,12 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
   Future<void> getData() async {
     change(null, status: RxStatus.loading());
     final ApiResponse<UserModel> res = await userRepo.getUserDetails();
+    log('getData ${res.message}');
 
     if (res.status == ApiResponseStatus.completed && res.data != null) {
       userData.value = res.data!;
       username = userData.value.name;
-      currentUserName = userData.value.name;
+
       if (userData.value.profileImage != null) {
         showUserPic.value = true;
       } else {
@@ -103,6 +103,7 @@ class ProfileController extends GetxController with StateMixin<ProfileView> {
 
   Future<void> onClickPayment() async {
     isloading.value = true;
+
     final RazorPayModel razorPaymodel = RazorPayModel(
       amount: 1000,
       contact: userData.value.phoneNumber,

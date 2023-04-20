@@ -2,13 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../main.dart';
+import '../../../../core/utils/constants.dart';
 
 import '../../../data/models/network_models/user_model.dart';
 import '../../../data/repo/network_repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
-import '../../splash_screen/controllers/splash_screen_controller.dart';
 
 class LoginController extends GetxController with StateMixin<dynamic> {
   GlobalKey<FormState> formKey = GlobalKey();
@@ -46,8 +45,8 @@ class LoginController extends GetxController with StateMixin<dynamic> {
         category: 'Standard User',
       );
       currentUserName = name.value;
-      currentUserState = state.value;
-      currentUserCategory = user.category;
+      // currentUserState = state.value;
+      currentUserCategory = 'Standard User';
       final ApiResponse<Map<String, dynamic>> res =
           await userRepo.signUpTheUser(user);
       if (res.status == ApiResponseStatus.completed) {

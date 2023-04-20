@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../../../data/models/network_models/travellers_model.dart';
@@ -13,21 +13,11 @@ class SinglePassengerController extends GetxController
     with StateMixin<SinglePassengerView> {
   RxList<TravellersModel> passenger = <TravellersModel>[].obs;
   int? id;
-  var adhar;
+  String? adhar;
   @override
   void onInit() {
     super.onInit();
     loadData();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   Future<void> loadData() async {
@@ -48,16 +38,21 @@ class SinglePassengerController extends GetxController
         passenger.value = res.data!;
         await loadAAdhar(passenger[0].name!, passenger[0].orderId!);
       } else {}
-    } catch (e) {}
+    } catch (e) {
+      log('cant fetch passenger detail : $e');
+    }
   }
 
   Future<void> loadAAdhar(String name, int orderid) async {
-    var res = await PassengerRepository().getadhar(name, orderid);
+    final ApiResponse<dynamic> res =
+        await PassengerRepository().getadhar(name, orderid);
     try {
       if (res.data != null) {
-        adhar = res.data;
+        adhar = res.data as String;
       } else {}
-    } catch (e) {}
+    } catch (e) {
+      log('cannot fetch aadahr : $e');
+    }
   }
 
   Uint8List getImageFromBytes() {

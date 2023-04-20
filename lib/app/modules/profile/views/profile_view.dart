@@ -122,7 +122,7 @@ class ProfileView extends GetView<ProfileController> {
                               child: controller.userData.value.address == ''
                                   ? Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
+                                      children: <Widget>[
                                         GestureDetector(
                                           onTap: () =>
                                               controller.onClickAdddetail(),

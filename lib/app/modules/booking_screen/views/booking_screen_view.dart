@@ -17,64 +17,55 @@ class BookingScreenView extends GetView<BookingScreenController> {
     final BookingScreenController controller =
         Get.put(BookingScreenController());
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          centerTitle: true,
-          title: Text(
-            'Bookings',
-            style: TextStyle(color: fontColor),
-          ),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Text(
+          'Bookings',
+          style: TextStyle(color: fontColor),
         ),
-        body: controller.obx(
-          onLoading: ListView.builder(
-            itemCount: 10,
-            itemBuilder: (BuildContext context, int index) => CustomShimmer(
-              height: 88,
-              margin: const EdgeInsets.all(10),
-              borderRadius: BorderRadius.circular(18),
+      ),
+      body: Column(
+        children: <Widget>[
+          Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 17),
+              child: Container(
+                height: 60,
+                width: 100.w,
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color(0xFFF1F1F1),
+                ),
+                child: TabBar(
+                  controller: controller.tabcontroller,
+                  indicatorColor: Colors.white,
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.black,
+                  indicator: BoxDecoration(
+                    color: englishViolet,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(15),
+                    ),
+                  ),
+                  tabs: const <Widget>[
+                    Tab(child: Text('Upcoming')),
+                    Tab(child: Text('Completed')),
+                    Tab(child: Text('Cancelled')),
+                  ],
+                ),
+              )),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: tabViewSection(controller),
             ),
           ),
-          (dynamic state) => Column(
-            children: <Widget>[
-              Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 12.0, horizontal: 17),
-                  child: Container(
-                    height: 60,
-                    width: 100.w,
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: const Color(0xFFF1F1F1),
-                    ),
-                    child: TabBar(
-                      controller: controller.tabcontroller,
-                      indicatorColor: Colors.white,
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.black,
-                      indicator: BoxDecoration(
-                        color: englishViolet,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                      ),
-                      tabs: const <Widget>[
-                        Tab(child: Text('Upcoming')),
-                        Tab(child: Text('Completed')),
-                        Tab(child: Text('Cancelled')),
-                      ],
-                    ),
-                  )),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: tabViewSection(controller),
-                ),
-              ),
-            ],
-          ),
-        ));
+        ],
+      ),
+    );
   }
 
   TabBarView tabViewSection(BookingScreenController controller) {
@@ -86,18 +77,30 @@ class BookingScreenView extends GetView<BookingScreenController> {
   }
 
   Widget buildCompletedView() {
-    return Obx(() {
-      return RefreshIndicator(
-        onRefresh: controller.loadData,
-        color: englishViolet,
-        child: controller.completedList.isNotEmpty
-            ? completedList()
-            : CustomErrorScreen(
-                errorText: 'No Completed \n bookings ',
-                onRefresh: controller.loadData,
-              ),
-      );
-    });
+    return Obx(
+      () {
+        return RefreshIndicator(
+          onRefresh: controller.loadData,
+          color: englishViolet,
+          child: controller.isLoading.value == true
+              ? ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (BuildContext context, int index) {
+                    return CustomShimmer(
+                      height: 88,
+                      margin: const EdgeInsets.all(10),
+                      borderRadius: BorderRadius.circular(18),
+                    );
+                  })
+              : controller.completedList.isNotEmpty
+                  ? completedList()
+                  : CustomErrorScreen(
+                      errorText: 'No Completed \n bookings ',
+                      onRefresh: controller.loadData,
+                    ),
+        );
+      },
+    );
   }
 
   ListView completedList() {
@@ -120,12 +123,22 @@ class BookingScreenView extends GetView<BookingScreenController> {
       return RefreshIndicator(
         onRefresh: controller.loadData,
         color: englishViolet,
-        child: controller.cancelledList.isNotEmpty
-            ? cancelledList()
-            : CustomErrorScreen(
-                errorText: 'No Cancelled \n bookings',
-                onRefresh: controller.loadData,
-              ),
+        child: controller.isLoading.value == true
+            ? ListView.builder(
+                itemCount: 10,
+                itemBuilder: (BuildContext context, int index) {
+                  return CustomShimmer(
+                    height: 88,
+                    margin: const EdgeInsets.all(10),
+                    borderRadius: BorderRadius.circular(18),
+                  );
+                })
+            : controller.cancelledList.isNotEmpty
+                ? cancelledList()
+                : CustomErrorScreen(
+                    errorText: 'No Cancelled \n bookings',
+                    onRefresh: controller.loadData,
+                  ),
       );
     });
   }
@@ -150,12 +163,22 @@ class BookingScreenView extends GetView<BookingScreenController> {
       return RefreshIndicator(
         onRefresh: controller.loadData,
         color: englishViolet,
-        child: controller.upcomingList.isNotEmpty
-            ? upcomingList()
-            : CustomErrorScreen(
-                errorText: 'No Upcoming\n bookings',
-                onRefresh: controller.loadData,
-              ),
+        child: controller.isLoading.value == true
+            ? ListView.builder(
+                itemCount: 10,
+                itemBuilder: (BuildContext context, int index) {
+                  return CustomShimmer(
+                    height: 88,
+                    margin: const EdgeInsets.all(10),
+                    borderRadius: BorderRadius.circular(18),
+                  );
+                })
+            : controller.upcomingList.isNotEmpty
+                ? upcomingList()
+                : CustomErrorScreen(
+                    errorText: 'No Upcoming\n bookings',
+                    onRefresh: controller.loadData,
+                  ),
       );
     });
   }

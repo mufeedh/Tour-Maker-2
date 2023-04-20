@@ -22,71 +22,75 @@ class AddPassengerView extends GetView<AddPassengerController> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Obx(() {
-        return Scaffold(
-          extendBody: true,
-          extendBodyBehindAppBar: true,
-          appBar: const CustomAppBar(),
-          resizeToAvoidBottomInset: true,
-          body: controller.obx(
-            onEmpty: const CustomErrorScreen(
-                errorText: 'Please Add \nPassengers Details'),
-            onLoading: const CustomLoadingScreen(),
-            (AddPassengerView? state) => Column(
-              children: <Widget>[
-                const SizedBox(height: 16),
-                Text('Travellers', style: heading2),
-                Text(
-                    '${controller.travellers.length}/${controller.totalTravellers} passengers added'),
-                const SizedBox(height: 8),
-                Obx(
-                  () {
-                    return controller.travellers.isNotEmpty
-                        ? Expanded(
-                            child: ListView.builder(
-                              physics: const BouncingScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: controller.travellers.length,
-                              itemBuilder: (BuildContext context, int index) =>
-                                  PassengerCard(
-                                      travellers: controller.travellers[index]),
-                            ),
-                          )
-                        : const Expanded(
-                            child: CustomErrorScreen(
-                                errorText: 'Please Add \nPassengers & Details'),
-                          );
-                  },
-                ),
-              ],
-            ),
-          ),
-          floatingActionButtonLocation:
-              controller.totalTravellers == controller.travellers.length
-                  ? FloatingActionButtonLocation.centerFloat
-                  : FloatingActionButtonLocation.endFloat,
-          floatingActionButton: controller.totalTravellers ==
-                  controller.travellers.length
-              ? AnimatedContainer(
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.bounceInOut,
-                  child: FloatingActionButton.extended(
-                    onPressed: () => controller.gotoCheckoutPage(),
-                    backgroundColor: englishViolet,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    label: controller.isLoadingIc.value
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('Ready to checkout'),
+      child: Obx(
+        () {
+          return Scaffold(
+            extendBody: true,
+            extendBodyBehindAppBar: true,
+            appBar: const CustomAppBar(),
+            resizeToAvoidBottomInset: true,
+            body: controller.obx(
+              onEmpty: const CustomErrorScreen(
+                  errorText: 'Please Add \nPassengers Details'),
+              onLoading: const CustomLoadingScreen(),
+              (AddPassengerView? state) => Column(
+                children: <Widget>[
+                  const SizedBox(height: 16),
+                  Text('Travellers', style: heading2),
+                  Text(
+                      '${controller.travellers.length}/${controller.totalTravellers} passengers added'),
+                  const SizedBox(height: 8),
+                  Obx(
+                    () {
+                      return controller.travellers.isNotEmpty
+                          ? Expanded(
+                              child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: controller.travellers.length,
+                                itemBuilder:
+                                    (BuildContext context, int index) =>
+                                        PassengerCard(
+                                            travellers:
+                                                controller.travellers[index]),
+                              ),
+                            )
+                          : const Expanded(
+                              child: CustomErrorScreen(
+                                  errorText: 'Please Add \nPassengers Details'),
+                            );
+                    },
                   ),
-                )
-              : FloatingActionButton(
-                  onPressed: () => showAddPassengerDialogue(context),
-                  backgroundColor: englishViolet,
-                  materialTapTargetSize: MaterialTapTargetSize.padded,
-                  child: const Icon(Icons.add),
-                ),
-        );
-      }),
+                ],
+              ),
+            ),
+            floatingActionButtonLocation:
+                controller.totalTravellers == controller.travellers.length
+                    ? FloatingActionButtonLocation.centerFloat
+                    : FloatingActionButtonLocation.endFloat,
+            floatingActionButton: controller.totalTravellers ==
+                    controller.travellers.length
+                ? AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.bounceInOut,
+                    child: FloatingActionButton.extended(
+                      onPressed: () => controller.gotoCheckoutPage(),
+                      backgroundColor: englishViolet,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      label: controller.isLoadingIc.value
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text('Ready to checkout'),
+                    ),
+                  )
+                : FloatingActionButton(
+                    onPressed: () => showAddPassengerDialogue(context),
+                    backgroundColor: englishViolet,
+                    materialTapTargetSize: MaterialTapTargetSize.padded,
+                    child: const Icon(Icons.add),
+                  ),
+          );
+        },
+      ),
     );
   }
 
@@ -182,6 +186,16 @@ class AddPassengerView extends GetView<AddPassengerController> {
                                     File(controller.image.value),
                                   ),
                                 ),
+                                Row(
+                                  children: <Widget>[
+                                    IconButton(
+                                      icon: const Icon(Icons.camera_alt),
+                                      onPressed: () {
+                                        onClickCamera(context);
+                                      },
+                                    ),
+                                  ],
+                                )
                               ],
                             )
                           : Row(

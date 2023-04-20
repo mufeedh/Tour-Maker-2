@@ -6,6 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
+import '../../../../core/utils/constants.dart';
 import '../../../data/models/network_models/user_model.dart';
 import '../../../data/repo/network_repo/user_repo.dart';
 import '../../../services/network_services/dio_client.dart';
@@ -75,14 +76,12 @@ class UserRegisterscreenController extends GetxController
                 user.value.gender?.toLowerCase(),
             orElse: () => Gender.Male)
         : Gender.Male;
-    log('Category value: ${user.value.category}');
-    selectedCategoryType.value = user.value.category != null
-        ? CategoryType.values.firstWhere(
-            (CategoryType categoryType) =>
-                categoryType.toString().split('.').last.toLowerCase() ==
-                user.value.category?.toLowerCase(),
-            orElse: () => CategoryType.Standard_User)
-        : CategoryType.Standard_User;
+    log('user category: ${user.value.category}');
+    log('CategoryType values: ${CategoryType.values}');
+    selectedCategoryType.value =
+        categoryTypeMap[user.value.category] ?? CategoryType.Standard_User;
+    log('CategoryType values: ${categoryTypeMap[user.value.category]}');
+
     userPhone.value = user.value.phoneNumber.toString();
     userName.value = user.value.name.toString();
     userAddress.value = user.value.address.toString();
@@ -127,6 +126,9 @@ class UserRegisterscreenController extends GetxController
     );
     if (res.status == ApiResponseStatus.completed) {
       log('Adeeb updated');
+      currentUserCategory = categoryOFuser;
+      log('Adeeb update usr category $categoryOFuser');
+      currentUserAddress = addressOFuser;
       isloading.value = false;
       Get.back();
     } else {
@@ -235,3 +237,12 @@ enum CategoryType {
   E_Service_Centre,
   Standard_User,
 }
+
+final Map<String, CategoryType> categoryTypeMap = <String, CategoryType>{
+  'Freelancer': CategoryType.Freelancer,
+  'Shop': CategoryType.Shop,
+  'Travel_Agency': CategoryType.Travel_Agency,
+  'Contact_Carriage': CategoryType.Contact_Carriage,
+  'E_Service_Centre': CategoryType.E_Service_Centre,
+  'Standard_User': CategoryType.Standard_User,
+};

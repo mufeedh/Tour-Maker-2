@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
@@ -39,7 +39,7 @@ class MainScreenView extends GetView<MainScreenController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         //Categories Section
-                        buildCategories(screenHeight),
+                        // buildCategories(screenHeight),
                         const SizedBox(height: 20),
                         Row(
                           children: <Widget>[
@@ -103,6 +103,7 @@ class MainScreenView extends GetView<MainScreenController> {
                     type: MaterialType.transparency,
                     elevation: 5,
                     child: CachedNetworkImage(
+                      cacheManager: DefaultCacheManager(),
                       placeholder: (BuildContext context, String url) =>
                           CustomShimmer(
                         margin: const EdgeInsets.all(7),
@@ -184,16 +185,15 @@ class MainScreenView extends GetView<MainScreenController> {
                       type: MaterialType.transparency,
                       elevation: 5,
                       child: CachedNetworkImage(
+                        cacheManager: DefaultCacheManager(),
                         placeholder: (BuildContext context, String url) =>
                             CustomShimmer(
                           margin: const EdgeInsets.all(7),
                           padding: const EdgeInsets.all(10),
                           width: screenWidth * 0.75,
                         ),
-                        imageUrl: controller.exclusiveToursList[index].image ==
-                                ''
-                            ? 'assets/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg'
-                            : controller.categoryList[index].image.toString(),
+                        imageUrl:
+                            controller.categoryList[index].image.toString(),
                         imageBuilder: (BuildContext context,
                                 ImageProvider<Object> imageProvider) =>
                             Container(
@@ -268,6 +268,7 @@ class MainScreenView extends GetView<MainScreenController> {
                       type: MaterialType.transparency,
                       elevation: 5,
                       child: CachedNetworkImage(
+                        cacheManager: DefaultCacheManager(),
                         placeholder: (BuildContext context, String url) =>
                             CustomShimmer(
                           width: 171,
@@ -275,11 +276,8 @@ class MainScreenView extends GetView<MainScreenController> {
                           padding: const EdgeInsets.all(10),
                           borderRadius: BorderRadius.circular(18),
                         ),
-                        imageUrl: controller.trendingToursList[index].image ==
-                                ''
-                            ? 'https://images.unsplash.com/photo-1589802829985-817e51171b92?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Nnx8fGVufDB8fHx8&w=1000&q=80'
-                            : controller.trendingToursList[index].image
-                                .toString(),
+                        imageUrl: controller.trendingToursList[index].image
+                            .toString(),
                         imageBuilder: (BuildContext context,
                                 ImageProvider<Object> imageProvider) =>
                             Container(
@@ -415,21 +413,21 @@ class MainScreenView extends GetView<MainScreenController> {
                                 ),
                                 child: Hero(
                                   transitionOnUserGestures: true,
-                                  tag: controller.categoryList[index],
+                                  tag: controller.categoryList[index].image
+                                      .toString(),
                                   child: SizedBox(
                                     height: 73,
                                     width: 73,
                                     child: Column(
                                       children: <Widget>[
                                         CachedNetworkImage(
+                                          // cacheKey:
+                                          //     'categories_image_cache_key ${controller.categoryList[index].image}',
+                                          // cacheManager: DefaultCacheManager(),
+                                          fadeInDuration:
+                                              const Duration(milliseconds: 600),
                                           imageUrl: controller
-                                                      .categoryList[index]
-                                                      .image ==
-                                                  ''
-                                              ? 'assets/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg'
-                                              : controller
-                                                  .categoryList[index].image
-                                                  .toString(),
+                                              .categoryList[index].image!,
                                           imageBuilder: (BuildContext context,
                                                   ImageProvider<Object>
                                                       imageProvider) =>

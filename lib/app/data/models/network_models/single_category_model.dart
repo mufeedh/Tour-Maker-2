@@ -11,13 +11,13 @@ class SingleCategoryModel {
     this.itinerary,
     this.name,
     this.nights,
-    this.priority,
+    // this.priority,
     this.region,
     this.tourCode,
     this.travelType,
     this.trending,
   });
-  int? amount;
+  num? amount;
   String? category;
   int? days;
   String? description;
@@ -28,7 +28,7 @@ class SingleCategoryModel {
   String? itinerary;
   String? name;
   int? nights;
-  int? priority;
+  // Null? priority;
   String? region;
   String? tourCode;
   String? travelType;
@@ -46,7 +46,6 @@ class SingleCategoryModel {
         'itinerary': itinerary,
         'name': name,
         'nights': nights,
-        'priority': priority,
         'region': region,
         'tour_code': tourCode,
         'travel_type': travelType,
@@ -55,7 +54,7 @@ class SingleCategoryModel {
 
   static SingleCategoryModel fromJson(Map<String, dynamic> json) =>
       SingleCategoryModel(
-        amount: json['amount'] as int,
+        amount: json['amount'] as num,
         category: json['category'] as String,
         days: json['days'] as int,
         description: json['description'] as String,
@@ -66,7 +65,7 @@ class SingleCategoryModel {
         itinerary: json['itinerary'] as String,
         name: json['name'] as String,
         nights: json['nights'] as int,
-        priority: json['priority'] as int,
+        // priority : json['priority'],
         region: json['region'] as String,
         tourCode: json['tour_code'] as String,
         travelType: json['travel_type'] as String,

@@ -46,8 +46,8 @@ class SearchDetailsController extends GetxController
   }
 
   Future<void> getWishList() async {
-    final ApiResponse res = await WishListRepo().getAllFav();
-    log('ihdiv${res.message}');
+    final ApiResponse<dynamic> res = await WishListRepo().getAllFav();
+    log('ihdiv getWishlist${res.message}');
     if (res.data != null) {
       wishList.value = res.data! as List<WishListModel>;
     } else {}

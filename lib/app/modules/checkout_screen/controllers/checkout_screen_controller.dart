@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
+import '../../../../core/utils/constants.dart';
 import '../../../data/models/network_models/checkout_model.dart';
 import '../../../data/models/network_models/razorpay_model.dart';
 import '../../../data/repo/local_repo/checkout_repo.dart';
@@ -76,9 +77,11 @@ class CheckoutScreenController extends GetxController
 
   num getTotalAmounttoBePaid() {
     final num commissionAmount = getCommissionAmount();
-
     final num totalAmount = getTotalAmount();
-    final num sum = totalAmount - commissionAmount;
+    final num sum;
+    currentUserCategory == 'Standard User'
+        ? sum = totalAmount
+        : sum = totalAmount - commissionAmount;
     return sum;
   }
 
@@ -117,7 +120,7 @@ class CheckoutScreenController extends GetxController
       },
       onConfirm: () {
         Get.toNamed(Routes.SINGLE_TOUR,
-            arguments: [checkOutModel.value!.tourID]);
+            arguments: <dynamic>[checkOutModel.value!.tourID]);
       },
     );
   }
@@ -209,7 +212,7 @@ class CheckoutScreenController extends GetxController
       if (res.status == ApiResponseStatus.completed && res.data!) {
         log('kunukunu completed payment fro the tour');
         Get.toNamed(Routes.SINGLE_TOUR,
-            arguments: [checkOutModel.value!.tourID]);
+            arguments: <dynamic>[checkOutModel.value!.tourID]);
       } else {
         log('kunukunu Payment verification failed: ${res.message}');
       }

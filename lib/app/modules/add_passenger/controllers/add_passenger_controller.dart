@@ -95,7 +95,6 @@ class AddPassengerController extends GetxController
       }
     }
     isloading.value = false;
-    log(customerDOB.value);
   }
 
   Future<void> getImage(ImageSource source) async {
@@ -124,7 +123,7 @@ class AddPassengerController extends GetxController
       isLoadingIc.value = false;
     }, onConfirm: () {
       Get.back();
-      Get.offAllNamed(Routes.CHECKOUT_SCREEN)!.whenComplete(() => loadData());
+      Get.offAllNamed(Routes.CHECKOUT_SCREEN);
       isLoadingIc.value = false;
     });
     isLoadingIc.value = false;

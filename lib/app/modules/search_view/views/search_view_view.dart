@@ -6,6 +6,7 @@ import 'package:sizer/sizer.dart';
 import '../../../../core/theme/style.dart';
 import '../../../../core/tour_maker_icons.dart';
 import '../../../data/models/local_model/recent_search_mode.dart';
+import '../../../data/models/network_models/package_model.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/custom_loadinscreen.dart';
 import '../controllers/search_view_controller.dart';
@@ -16,70 +17,114 @@ class SearchViewView extends GetView<SearchViewController> {
   Widget build(BuildContext context) {
     final SearchViewController controller = Get.find();
     return SafeArea(
-      child: Scaffold(
-          appBar: CustomAppBar(
-            title: buildTextField(),
-          ),
-          body: controller.obx(
-            onLoading: const CustomLoadingScreen(),
-            (SearchViewView? state) => Obx(() {
-              return RefreshIndicator(
-                color: englishViolet,
-                onRefresh: controller.loadRecentSearchesFromStorage,
-                child: controller.recentSearches.isEmpty
-                    ? Container()
-                    : ListView.separated(
-                        separatorBuilder: (BuildContext context, int index) =>
-                            const Divider(indent: 30, endIndent: 50),
-                        shrinkWrap: true,
-                        itemCount: controller.recentSearches.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final RecentSearch search =
-                              controller.recentSearches[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 24),
-                            child: GestureDetector(
-                              onTap: () =>
-                                  controller.onSubmitSearch(search.keyword),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(search.keyword, style: subheading1),
-                                    GestureDetector(
-                                      onTap: () => controller
-                                          .onClickDeleteSuggestion(index),
-                                      child: Container(
-                                        width: 25,
-                                        height: 25,
-                                        decoration: BoxDecoration(
-                                          color: englishViolet,
-                                          borderRadius:
-                                              BorderRadius.circular(5),
+        child: Scaffold(
+            appBar: CustomAppBar(
+              title: buildTextField(),
+            ),
+            body: controller.obx(
+              onLoading: const CustomLoadingScreen(),
+              (SearchViewView? state) => Obx(() {
+                return SingleChildScrollView(
+                  child: RefreshIndicator(
+                    color: englishViolet,
+                    onRefresh: controller.loadRecentSearchesFromStorage,
+                    child: controller.recentSearchesList.isEmpty
+                        ? ListView.separated(
+                            separatorBuilder:
+                                (BuildContext context, int index) =>
+                                    const Divider(indent: 30, endIndent: 50),
+                            shrinkWrap: true,
+                            itemCount: controller.packagesList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final PackageModel package =
+                                  controller.packagesList[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 18.0, left: 23, right: 23),
+                                child: ListTile(
+                                  title: Text(package.name.toString(),
+                                      style: subheading1),
+                                  onTap: () => controller
+                                      .onSubmitSearch(package.name.toString()),
+                                ),
+                              );
+                            },
+                          )
+                        : Column(
+                            children: <Widget>[
+                              ListView.separated(
+                                separatorBuilder: (BuildContext context,
+                                        int index) =>
+                                    const Divider(indent: 30, endIndent: 50),
+                                shrinkWrap: true,
+                                itemCount: controller.recentSearchesList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final RecentSearch search =
+                                      controller.recentSearchesList[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 18.0, left: 23, right: 23),
+                                    child: ListTile(
+                                      title: Text(
+                                        search.keyword,
+                                        style: subheading1.copyWith(
+                                          color: englishlinearViolet,
                                         ),
-                                        child: const Center(
-                                          child: Icon(
-                                            Icons.close_sharp,
-                                            color: Colors.white,
-                                            size: 10,
+                                      ),
+                                      trailing: GestureDetector(
+                                        onTap: () => controller
+                                            .onClickDeleteSuggestion(index),
+                                        child: Container(
+                                          width: 25,
+                                          height: 25,
+                                          decoration: BoxDecoration(
+                                            color: englishViolet,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.close_sharp,
+                                              color: Colors.white,
+                                              size: 10,
+                                            ),
                                           ),
                                         ),
                                       ),
+                                      onTap: () => controller
+                                          .onSubmitSearch(search.keyword),
                                     ),
-                                  ],
-                                ),
+                                  );
+                                },
                               ),
-                            ),
-                          );
-                        },
-                      ),
-              );
-            }),
-          )),
-    );
+                              const Divider(),
+                              ListView.separated(
+                                separatorBuilder: (BuildContext context,
+                                        int index) =>
+                                    const Divider(indent: 30, endIndent: 50),
+                                shrinkWrap: true,
+                                itemCount: controller.packagesList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final PackageModel package =
+                                      controller.packagesList[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 18.0, left: 23, right: 23),
+                                    child: ListTile(
+                                      title: Text(package.name.toString(),
+                                          style: subheading1),
+                                      onTap: () => controller.onSubmitSearch(
+                                          package.name.toString()),
+                                    ),
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+                  ),
+                );
+              }),
+            )));
   }
 
   Widget buildTextField() {
@@ -91,6 +136,7 @@ class SearchViewView extends GetView<SearchViewController> {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
+        onChanged: (String text) => controller.onSerchTextChanged(text),
         controller: controller.textController,
         textInputAction: TextInputAction.search,
         onSubmitted: (String value) => controller.onSubmitSearch(value),

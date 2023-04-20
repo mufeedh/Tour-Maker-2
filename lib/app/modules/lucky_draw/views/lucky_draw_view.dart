@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/theme/style.dart';
-import '../../../../main.dart';
+import '../../../../core/utils/constants.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/custom_dialogue.dart';
 import '../controllers/lucky_draw_controller.dart';

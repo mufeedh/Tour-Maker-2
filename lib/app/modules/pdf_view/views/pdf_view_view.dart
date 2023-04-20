@@ -11,18 +11,20 @@ class PdfViewView extends GetView<PdfViewController> {
   Widget build(BuildContext context) {
     final PdfViewController controller = Get.put(PdfViewController());
     return Scaffold(
-      appBar: CustomAppBar(actions: [
-        IconButton(
-          icon: const Icon(Icons.share),
-          onPressed: () {
-            controller.sharePDF();
-          },
-        ),
-      ]),
+      appBar: CustomAppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {
+              controller.sharePdf();
+            },
+          ),
+        ],
+      ),
       body: controller.obx(
         onLoading: const Center(child: CircularProgressIndicator()),
         (PdfViewView? state) => SfPdfViewer.network(
-          controller.localPDFpath.value,
+          controller.url.value,
           key: controller.pdfViewerKey,
         ),
       ),

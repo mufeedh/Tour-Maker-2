@@ -22,6 +22,8 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/lucky_draw/bindings/lucky_draw_binding.dart';
 import '../modules/lucky_draw/views/lucky_draw_view.dart';
+import '../modules/maangaatholi/bindings/maangaatholi_binding.dart';
+import '../modules/maangaatholi/views/maangaatholi_view.dart';
 import '../modules/main_screen/bindings/main_screen_binding.dart';
 import '../modules/main_screen/views/main_screen_view.dart';
 import '../modules/nointernet/bindings/nointernet_binding.dart';
@@ -30,7 +32,6 @@ import '../modules/notifications/bindings/notifications_binding.dart';
 import '../modules/notifications/views/notifications_view.dart';
 import '../modules/otp_screen/bindings/otp_screen_binding.dart';
 import '../modules/otp_screen/views/otp_screen_view.dart';
-
 import '../modules/payment_screen/bindings/payment_screen_binding.dart';
 import '../modules/payment_screen/views/payment_screen_view.dart';
 import '../modules/payment_summary/bindings/payment_summary_binding.dart';
@@ -79,13 +80,15 @@ class AppPages {
 
   static final List<GetPage<dynamic>> routes = <GetPage<dynamic>>[
     GetPage<dynamic>(
-      transition: Transition.zoom,
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.HOME,
       page: () => const HomeView(),
       binding: HomeBinding(),
     ),
     GetPage<dynamic>(
       transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.SPLASH_SCREEN,
       page: () => const SplashScreenView(),
       binding: SplashScreenBinding(),
@@ -133,6 +136,8 @@ class AppPages {
       binding: LuckyDrawBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
@@ -152,11 +157,15 @@ class AppPages {
       binding: PaymentSummaryBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.FAVOURITES_SCREEN,
       page: () => const FavouritesScreenView(),
       binding: FavouritesScreenBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.BOOKING_SCREEN,
       page: () => const BookingScreenView(),
       binding: BookingScreenBinding(),
@@ -176,6 +185,8 @@ class AppPages {
       binding: SearchViewBinding(),
     ),
     GetPage<dynamic>(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.TOKEN_SCREEN,
       page: () => const TokenScreenView(),
       binding: TokenScreenBinding(),
@@ -209,67 +220,94 @@ class AppPages {
       binding: SearchDetailsBinding(),
     ),
     GetPage(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.NOTIFICATIONS,
       page: () => const NotificationsView(),
       binding: NotificationsBinding(),
     ),
     GetPage(
-      transition: Transition.leftToRightWithFade,
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.NOINTERNET,
       page: () => const NointernetView(),
       binding: NointernetBinding(),
     ),
     GetPage(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.TOURS_VIEW,
       page: () => const ToursViewView(),
       binding: ToursViewBinding(),
     ),
     GetPage(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.ADD_PASSENGER,
       page: () => const AddPassengerView(),
       binding: AddPassengerBinding(),
     ),
     GetPage(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.PDF_VIEW,
       page: () => const PdfViewView(),
       binding: PdfViewBinding(),
     ),
     GetPage(
-      transition: Transition.downToUp,
-      transitionDuration: const Duration(seconds: 1),
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
+      transitionDuration: const Duration(milliseconds: 400),
       name: _Paths.USER_REGISTERSCREEN,
       page: () => const UserRegisterscreenView(),
       binding: UserRegisterscreenBinding(),
     ),
     GetPage(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.TRENDING_TOURS,
       page: () => const TrendingToursView(),
       binding: TrendingToursBinding(),
     ),
     GetPage(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.EXCLUSIVE_TOURS,
       page: () => const ExclusiveToursView(),
       binding: ExclusiveToursBinding(),
     ),
     GetPage(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.TRAVEL_TYPES,
       page: () => const TravelTypesView(),
       binding: TravelTypesBinding(),
     ),
     GetPage(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.CHECKOUT_SCREEN,
       page: () => const CheckoutScreenView(),
       binding: CheckoutScreenBinding(),
     ),
     GetPage(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.TRAVELLERS_SCREEN,
       page: () => const TravellersScreenView(),
       binding: TravellersScreenBinding(),
     ),
     GetPage(
+      transition: Transition.fadeIn,
+      curve: Curves.easeInOut,
       name: _Paths.SINGLE_PASSENGER,
       page: () => const SinglePassengerView(),
       binding: SinglePassengerBinding(),
+    ),
+    GetPage(
+      name: _Paths.MAANGAATHOLI,
+      page: () => const MaangaatholiView(),
+      binding: MaangaatholiBinding(),
     ),
   ];
 }

@@ -41,6 +41,7 @@ class CategoryRepository {
       log('Adeeb rep resdata ${response.data}');
       log('Adeeb rep resd msg ${response.statusMessage}');
       if (response.statusCode == 200) {
+        log('response 200');
         if (response.data!['result'] != null) {
           singleCategoryList =
               (response.data!['result'] as List<dynamic>).map((dynamic e) {

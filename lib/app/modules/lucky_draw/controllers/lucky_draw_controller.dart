@@ -6,7 +6,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-import '../../../../main.dart';
+import '../../../../core/utils/constants.dart';
 
 import '../../../data/models/network_models/razorpay_model.dart';
 import '../../../data/repo/network_repo/razorpay_repo.dart';

@@ -30,7 +30,7 @@ class FavouritesScreenController extends GetxController
 
   Future<void> getAllFavourites() async {
     final res = await WishListRepo().getAllFav();
-    log('ihdiv ${res.message}');
+    log('ihdiv getAllFav ${res.message}');
     if (res.data != null) {
       favouritesList.value = res.data! as List<WishListModel>;
       change(null, status: RxStatus.success());

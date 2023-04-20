@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_overrides
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -16,7 +14,7 @@ class BookingScreenController extends GetxController
     with StateMixin<BookingScreenView>, GetSingleTickerProviderStateMixin {
   late final TabController tabcontroller =
       TabController(length: 3, vsync: this);
-
+  RxBool isLoading = false.obs;
   RxList<BookingsModel> upcomingList = <BookingsModel>[].obs;
   RxList<BookingsModel> completedList = <BookingsModel>[].obs;
   RxList<BookingsModel> cancelledList = <BookingsModel>[].obs;
@@ -25,16 +23,6 @@ class BookingScreenController extends GetxController
   void onInit() {
     super.onInit();
     loadData();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   Future<void> loadData() async {
@@ -57,32 +45,41 @@ class BookingScreenController extends GetxController
   }
 
   Future<void> getAllUpcomingBookings() async {
+    isLoading.value = true;
+
     final ApiResponse<List<BookingsModel>> res =
         await BookingRepository().getAllBookings('pending');
-    log('adeeb ${res.message}');
+    log('getAllUpcomingBookings ${res.message}');
     if (res.data != null) {
       upcomingList.value = res.data!;
     }
+    isLoading.value = false;
   }
 
   Future<void> getAllCompletedBookings() async {
+    isLoading.value = true;
+
     final ApiResponse<List<BookingsModel>> res =
         await BookingRepository().getAllBookings('completed');
 
     if (res.data != null) {
-      log('adeeb anvar completed ${res.data}');
+      log('getAllCompletedBookings ${res.message}');
       completedList.value = res.data!;
     }
+    isLoading.value = false;
   }
 
   Future<void> getAllCancelledBookings() async {
+    isLoading.value = true;
+
     final ApiResponse<List<BookingsModel>> res =
         await BookingRepository().getAllBookings('cancelled');
 
     if (res.data != null) {
-      log('adeeb anvar cancelled ${res.data}');
+      log('getAllCancelledBookings ${res.message}');
       cancelledList.value = res.data!;
     }
+    isLoading.value = false;
   }
 
   num getTotalTravellers(num adults, num childrens) {

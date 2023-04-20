@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/maangaatholi_controller.dart';
 
 class MaangaatholiView extends GetView<MaangaatholiController> {
-  const MaangaatholiView({Key? key}) : super(key: key);
+  const MaangaatholiView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
