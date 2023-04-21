@@ -87,7 +87,7 @@ class GetStartedController extends GetxController with StateMixin<dynamic> {
               arguments: <dynamic>[
                 verificationId,
                 phoneNumber,
-                forceResendingToken
+                // forceResendingToken
               ],
             );
             isFinished.value = true;

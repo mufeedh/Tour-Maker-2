@@ -52,7 +52,7 @@ class OtpScreenController extends GetxController
     if (Get.arguments != null) {
       verID = Get.arguments[0] as String;
       phone = Get.arguments[1] as String;
-      forceToken = Get.arguments[2] as int;
+      // forceToken = Get.arguments[2] as int;
       log('ver id $verID');
       log('phone $phone');
     }
