@@ -73,6 +73,7 @@ class SplashScreenController extends GetxController with StateMixin<dynamic> {
     final NotificationSettings settings = await messaging.requestPermission();
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       //authorized
+      isNotificationON = true;
       final String? fcmToken = await messaging.getToken();
       fcmtoken = fcmToken;
       log('fcm $fcmToken');
@@ -85,6 +86,7 @@ class SplashScreenController extends GetxController with StateMixin<dynamic> {
       }
     } else {
       //not authorized
+      isNotificationON = false;
     }
   }
 
@@ -93,11 +95,16 @@ class SplashScreenController extends GetxController with StateMixin<dynamic> {
     final ApiResponse<Map<String, dynamic>> res =
         await UserRepository().checkUserExists();
     if (res.data!.isNotEmpty) {
-      await Get.offAllNamed(Routes.HOME);
-
+      if (tndc == null) {
+        await Get.offAllNamed(Routes.TERMS_AND_CONDITIONS);
+      } else {
+        await Get.offAllNamed(Routes.HOME);
+      }
       // Get.offAllNamed(Routes.TOKEN_SCREEN, arguments: [token, fcmToken]);
     } else {
       await Get.offAllNamed(Routes.LOGIN);
     }
   }
 }
+
+String? tndc;

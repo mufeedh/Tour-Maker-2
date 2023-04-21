@@ -4,7 +4,6 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 
-import '../../../data/models/network_models/user_model.dart';
 import '../../../data/repo/network_repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
@@ -59,11 +58,12 @@ If you can book minimum 2 tours within 20 days of your app installation, you wil
 
   Future<void> onGetStartedClicked() async {
     isLoading.value = true;
-    final UserModel user = UserModel(
-      tAndCStatus: 'true',
-    );
+    // final UserModel user = UserModel(
+    //   tAndCStatus: 'true',
+    // );
     final ApiResponse<Map<String, dynamic>> res =
-        await UserRepository().signUpTheUser(user);
+        await UserRepository().signUpTheUser('true');
+    log('ihih ${res.data}');
     if (res.status == ApiResponseStatus.completed) {
       log('completed');
       Get.offAllNamed(Routes.LUCKY_DRAW);

@@ -22,7 +22,7 @@ Future<void> main() async {
   await getTemporaryDirectory()
       .then((Directory value) => tempDir.value = value);
 
-  // HttpOverrides.global = MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
@@ -50,11 +50,11 @@ Future<void> main() async {
   );
 }
 
-// class MyHttpOverrides extends HttpOverrides {
-//   @override
-//   HttpClient createHttpClient(SecurityContext? context) {
-//     return super.createHttpClient(context)
-//       ..badCertificateCallback =
-//           (X509Certificate cert, String host, int port) => true;
-//   }
-// }
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}

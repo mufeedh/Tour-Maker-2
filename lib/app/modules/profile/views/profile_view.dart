@@ -180,7 +180,8 @@ class ProfileView extends GetView<ProfileController> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text('country :', style: subheading1),
-                            if (controller.userData.value.country != null)
+                            if (controller.userData.value.country == null &&
+                                controller.userData.value.country == '')
                               GestureDetector(
                                 onTap: () => controller.onClickAdddetail(),
                                 child: Text(
@@ -233,30 +234,24 @@ class ProfileView extends GetView<ProfileController> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text('Enterprise Name :', style: subheading1),
+                            Text('EnterPrise Name :', style: subheading1),
                             if (controller.userData.value.enterpriseName == '')
-                              SizedBox(
-                                width: 100,
-                                child: GestureDetector(
-                                  onTap: () => controller.onClickAdddetail(),
-                                  child: Text(
-                                    'Add your Enterprise Name',
-                                    style: paragraph2.copyWith(
-                                      color: englishViolet,
-                                      overflow: TextOverflow.visible,
-                                    ),
+                              GestureDetector(
+                                onTap: () => controller.onClickAdddetail(),
+                                child: Text(
+                                  'Add your Category',
+                                  style: paragraph2.copyWith(
+                                    color: englishViolet,
+                                    overflow: TextOverflow.visible,
                                   ),
                                 ),
                               )
                             else
-                              SizedBox(
-                                width: 150,
-                                child: Text(
-                                  controller.userData.value.enterpriseName
-                                      .toString(),
-                                  style: paragraph2.copyWith(
-                                    overflow: TextOverflow.visible,
-                                  ),
+                              Text(
+                                controller.userData.value.enterpriseName
+                                    .toString(),
+                                style: paragraph2.copyWith(
+                                  overflow: TextOverflow.visible,
                                 ),
                               ),
                           ],

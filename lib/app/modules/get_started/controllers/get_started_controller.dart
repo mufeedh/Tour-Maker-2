@@ -65,8 +65,6 @@ class GetStartedController extends GetxController with StateMixin<dynamic> {
     if (formKey.currentState!.validate()) {
       log('valid');
       isloading.value = true;
-      // ignore: always_specify_types
-      await Future.delayed(const Duration(seconds: 1));
       try {
         final String phoneNumber = '+${selectedCountry.value.phoneCode}$phone';
         final FirebaseAuth auth = FirebaseAuth.instance;

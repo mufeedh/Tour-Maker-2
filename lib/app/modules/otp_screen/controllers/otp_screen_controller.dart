@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_controller.dart';
 
+import '../../../../core/utils/constants.dart';
 import '../../../data/repo/network_repo/user_repo.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/network_services/dio_client.dart';
@@ -162,6 +163,7 @@ class OtpScreenController extends GetxController
     final NotificationSettings settings = await messaging.requestPermission();
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       //authorized
+      isNotificationON = true;
       final String? fcmToken = await messaging.getToken();
       final ApiResponse<Map<String, dynamic>> res =
           await UserRepository().putFCMToken(fcmToken);
@@ -169,6 +171,8 @@ class OtpScreenController extends GetxController
       } else {
         log('req not send');
       }
+    } else {
+      isNotificationON = false;
     }
   }
 
@@ -178,6 +182,7 @@ class OtpScreenController extends GetxController
     final NotificationSettings settings = await messaging.requestPermission();
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       //authorized
+      isNotificationON = true;
       final String? fcmToken = await messaging.getToken();
       final ApiResponse<Map<String, dynamic>> res =
           await UserRepository().postFCMToken(fcmToken!);
@@ -187,6 +192,7 @@ class OtpScreenController extends GetxController
       }
     } else {
       //not authorized
+      isNotificationON = false;
     }
   }
 }

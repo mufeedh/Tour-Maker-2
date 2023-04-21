@@ -112,7 +112,8 @@ class PassengerRepository {
         'address': address,
         'order_id': orderID,
         'image': await MultipartFile.fromFile(
-          fullPath, contentType: MediaType('image', 'jpeg'), //important
+          fullPath,
+          contentType: MediaType('image', 'jpeg'),
         ),
       });
       final Response<Map<String, dynamic>> response = await dio.postUri(

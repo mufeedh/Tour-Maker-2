@@ -39,7 +39,7 @@ class MainScreenView extends GetView<MainScreenController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         //Categories Section
-                        // buildCategories(screenHeight),
+                        buildCategories(screenHeight),
                         const SizedBox(height: 20),
                         Row(
                           children: <Widget>[

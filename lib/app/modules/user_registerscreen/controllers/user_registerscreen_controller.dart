@@ -86,6 +86,7 @@ class UserRegisterscreenController extends GetxController
     userName.value = user.value.name.toString();
     userAddress.value = user.value.address.toString();
     userCity.value = user.value.district.toString();
+    userCountry.value = user.value.country.toString();
     userState.value = user.value.state.toString();
     change(null, status: RxStatus.success());
   }

@@ -99,14 +99,54 @@ class UserRepository {
   //         return UserModel.fromjson(e as Map<String, String>);
 
   Future<ApiResponse<Map<String, dynamic>>> signUpTheUser(
-      UserModel user) async {
+      String tAndCStatusOfUser) async {
     try {
       final Map<String, dynamic>? autheHeader = await Client().getAuthHeader();
       log('auth hre $autheHeader');
+      final FormData formData = FormData.fromMap(<String, dynamic>{
+        't_and_c_status': tAndCStatusOfUser,
+      });
       final Response<Map<String, dynamic>> res = await dio.postUri(
           Uri.parse('user/signup'),
           options: Options(headers: autheHeader),
-          data: user.toJson());
+          data: formData);
+      log('signUpTheUser ${res.statusMessage}');
+
+      if (res.statusCode == 200) {
+        log('200 ${res.statusMessage}');
+
+        return ApiResponse<Map<String, dynamic>>.completed(res.data);
+      } else {
+        log('adb');
+        return ApiResponse<Map<String, dynamic>>.error(res.statusMessage);
+      }
+    } on DioError catch (de) {
+      log('jnijk');
+      return ApiResponse<Map<String, dynamic>>.error(de.error.toString());
+    } catch (e) {
+      log('fgs');
+      return ApiResponse<Map<String, dynamic>>.error(e.toString());
+    }
+  }
+
+  Future<ApiResponse<Map<String, dynamic>>> loginTheUser(
+      {required String name,
+      required String state,
+      required String phoneNumber,
+      required String category}) async {
+    try {
+      final Map<String, dynamic>? autheHeader = await Client().getAuthHeader();
+      log('auth hre $autheHeader');
+      final FormData formData = FormData.fromMap(<String, dynamic>{
+        'name': name,
+        'phone_number': phoneNumber,
+        'state': state,
+        'category': category
+      });
+      final Response<Map<String, dynamic>> res = await dio.postUri(
+          Uri.parse('user/signup'),
+          options: Options(headers: autheHeader),
+          data: formData);
       log('signUpTheUser ${res.statusMessage}');
 
       if (res.statusCode == 200) {
